@@ -22,6 +22,8 @@ export interface GameInput {
   log?: boolean;
   defNerf?: number;
   exhibition?: boolean;
+  /** Sitting this game. Earned in an earlier game of the same series. */
+  suspended?: { playerId: string; reason: string }[];
 }
 
 interface Live {
@@ -41,8 +43,15 @@ interface Live {
   ftm: number;
   fta: number;
   pm: number;
+  drawn: number;
+  tech: number;
+  flagrant: number;
   injured: boolean;
   opened: boolean;
+  ejected: boolean;
+  ejectReason?: "technicals" | "flagrant" | "fouls";
+  suspended: boolean;
+  suspendReason?: string;
 }
 
 interface Side {
@@ -64,7 +73,8 @@ const clamp = (n: number, lo: number, hi: number) => Math.max(lo, Math.min(hi, n
 function blankLive(): Live {
   return {
     sec: 0, pts: 0, orb: 0, drb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0,
-    fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pm: 0, injured: false, opened: false,
+    fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pm: 0, drawn: 0, tech: 0, flagrant: 0,
+    injured: false, opened: false, ejected: false, suspended: false,
   };
 }
 
@@ -118,15 +128,19 @@ function desire(player: Player, live: Live, ctx: FloorCtx): number {
   return score;
 }
 
+function onFloor(live: Live): boolean {
+  return live.pf < 6 && !live.injured && !live.ejected && !live.suspended;
+}
+
 function available(side: Side): Player[] {
-  return side.players.filter((p) => side.live[p.id].pf < 6 && !side.live[p.id].injured);
+  return side.players.filter((p) => onFloor(side.live[p.id]));
 }
 
 function pickLineup(side: Side, ctx: FloorCtx): Player[] {
   const pool = available(side);
   if (pool.length <= 5) return pool.slice();
   if (ctx.opening) {
-    const starters = side.players.filter((p) => p.starts && side.live[p.id].pf < 6 && !side.live[p.id].injured);
+    const starters = side.players.filter((p) => p.starts && onFloor(side.live[p.id]));
     if (starters.length === 5) return starters;
   }
   const slots: Pos[] = ["PG", "SG", "SF", "PF", "C"];
@@ -219,6 +233,15 @@ export function simulateGame(input: GameInput): GameResult {
   const injuryAt: Record<string, number> = {};
   if (rng() < 0.045) injuryAt[home.id] = 500 + Math.floor(rng() * 1900);
   if (rng() < 0.045) injuryAt[away.id] = 500 + Math.floor(rng() * 1900);
+  const sat: string[] = [];
+  for (const ban of input.suspended ?? []) {
+    const side = home.players.some((p) => p.id === ban.playerId) ? home : away.players.some((p) => p.id === ban.playerId) ? away : null;
+    if (!side?.live[ban.playerId]) continue;
+    side.live[ban.playerId].suspended = true;
+    side.live[ban.playerId].suspendReason = ban.reason;
+    const player = side.players.find((p) => p.id === ban.playerId);
+    if (player) sat.push(`${player.name}, ${ban.reason}`);
+  }
 
   let period = 1;
   let clock = 0;
@@ -227,6 +250,17 @@ export function simulateGame(input: GameInput): GameResult {
   const addPlay = (play: Play) => {
     if (log) plays.push(play);
   };
+  if (sat.length) {
+    addPlay({
+      q: 1,
+      clock: "12:00",
+      text: `Suspended: ${sat.join("; ")}.`,
+      home: 0,
+      away: 0,
+      kind: "note",
+      key: true,
+    });
+  }
 
   const noteScore = (side: Side, pts: number) => {
     side.score += pts;
@@ -308,6 +342,73 @@ export function simulateGame(input: GameInput): GameResult {
     return made;
   };
 
+  const sendOff = (side: Side, player: Player, reason: "technicals" | "flagrant" | "fouls", ctx: FloorCtx) => {
+    const live = side.live[player.id];
+    live.ejected = true;
+    if (reason === "flagrant" || !live.ejectReason || live.ejectReason === "fouls") live.ejectReason = reason;
+    side.lineup = pickLineup(side, ctx);
+  };
+
+  /** Dead-ball NBA foul. The team that was about to play keeps the ball after the free throws. */
+  const deadBall = (off: Side, def: Side, ctx: FloorCtx) => {
+    if (!off.lineup.length || !def.lineup.length) return;
+    const roll = rng();
+    const flagrant2 = roll < 0.00028;
+    const flagrant1 = !flagrant2 && roll < 0.00115;
+    const technical = !flagrant1 && !flagrant2 && roll < 0.0064;
+    if (!technical && !flagrant1 && !flagrant2) return;
+    const fouler = pickWeighted(def.lineup, (p) => 12 + p.ratings.usg * 0.22 + (p.role === "star" ? 5 : 0), rng);
+    const live = def.live[fouler.id];
+    if (!onFloor(live)) return;
+    live.pf += 1;
+    def.foulsQ += 1;
+    const shooter = pickWeighted(off.lineup, (p) => 16 + p.ratings.ft, rng);
+    if (technical) {
+      live.tech += 1;
+      const made = shootFT(shooter, off, def, 1);
+      let why = "";
+      if (live.tech >= 2) {
+        sendOff(def, fouler, "technicals", ctx);
+        why = " Second technical. Ejected.";
+      } else if (live.pf >= 6) {
+        sendOff(def, fouler, "fouls", ctx);
+        why = " Sixth personal foul. Ejected.";
+      }
+      addPlay({
+        q: ctx.quarter,
+        clock: clockLabel(clock),
+        text: `Technical foul on ${names(fouler)}. ${names(shooter)} makes ${made} of 1.${why}`,
+        home: home.score,
+        away: away.score,
+        kind: "foul",
+        key: why.length > 0 || fouler.role === "star",
+        teamId: def.id,
+      });
+      return;
+    }
+    const level = flagrant2 ? 2 : 1;
+    live.flagrant += level === 2 ? 2 : 1;
+    const made = shootFT(shooter, off, def, 2);
+    let why = "";
+    if (level === 2 || live.flagrant >= 2) {
+      sendOff(def, fouler, "flagrant", ctx);
+      why = " Ejected.";
+    } else if (live.pf >= 6) {
+      sendOff(def, fouler, "fouls", ctx);
+      why = " Sixth personal foul. Ejected.";
+    }
+    addPlay({
+      q: ctx.quarter,
+      clock: clockLabel(clock),
+      text: `Flagrant ${level} on ${names(fouler)}. ${names(shooter)} makes ${made} of 2.${why}`,
+      home: home.score,
+      away: away.score,
+      kind: "foul",
+      key: true,
+      teamId: def.id,
+    });
+  };
+
   while (period <= 10) {
     const length = period <= 4 ? 720 : 300;
     clock = length;
@@ -335,7 +436,7 @@ export function simulateGame(input: GameInput): GameResult {
       const margin = off.score - def.score;
       const emergency = off.players.some((p) => {
         const live = off.live[p.id];
-        return (p.role === "star" || p.role === "starter") && (live.injured || live.pf >= 6);
+        return (p.role === "star" || p.role === "starter") && (live.injured || live.pf >= 6 || live.ejected);
       });
       const ctx: FloorCtx = {
         quarter: period,
@@ -346,10 +447,10 @@ export function simulateGame(input: GameInput): GameResult {
         emergency,
         opening: (period === 1 || period === 3) && clock > length - 20,
       };
-      if (clock === length || length - clock >= nextSub || off.lineup.some((p) => off.live[p.id].pf >= 6 || off.live[p.id].injured)) {
+      if (clock === length || length - clock >= nextSub || off.lineup.some((p) => off.live[p.id].pf >= 6 || off.live[p.id].injured || off.live[p.id].ejected)) {
         const before = off.lineup.map((p) => p.id).join();
         off.lineup = pickLineup(off, ctx);
-        def.lineup = pickLineup(def, { ...ctx, margin: -margin, emergency: def.players.some((p) => (p.role === "star" || p.role === "starter") && (def.live[p.id].injured || def.live[p.id].pf >= 6)) });
+        def.lineup = pickLineup(def, { ...ctx, margin: -margin, emergency: def.players.some((p) => (p.role === "star" || p.role === "starter") && (def.live[p.id].injured || def.live[p.id].pf >= 6 || def.live[p.id].ejected)) });
         if (period === 1 && clock === length) {
           for (const p of off.lineup) off.live[p.id].opened = true;
           for (const p of def.lineup) def.live[p.id].opened = true;
@@ -368,7 +469,9 @@ export function simulateGame(input: GameInput): GameResult {
         }
         if (length - clock >= nextSub) nextSub += 240;
       }
-      if (off.lineup.length < 5 || def.lineup.length < 5) break;
+      if (!off.lineup.length || !def.lineup.length) break;
+      deadBall(off, def, ctx);
+      if (!off.lineup.length || !def.lineup.length) break;
 
       const pace = (off.pace + def.pace) / 2;
       let used = (10 + rng() * 8) / pace;
@@ -423,11 +526,13 @@ export function simulateGame(input: GameInput): GameResult {
         const fouler = pickWeighted(def.lineup, (p) => 30 + (100 - p.ratings.def) + (p.pos === "C" || p.pos === "PF" ? 8 : 0), rng);
         def.live[fouler.id].pf += 1;
         def.foulsQ += 1;
-        if (def.live[fouler.id].pf === 6) {
+        if (def.live[fouler.id].pf >= 6 && !def.live[fouler.id].ejected) {
+          def.live[fouler.id].ejected = true;
+          def.live[fouler.id].ejectReason = "fouls";
           addPlay({
             q: period,
             clock: clockLabel(clock),
-            text: `Foul out: ${fouler.name}, sixth foul.`,
+            text: `Foul out: ${fouler.name}, sixth personal foul. Ejected.`,
             home: home.score,
             away: away.score,
             kind: "foul",
@@ -459,6 +564,7 @@ export function simulateGame(input: GameInput): GameResult {
 
       if (roll < tovP + foulP && rng() < 0.42) {
         const fouler = foulSomeone();
+        ballLive.drawn += 1;
         if (inBonus(def.foulsQ, period)) {
           const made = shootFT(ball, off, def, 2);
           addPlay({
@@ -491,6 +597,7 @@ export function simulateGame(input: GameInput): GameResult {
         const spacing = lineupThree(off.lineup);
         const three = rng() < clamp(ball.ratings.threeRate / 100 * 0.45 + (spacing - 70) * 0.001, 0.02, 0.3);
         const fouler = foulSomeone();
+        ballLive.drawn += 1;
         const n = three ? 3 : 2;
         const made = shootFT(ball, off, def, n);
         addPlay({
@@ -566,6 +673,7 @@ export function simulateGame(input: GameInput): GameResult {
         let andOne = "";
         if (rng() < 0.09 + ball.ratings.ath / 2400) {
           const fouler = foulSomeone();
+          ballLive.drawn += 1;
           const ft = shootFT(ball, off, def, 1);
           andOne = ft ? ` And-one over ${names(fouler)}.` : ` Fouled by ${names(fouler)}, misses the free throw.`;
         }
@@ -739,7 +847,7 @@ function toBox(side: Side): BoxLine[] {
   const lines: BoxLine[] = [];
   for (const p of side.players) {
     const live = side.live[p.id];
-    if (live.sec <= 0 && live.pf === 0 && !live.injured) continue;
+    if (live.sec <= 0 && live.pf === 0 && !live.injured && !live.suspended && !live.ejected) continue;
     lines.push({
       playerId: p.id,
       sec: Math.round(live.sec),
@@ -758,12 +866,19 @@ function toBox(side: Side): BoxLine[] {
       ftm: live.ftm,
       fta: live.fta,
       pm: live.pm,
+      drawn: live.drawn,
+      tech: live.tech,
+      flagrant: live.flagrant,
       started: live.opened,
       fouledOut: live.pf >= 6,
       injured: live.injured,
+      ejected: live.ejected,
+      ejectReason: live.ejectReason,
+      suspended: live.suspended || undefined,
+      suspendReason: live.suspendReason,
     });
   }
-  lines.sort((a, b) => Number(b.started) - Number(a.started) || b.sec - a.sec);
+  lines.sort((a, b) => Number(Boolean(a.suspended)) - Number(Boolean(b.suspended)) || Number(b.started) - Number(a.started) || b.sec - a.sec);
   return lines;
 }
 

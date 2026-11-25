@@ -1,4 +1,4 @@
-import type { GameResult, SeriesResult } from "../data/types";
+import type { BoxLine, GameResult, SeriesResult } from "../data/types";
 import { simulateGame, type SideInput } from "./game";
 import { mixSeed } from "./rng";
 
@@ -35,6 +35,21 @@ export function playSeries(input: {
   const games: GameResult[] = [];
   let homeWins = 0;
   let awayWins = 0;
+  const held: { playerId: string; reason: string }[] = [];
+  const techEjections = new Map<string, number>();
+  const takeOuts = (lines: BoxLine[]) => {
+    for (const line of lines) {
+      if (line.ejectReason !== "technicals" && line.ejectReason !== "flagrant") continue;
+      const n = (techEjections.get(line.playerId) ?? 0) + 1;
+      techEjections.set(line.playerId, n);
+      if (line.ejectReason === "flagrant" || n >= 2) {
+        held.push({
+          playerId: line.playerId,
+          reason: line.ejectReason === "flagrant" ? "Flagrant ejection in the previous game" : "Second ejection of the series",
+        });
+      }
+    }
+  };
   for (let n = 1; n <= SERIES_MAX_GAMES && homeWins < SERIES_WINS && awayWins < SERIES_WINS; n++) {
     const hostHome = SERIES_HOME_HOSTS.has(n);
     const gameHome = hostHome ? input.home : input.away;
@@ -52,7 +67,10 @@ export function playSeries(input: {
       away: gameAway,
       log: input.log,
       exhibition: input.exhibition,
+      suspended: held.splice(0, held.length),
     });
+    takeOuts(played.box.home);
+    takeOuts(played.box.away);
     games.push({ ...played, seriesId: input.id });
     if (played.winnerId === input.home.id) homeWins += 1;
     else awayWins += 1;

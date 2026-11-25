@@ -249,7 +249,10 @@ function StatBlock({
   const reached = views.filter((view) => view.reached);
   const story = roundStory(views);
   const wins = nights.filter((night) => night.win).length;
-  const fouled = nights.filter((night) => night.line.fouledOut).length;
+  const fouled = nights.filter((night) => night.line.fouledOut || night.line.ejectReason === "fouls").length;
+  const ejected = nights.filter((night) => night.line.ejected || night.line.fouledOut).length;
+  const techs = nights.reduce((sum, night) => sum + (night.line.tech ?? 0), 0);
+  const sat = nights.filter((night) => night.line.suspended);
   const injured = nights.filter((night) => night.line.injured).length;
   return (
     <section className="section" id={id}>
@@ -276,7 +279,7 @@ function StatBlock({
             <span className="quiet">The same games, added up</span>
           </div>
           <LineSheet line={line} mode="total" />
-          {fouled || injured ? <p className="note">{wearSentence(fouled, injured)}</p> : null}
+          {fouled || ejected || techs || sat.length || injured ? <p className="note">{wearSentence(fouled, ejected, techs, sat, injured)}</p> : null}
           <div className="section-head">
             <h3 className="subhead">Highs</h3>
             <span className="quiet">Best single game in this line</span>
@@ -319,6 +322,8 @@ function LineSheet({ line, mode }: { line: Tot; mode: "per" | "total" }) {
       <Cell label="Blocks" value={count(line.blk)} />
       <Cell label="Turnovers" value={count(line.tov)} />
       <Cell label="Fouls" value={count(line.pf)} />
+      <Cell label="Fouls drawn" value={count(line.drawn)} />
+      <Cell label="Technicals" value={count(line.tech)} />
       <Cell label="FG" value={pct(line.fgm, line.fga)} detail={volume(line.fgm, line.fga)} />
       <Cell label="3P" value={pct(line.tpm, line.tpa)} detail={volume(line.tpm, line.tpa)} />
       <Cell label="FT" value={pct(line.ftm, line.fta)} detail={volume(line.ftm, line.fta)} />
@@ -410,7 +415,9 @@ function GameLog({ nights, tournament }: { nights: Night[]; tournament: Tourname
                 <div className="quiet">
                   {gameNo(night.game.id)}
                   {night.line.started ? " · opened" : " · bench"}
-                  {night.line.fouledOut ? " · fouled out" : ""}
+                  {night.line.suspended ? " · suspended" : ""}
+                  {night.line.ejected || night.line.fouledOut ? " · ejected" : ""}
+                  {(night.line.tech ?? 0) > 0 ? ` · ${night.line.tech} tech` : ""}
                   {night.line.injured ? " · injured" : ""}
                 </div>
               </div>
@@ -438,6 +445,8 @@ function Bits({ line }: { line: BoxLine }) {
     { text: `${line.blk} blk` },
     { text: `${line.tov} tov` },
     { text: `${line.pf} pf` },
+    { text: `${line.drawn ?? 0} drawn` },
+    { text: `${line.tech ?? 0} tech` },
     { text: `FG ${shotLine(line.fgm, line.fga)}` },
     { text: `3P ${shotLine(line.tpm, line.tpa)}` },
     { text: `FT ${shotLine(line.ftm, line.fta)}` },
@@ -688,9 +697,11 @@ function openSentence(starts: number, games: number): string {
   return `Opened ${starts} of ${games}.`;
 }
 
-function wearSentence(fouled: number, injured: number): string {
+function wearSentence(fouled: number, ejected: number, techs: number, sat: { line: BoxLine }[], injured: number): string {
   const parts: string[] = [];
-  if (fouled) parts.push(`Fouled out of ${fouled} game${fouled === 1 ? "" : "s"}.`);
+  if (techs) parts.push(`${techs} technical${techs === 1 ? "" : "s"}.`);
+  if (ejected) parts.push(`Ejected from ${ejected} game${ejected === 1 ? "" : "s"}${fouled ? `, ${fouled} on six fouls` : ""}.`);
+  if (sat.length) parts.push(`Suspended for ${sat.length} game${sat.length === 1 ? "" : "s"}: ${sat.map((night) => night.line.suspendReason ?? "out").join("; ")}.`);
   if (injured) parts.push(`Left ${injured} game${injured === 1 ? "" : "s"} with an injury.`);
   return parts.join(" ");
 }

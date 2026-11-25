@@ -32,12 +32,12 @@ import { readPlayerStyle, readStyle } from "../src/engine/style";
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
 
-if (TEAMS.length !== 57) fail(`expected 57 sides, got ${TEAMS.length}`);
+if (TEAMS.length !== 61) fail(`expected 61 sides, got ${TEAMS.length}`);
 const overflow = TEAMS.filter((t) => t.kind === "overflow");
 const homeland = TEAMS.filter((t) => t.kind === "homeland");
 const countries = TEAMS.filter((t) => t.kind === "country");
 const built = TEAMS.filter((t) => t.kind === "construct");
-if (overflow.length !== 34) fail(`expected 34 overflow houses, got ${overflow.length}`);
+if (overflow.length !== 38) fail(`expected 38 overflow houses, got ${overflow.length}`);
 if (homeland.length !== 4) fail(`expected 4 homeland houses, got ${homeland.length}`);
 if (countries.length !== 18) fail(`expected 18 countries, got ${countries.length}`);
 if (built.length !== 1) fail(`expected 1 constructed side, got ${built.length}`);
@@ -236,7 +236,7 @@ if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star 
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
 const expectedSeries = tournament.groups.length * 6 + 8 + 4 + 2 + 2;
 if (SERIES_WINS !== 4 || SERIES_MAX_GAMES !== 7) fail("the series scheduler is not best of seven");
-if (tournament.groups.length !== 14) fail(`expected 14 groups, got ${tournament.groups.length}`);
+if (tournament.groups.length !== 15) fail(`expected 15 groups, got ${tournament.groups.length}`);
 if (tournament.groups.some((group) => group.teamIds.length !== 4)) fail("a group is not four sides");
 const r16ids = new Set(tournament.series.filter((item) => item.round === "r16").flatMap((item) => [item.homeId, item.awayId]));
 if (r16ids.size !== 16) fail(`round of 16 has ${r16ids.size} sides`);
@@ -255,6 +255,46 @@ if (!siege?.arrival || !siege.gate || !siege.restoration) fail("siege is missing
 for (const item of [siege?.arrival, siege?.gate, siege?.restoration]) {
   if (!item || !seriesIsBestOfSeven(item)) fail(`${item?.id ?? "siege"} is not a best-of-seven`);
 }
+let techCount = 0;
+let ejectCount = 0;
+let satCount = 0;
+for (const game of official) {
+  for (const line of [...game.box.home, ...game.box.away]) {
+    techCount += line.tech ?? 0;
+    if ((line.tech ?? 0) < 0 || (line.flagrant ?? 0) < 0) fail(`${game.id} has a negative foul count`);
+    if (line.ejectReason === "technicals" && (line.tech ?? 0) < 2) fail(`${line.playerId} ejected on technicals with ${line.tech}`);
+    if (line.ejectReason === "flagrant" && (line.flagrant ?? 0) < 2) fail(`${line.playerId} ejected on a flagrant with ${line.flagrant}`);
+    if (line.ejectReason === "fouls" && line.pf < 6) fail(`${line.playerId} ejected on fouls with ${line.pf}`);
+    if ((line.ejected || line.fouledOut) && !line.ejectReason) fail(`${line.playerId} is out with no reason`);
+    if (line.suspended) {
+      satCount += 1;
+      if (line.sec !== 0) fail(`${line.playerId} played while suspended`);
+      if (!line.suspendReason) fail(`${line.playerId} is suspended with no reason`);
+    }
+    if (line.ejected || line.fouledOut) ejectCount += 1;
+  }
+}
+if (techCount < 1) fail("the tournament called no technical fouls");
+for (const item of [...officialSeries, siege?.arrival, siege?.gate, siege?.restoration]) {
+  if (!item) continue;
+  const earned = new Map<string, number>();
+  let caused = new Set<string>();
+  for (const game of item.games) {
+    for (const line of [...game.box.home, ...game.box.away]) {
+      if (line.suspended && !caused.has(line.playerId)) fail(`${line.playerId} suspended in ${game.id} without the previous game earning it`);
+    }
+    caused = new Set();
+    for (const line of [...game.box.home, ...game.box.away]) {
+      if (line.ejectReason === "flagrant") caused.add(line.playerId);
+      if (line.ejectReason === "technicals") {
+        const n = (earned.get(line.playerId) ?? 0) + 1;
+        earned.set(line.playerId, n);
+        if (n >= 2) caused.add(line.playerId);
+      }
+    }
+  }
+}
+console.log(`DISCIPLINE techs=${techCount} ejected=${ejectCount} suspended=${satCount}`);
 if (tournament.groups.some((group) => group.teamIds.includes("cstr"))) fail("Construct was drawn into a group");
 if (tournament.ranking.some((row) => row.teamId === "cstr")) fail("Construct was given a country seed");
 if ((siege?.concordIds.length ?? 0) !== 12) fail(`Concord has ${siege?.concordIds.length} players`);
@@ -302,10 +342,10 @@ if (!leader || leader[0] !== "cont") fail(`Continental is not the most common ch
 if (contTitles > 34) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
 if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-// Seeds 1100 + i*97 with fifty-six human sides: arrival 33, gate 34, restored 4.
-if (arrivalConstruct !== 33) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 33`);
-if (gateConstruct !== 34) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 34`);
-if (restored !== 4) fail(`Concord restored the floor ${restored}/${TRIALS}, expected 4`);
+// Seeds 1100 + i*97 with sixty human sides: arrival 32, gate 36, restored 5.
+if (arrivalConstruct !== 32) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 32`);
+if (gateConstruct !== 36) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 36`);
+if (restored !== 5) fail(`Concord restored the floor ${restored}/${TRIALS}, expected 5`);
 
 for (const card of ERA_CARDS) {
   if (card.playerIds.length < 2) fail(`${card.franchise} ${card.years} lists ${card.playerIds.length} primes`);
@@ -360,7 +400,7 @@ if (survivor.rounds.length < 3 || !survivor.champion) fail("survivor did not pla
 if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70) fail("the five did not tip");
 console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
 
-if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-v9" || OLYMPICS_KEY === "pantheon-v10" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
+if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-v9" || OLYMPICS_KEY === "pantheon-v10" || OLYMPICS_KEY === "pantheon-v11" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
 if (olympicsUnlock([]).open) fail("olympics opened with no trials");
 const lockedLine = olympicsLockLine(olympicsUnlock([]));
 const lockedSentences = lockedLine.split(/[.!?]/).map((part) => part.trim()).filter(Boolean);
@@ -417,7 +457,7 @@ for (const seed of [1, 8, 21, 99, 20261125]) {
 const olympicRoster = fillOlympic(20261125);
 const beforeTeams = TEAMS.length;
 const olympics = playOlympics(olympicRoster.rosterIds, 20261125);
-if (TEAMS.length !== beforeTeams || TEAMS.length !== 57) fail("olympics changed the championship team count");
+if (TEAMS.length !== beforeTeams || TEAMS.length !== 61) fail("olympics changed the championship team count");
 if (TEAMS.some((team) => team.id === OLY_ID)) fail("the rolled side was added to the championship");
 if (olympics.field.length !== 8 || !olympics.field.some((side) => side.id === OLY_ID) || !olympics.field.some((side) => side.id === CONSTRUCT_ID)) {
   fail("the Olympic field is not the rolled side, the Construct, and six others");
@@ -460,7 +500,7 @@ else {
 const unit = PLAYERS.find((player) => isConstructed(player));
 if (!unit || draftOlympicPrime(startOlympicBuild(4, 0), unit.id).rosterIds.length !== 0) fail("the draft took a Construct unit");
 const reading = readOlympicSide(olympicRoster.rosterIds);
-if (!reading.ready || !reading.styleName || reading.humanSides !== 56 || !reading.line.includes("Construct") || !reading.line.includes("human sides")) {
+if (!reading.ready || !reading.styleName || reading.humanSides !== 60 || !reading.line.includes("Construct") || !reading.line.includes("human sides")) {
   fail(`olympic reading did not place the side (${reading.line})`);
 }
 const meetSeat = olympicMeetReading(olympics);

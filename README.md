@@ -1,6 +1,6 @@
 # Pantheon
 
-Pantheon is a fictional all-time world basketball championship. Fifty-two human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
+Pantheon is a fictional all-time world basketball championship. Sixty human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
 
 This repository is private. It stays private until the owner decides to publish. Do not flip the repository to public, and do not deploy a public site from this project, unless the owner makes that decision.
 
@@ -56,7 +56,7 @@ No FIBA quarter length, foul limit, or roster cap is used anywhere in the event.
 
 ## The field
 
-Eighteen countries that can fill a competitive all-time book, thirty-four American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
+Eighteen countries that can fill a competitive all-time book, thirty-eight American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
 
 Countries that cannot fill twenty-two competitive primes are not in the draw. Their best players chose a homeland house instead of carrying a weak national side. The Teams page lists every side.
 
@@ -76,7 +76,7 @@ After a game or a series, the players who just played can run six tiny games: Ho
 
 ## Comparing draws
 
-Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v10`. An older `pantheon-v9` save does not reopen, because the field changed. Rankings at `/rankings` list every human side and the Construct, and order them by power, series wins, point margin, finish, or country titles. Compare at `/compare` sets any two primes or any two sides beside each other.
+Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v11`. An older `pantheon-v10` save does not reopen, because the field changed. Rankings at `/rankings` list every human side and the Construct, and order them by power, series wins, point margin, finish, or country titles. Compare at `/compare` sets any two primes or any two sides beside each other.
 
 A series page lists every game, the running tally, and the series sheet. A game page has the line score, the night sheet, team shooting and true shooting, a short list of the plays that swung it, the full possession log, and the after-the-horn games. Player pages carry a game log, offensive and defensive boards, and clutch. Team pages list the opening five and every series. The look is a fantasy sci-fi floor. The games are NBA basketball, played at the prime on each card.
 
@@ -84,7 +84,7 @@ The Unbroken Year is a side floor at `/season`. It does not replace the champion
 
 Other side floors live at `/play`. Era Clash is one game between two rolled years. A series tonight is a best-of-seven between any two sides. The Lamp runs the three-point, dunk, and skills contests on demand. The Throne is an eight-team era bracket. King of the Hill keeps the winner on the floor. The Gauntlet is seven games up the field, ending at the Construct. The Decade Cup sorts primes by the decade on the card. The Open is a sixteen-side one-game bracket. Fortnight is a six-side round robin and a best-of-seven final. Survivor eliminates the heaviest loss each night. The Five is two drawn lineups and one game. They are exhibitions. They do not change the championship.
 
-The Olympics, at `/olympics`, opens on the same door as the Unbroken Year. It is a fantasy draft of twelve real primes already in the book, at most three from one nationality, and no Construct units. The page shows power, style, and where that card sits against the human field before the bracket. The meet is eight sides, every series first to four. The drafted side never enters the championship draw and does not write the country standings. That save is `pantheon-olympics-v1`, apart from `pantheon-v10`.
+The Olympics, at `/olympics`, opens on the same door as the Unbroken Year. It is a fantasy draft of twelve real primes already in the book, at most three from one nationality, and no Construct units. The page shows power, style, and where that card sits against the human field before the bracket. The meet is eight sides, every series first to four. The drafted side never enters the championship draw and does not write the country standings. That save is `pantheon-olympics-v2`, apart from `pantheon-v11`. A `pantheon-olympics-v1` draft does not reopen, because a few thin-seat primes left the book.
 
 Short nights on that hall do not call a full game. Shootaround is midrange, threes, and free throws. The Ladder is a free-throw elimination. Halfcourt is first to 11, one prime against another. The Cut is a five under an overall cap. The Streak is makes until a miss. The Glass is boards and blocks. The Closer is five late possessions after you name who. The Arc is five threes, one shooter from each decade. Trivia on the same hall is prime year, flag, opening teammates, the higher rating, and height or position. Nine questions a run. A miss shows the right name. None of it changes the championship.
 

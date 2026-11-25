@@ -107,9 +107,9 @@ Jens Kujawa|PF|6-10|1989|Germany|deep|standard|post|76|12|8|0|-|reb:76,shot:74|N
 Sven Schultze|PF|6-9|2005|Germany|deep|short|glue|76|12|16|0|-|reb:74,shot:72|A short seat under Dirk.
 `,
   atlr: `
-Pietro Aradori|SG|6-5|2015|Italy|deep|standard|wing|73|14|36|0|-|three:76
-Awudu Abass|SF|6-7|2018|Italy|deep|standard|slasher|73|14|16|0|-|ath:84,def:76|Born in Ghana. Represented Italy.
-Travis Diener|PG|6-1|2008|Italy|deep|standard|point|73|14|38|0|-|three:80,play:76|American-born. Represented Italy.
+Riccardo Pittis|PF|6-8|1997|Italy|deep|standard|wing|80|16|22|0|SF|shot:78,def:76,play:74|EuroLeague captain. The 1990s Italian prime.
+Roberto Brunamonti|PG|6-2|1983|Italy|deep|standard|point|79|16|8|0|-|play:84,def:76,shot:74|Italian national team point guard. The 1980s prime.
+Gianmarco Pozzecco|PG|6-1|2003|Italy|deep|standard|point|79|18|30|0|-|play:82,three:76,shot:76|EuroLeague point guard. The 2003 prime.
 Matteo Spagnolo|PG|6-3|2024|Italy|deep|short|point|72|14|34|0|-|play:74,ath:80|Rated on the prime already on record.
 `,
   grns: `

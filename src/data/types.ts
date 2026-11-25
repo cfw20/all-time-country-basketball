@@ -91,9 +91,21 @@ export interface BoxLine {
   ftm: number;
   fta: number;
   pm: number;
+  /** Personal fouls drawn. A technical is not one of these. */
+  drawn: number;
+  /** Personal technical fouls. Two ejects. */
+  tech: number;
+  /** Flagrant fouls. A flagrant 2 counts as two. Two ejects. */
+  flagrant: number;
   started: boolean;
   fouledOut: boolean;
   injured: boolean;
+  ejected: boolean;
+  /** technicals: two technicals. flagrant: flagrant 2 or a second flagrant. fouls: sixth personal. */
+  ejectReason?: "technicals" | "flagrant" | "fouls";
+  /** Did not dress. A one-game suspension from an earlier game in this series. */
+  suspended?: boolean;
+  suspendReason?: string;
 }
 
 export type PlayKind =

@@ -31,6 +31,9 @@ export function Leaders() {
         <Board title="Assists" rows={top(rows, (row) => row.ast / row.g)} value={(row) => one(row.ast, row.g)} />
         <Board title="Steals" rows={top(rows, (row) => row.stl / row.g)} value={(row) => one(row.stl, row.g)} />
         <Board title="Blocks" rows={top(rows, (row) => row.blk / row.g)} value={(row) => one(row.blk, row.g)} />
+        <Board title="Fouls" rows={top(rows, (row) => row.pf / row.g)} value={(row) => one(row.pf, row.g)} />
+        <Board title="Fouls drawn" rows={top(rows, (row) => row.drawn / row.g)} value={(row) => one(row.drawn, row.g)} />
+        <Board title="Technicals" rows={top(rows.filter((row) => row.tech > 0), (row) => row.tech)} value={(row) => String(row.tech)} />
         <Board title="True shooting" rows={top(rows.filter((row) => row.fga >= 25), (row) => ts(row))} value={(row) => trueShooting(row.pts, row.fga, row.fta)} detail={(row) => `${row.fga} fga`} />
         <Board title="Minutes" rows={top(rows, (row) => row.sec / row.g)} value={(row) => one(row.sec / 60, row.g)} />
       </div>

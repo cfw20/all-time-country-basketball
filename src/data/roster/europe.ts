@@ -71,14 +71,14 @@ Ivica Zubac|C|7-0|2024|Croatia|rotation|standard|rim|80|16|0|0|-|reb:86,def:80,s
 Dario Saric|PF|6-10|2018|Croatia|rotation|standard|stretch|79|18|34|0|-|play:76,three:76
 Ante Tomic|C|7-2|2014|Croatia|rotation|standard|post|78|16|4|0|-|play:74,reb:76
 Velimir Perasovic|SG|6-4|1995|Croatia|rotation|standard|shooter|77|18|36|0|-|three:78
-Gordan Giricek|SG|6-6|2004|Croatia|deep|standard|shooter|74|16|38|0|-|three:76
+Damir Mulaomerovic|PG|6-4|2001|Croatia|deep|standard|point|78|16|28|0|-|play:82,shot:76,three:74|Croatian national team point guard. The early-2000s prime.
 Roko Ukic|PG|6-5|2010|Croatia|deep|standard|point|74|16|28|0|-|play:78
 Zoran Planinic|SG|6-7|2006|Croatia|deep|standard|wing|73|14|30|0|-|ath:78
 Mario Hezonja|SG|6-8|2018|Croatia|deep|standard|slasher|73|16|36|0|SF|ath:84
 Stojko Vrankovic|C|7-2|1992|Croatia|deep|standard|rim|73|10|0|0|-|def:80,reb:72
 Zan Tabak|C|7-0|1996|Croatia|two-way|two-way|post|72|12|0|0|-|reb:74
 Arijan Komazec|SF|6-8|1994|Croatia|two-way|two-way|wing|74|14|24|0|-|shot:76
-Dragan Bender|PF|7-0|2018|Croatia|deep|ten-day|stretch|71|12|36|0|-|three:72
+Mario Kasun|C|7-0|2004|Croatia|deep|ten-day|post|76|14|2|0|-|reb:80,shot:74,ath:76|NBA center and the Croatian national team. A short seat.
 `,
   alps: `
 Luka Doncic|PG|6-7|2024|Slovenia|star|standard|creator|94|34|40|1|-|shot:86,three:82,play:96,reb:78,def:68,ath:74,ft:78,clutch:94
@@ -171,14 +171,14 @@ Nicolo Melli|PF|6-9|2019|Italy|rotation|standard|stretch|77|14|36|0|-|def:76,thr
 Luigi Datome|SF|6-8|2013|Italy|rotation|standard|stretch|76|16|40|0|-|three:80
 Gregor Fucka|PF|6-10|1998|Italy|rotation|standard|post|80|18|6|0|-|shot:78,reb:74|Born in Croatia. Represented Italy.
 Simone Fontecchio|SF|6-7|2023|Italy|rotation|standard|stretch|76|16|40|0|-|three:78
-Andrea Bargnani|PF|7-0|2011|Italy|rotation|standard|stretch|74|18|32|0|C|shot:76,three:72
+Andrea Bargnani|PF|7-0|2011|Italy|rotation|standard|stretch|78|18|32|0|C|shot:78,three:74|The 2011 scoring prime, about 21 a night. The defense keeps the rating here.
 Pierluigi Marzorati|PG|6-1|1982|Italy|deep|standard|point|80|16|8|0|-|play:86,def:78,shot:76|EuroLeague peak with Cantù. Rated for that prime, not an NBA translation.
 Daniel Hackett|PG|6-5|2016|Italy|deep|standard|point|75|14|28|0|-|play:80,def:74|American-born. Represented Italy.
 Gianluca Basile|SG|6-4|2003|Italy|deep|standard|shooter|80|18|36|0|-|three:78,shot:78|EuroLeague shooting guard. Olympic prime, not a projection.
 Achille Polonara|PF|6-8|2018|Italy|deep|standard|glue|74|12|32|0|-|def:76
-Amedeo Della Valle|SG|6-4|2016|Italy|two-way|two-way|shooter|72|14|44|0|-|
+Stefano Mancinelli|SF|6-8|2008|Italy|two-way|two-way|wing|76|14|28|0|PF|def:76,shot:74|EuroLeague forward. A two-way seat.
 Alessandro Gentile|SG|6-6|2015|Italy|two-way|two-way|slasher|73|16|28|0|-|
-Giacomo Galanda|PF|6-10|2001|Italy|deep|ten-day|glue|72|12|10|0|-|
+Denis Marconato|C|6-11|2003|Italy|deep|ten-day|post|77|14|2|0|-|reb:78,def:76,shot:74|Italian national team center. A short seat.
 `,
   crsc: `
 Alperen Sengun|C|6-11|2025|Turkey|star|standard|post|88|28|14|1|-|shot:84,play:80,reb:88,def:74,ath:76,ft:72|Rated on the prime already on record.
@@ -312,9 +312,9 @@ Yotam Halperin|SG|6-5|2008|Israel|rotation|standard|glue|75|14|30|0|-|play:78,de
 Tal Burstein|SG|6-6|2006|Israel|rotation|standard|wing|74|14|32|0|-|
 Nadav Henefeld|PF|6-7|1992|Israel|rotation|standard|defender|76|12|16|0|-|def:84,play:74
 Gal Mekel|PG|6-3|2014|Israel|rotation|standard|point|74|16|28|0|-|
-Tomer Ginat|PF|6-8|2022|Israel|deep|standard|glue|74|12|24|0|-|def:74
+Tal Brody|SG|6-2|1977|Israel|rotation|standard|shooter|82|22|8|0|PG|shot:82,play:78,ath:78,ft:80|Maccabi Tel Aviv. The 1977 European Cup prime, inside the window.
 Guy Pnini|SF|6-7|2010|Israel|deep|standard|wing|73|12|30|0|-|
-Yogev Ohayon|PG|6-2|2012|Israel|deep|standard|point|72|14|30|0|-|
+T.J. Leaf|PF|6-10|2018|Israel|deep|standard|stretch|76|16|28|0|-|shot:76,ath:78,three:72|Represented Israel. The 2018 prime already on record.
 Tanhum Cohen-Mintz|C|6-10|1978|Israel|deep|standard|post|76|14|0|0|-|reb:76,shot:74
 Tamir Blatt|PG|6-0|2021|Israel|two-way|two-way|point|73|14|36|0|-|
 Yam Madar|PG|6-3|2023|Israel|two-way|two-way|point|72|14|34|0|-|

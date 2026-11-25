@@ -3,25 +3,30 @@ import { formatSeed } from "../engine/rng";
 import { STAGE_LABELS } from "../engine/tournament";
 import { usePantheon } from "../state/store";
 
-const LINKS = [
-  ["/", "Floor"],
-  ["/standings", "Groups"],
+const PRIMARY = [
+  ["/", "Home"],
+  ["/rankings", "Rankings"],
+  ["/compare", "Compare"],
+  ["/teams", "Teams"],
+  ["/players", "Players"],
+  ["/play", "Play"],
+  ["/season", "Season"],
+  ["/olympics", "Olympics"],
+  ["/trials", "Trials"],
+  ["/rules", "Rules"],
+];
+
+const SECONDARY = [
+  ["/standings", "Standings"],
   ["/bracket", "Bracket"],
   ["/siege", "Siege"],
   ["/schedule", "Games"],
-  ["/teams", "Sides"],
-  ["/players", "Players"],
   ["/awards", "Honors"],
   ["/leaders", "Leaders"],
-  ["/rankings", "Ranks"],
-  ["/events", "Interval"],
   ["/atlas", "Atlas"],
   ["/rivalries", "Nights"],
+  ["/events", "Interval"],
   ["/news", "Wire"],
-  ["/trials", "Trials"],
-  ["/season", "Season"],
-  ["/play", "Play"],
-  ["/rules", "Rules"],
 ];
 
 export function Shell() {
@@ -107,12 +112,21 @@ export function Shell() {
             <h1>Pan<em>theon</em></h1>
           </span>
         </Link>
-        <nav className="nav">
-          {LINKS.map(([to, label]) => (
-            <NavLink key={to} to={to} end={to === "/"} className={({ isActive }) => (isActive ? "active" : "")}>
-              {label}
-            </NavLink>
-          ))}
+        <nav className="site-nav" aria-label="Pages">
+          <div className="nav-row">
+            {PRIMARY.map(([to, label]) => (
+              <NavLink key={to} to={to} end={to === "/"} className={({ isActive }) => (isActive ? "active" : "")}>
+                {label}
+              </NavLink>
+            ))}
+          </div>
+          <div className="nav-row secondary">
+            {SECONDARY.map(([to, label]) => (
+              <NavLink key={to} to={to} className={({ isActive }) => (isActive ? "active" : "")}>
+                {label}
+              </NavLink>
+            ))}
+          </div>
         </nav>
       </header>
       <Outlet />

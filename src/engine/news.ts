@@ -104,11 +104,30 @@ export function buildNews(input: {
             importance: 74,
           });
         }
-        if (line.fouledOut && (player.role === "star" || player.role === "starter")) {
+        if (line.suspended) {
+          push({
+            kicker: "Suspension",
+            title: `${player.name} is out`,
+            body: line.suspendReason ?? "Suspended for this game.",
+            gameId: game.id,
+            importance: 70,
+          });
+        }
+        if (line.ejectReason === "technicals" || line.ejectReason === "flagrant") {
+          push({
+            kicker: "Ejection",
+            title: `${player.name} ejected`,
+            body: line.ejectReason === "flagrant"
+              ? "Flagrant foul. Ejected for the night, and suspended for the next game of this series."
+              : "Two technical fouls. Ejected for the night.",
+            gameId: game.id,
+            importance: 76,
+          });
+        } else if (line.fouledOut && (player.role === "star" || player.role === "starter")) {
           push({
             kicker: "Fouls",
             title: `${player.name} fouls out`,
-            body: `Six fouls. NBA rules. The minute band behind them had to play.`,
+            body: `Sixth personal foul. Ejected. NBA rules. The minute band behind them had to play.`,
             gameId: game.id,
             importance: 54,
           });

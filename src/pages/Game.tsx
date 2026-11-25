@@ -8,7 +8,7 @@ import { castFromGame } from "../engine/after";
 import { periodName } from "../engine/names";
 import { findGame } from "../engine/tournament";
 import { meetStyles } from "../engine/style";
-import { clockMin, estimatePossessions, pct, shotLine, signed, trueShooting } from "../lib/format";
+import { clockMin, estimatePossessions, outLabel, outWhy, pct, shotLine, signed, trueShooting } from "../lib/format";
 import { styleForSide } from "../lib/styleFor";
 import { usePantheon } from "../state/store";
 
@@ -152,6 +152,9 @@ function NightSheet({ game }: { game: GameResult }) {
     { label: "Tov", away: String(away.tov), home: String(home.tov) },
     { label: "Stl", away: String(away.stl), home: String(home.stl) },
     { label: "Blk", away: String(away.blk), home: String(home.blk) },
+    { label: "Pf", away: String(away.pf), home: String(home.pf) },
+    { label: "Tech", away: String(away.tech), home: String(home.tech) },
+    { label: "Drawn", away: String(away.drawn), home: String(home.drawn) },
     { label: "Start", away: String(away.startPts), home: String(home.startPts) },
     { label: "Bench", away: String(away.benchPts), home: String(home.benchPts) },
   ];
@@ -262,6 +265,8 @@ interface BoxSum {
   blk: number;
   tov: number;
   pf: number;
+  tech: number;
+  drawn: number;
   fgm: number;
   fga: number;
   tpm: number;
@@ -284,6 +289,8 @@ function sumBox(lines: BoxLine[]): BoxSum {
       row.blk += line.blk;
       row.tov += line.tov;
       row.pf += line.pf;
+      row.tech += line.tech ?? 0;
+      row.drawn += line.drawn ?? 0;
       row.fgm += line.fgm;
       row.fga += line.fga;
       row.tpm += line.tpm;
@@ -295,7 +302,7 @@ function sumBox(lines: BoxLine[]): BoxSum {
       return row;
     },
     {
-      pts: 0, reb: 0, orb: 0, drb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0,
+      pts: 0, reb: 0, orb: 0, drb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0, tech: 0, drawn: 0,
       fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, startPts: 0, benchPts: 0,
     },
   );
@@ -328,24 +335,22 @@ function marksFromLog(game: GameResult): { paint: { away: number; home: number }
 }
 
 function troubleLine(game: GameResult): string | null {
-  const list = (flag: "fouledOut" | "injured") => {
-    const names: string[] = [];
-    const take = (lines: BoxLine[], teamId: string) => {
-      const team = sideName(game, teamId);
-      for (const line of lines) {
-        if (!line[flag]) continue;
-        names.push(`${playerById(line.playerId)?.name ?? line.playerId} (${team})`);
-      }
-    };
-    take(game.box.away, game.awayId);
-    take(game.box.home, game.homeId);
-    return names;
+  const names: { ejected: string[]; sat: string[]; hurt: string[] } = { ejected: [], sat: [], hurt: [] };
+  const take = (lines: BoxLine[], teamId: string) => {
+    const team = sideName(game, teamId);
+    for (const line of lines) {
+      const name = `${playerById(line.playerId)?.name ?? line.playerId} (${team})`;
+      if (line.suspended) names.sat.push(`${name}: ${outWhy(line)}`);
+      else if (line.ejected || line.fouledOut) names.ejected.push(`${name}, ${outWhy(line)}`);
+      if (line.injured) names.hurt.push(name);
+    }
   };
-  const out = list("fouledOut");
-  const hurt = list("injured");
+  take(game.box.away, game.awayId);
+  take(game.box.home, game.homeId);
   const parts: string[] = [];
-  if (out.length) parts.push(`Fouled out: ${out.join(", ")}.`);
-  if (hurt.length) parts.push(`Left hurt: ${hurt.join(", ")}.`);
+  if (names.sat.length) parts.push(`Suspended: ${names.sat.join("; ")}.`);
+  if (names.ejected.length) parts.push(`Ejected: ${names.ejected.join("; ")}.`);
+  if (names.hurt.length) parts.push(`Left hurt: ${names.hurt.join(", ")}.`);
   return parts.length ? parts.join(" ") : null;
 }
 
@@ -358,8 +363,8 @@ function Box({ title, lines }: { title: string; lines: BoxLine[] }) {
         <table>
           <thead>
             <tr>
-              {["Player", "Min", "Pts", "Reb", "Ast", "Stl", "Blk", "To", "Pf", "Fg", "3p", "Ft", "+/−"].map((label) => (
-                <th key={label} className={label === "Player" ? "" : "num"}>{label}</th>
+              {["Player", "Min", "Pts", "Reb", "Ast", "Stl", "Blk", "To", "Pf", "Tech", "Drawn", "Fg", "3p", "Ft", "+/−", "Out"].map((label) => (
+                <th key={label} className={label === "Player" || label === "Out" ? "" : "num"}>{label}</th>
               ))}
             </tr>
           </thead>
@@ -371,7 +376,7 @@ function Box({ title, lines }: { title: string; lines: BoxLine[] }) {
                   <td className="name-cell">
                     <Link to={`/players/${line.playerId}`}>{player?.name ?? line.playerId}</Link>
                     {line.started ? " · start" : ""}
-                    {line.fouledOut ? " · fouled out" : ""}
+                    {outWhy(line) ? ` · ${outWhy(line)}` : ""}
                     {line.injured ? " · left hurt" : ""}
                   </td>
                   <td className="num">{clockMin(line.sec)}</td>
@@ -382,10 +387,13 @@ function Box({ title, lines }: { title: string; lines: BoxLine[] }) {
                   <td className="num">{line.blk}</td>
                   <td className="num">{line.tov}</td>
                   <td className="num">{line.pf}</td>
+                  <td className="num">{line.tech ?? 0}</td>
+                  <td className="num">{line.drawn ?? 0}</td>
                   <td className="num">{shotLine(line.fgm, line.fga)}</td>
                   <td className="num">{shotLine(line.tpm, line.tpa)}</td>
                   <td className="num">{shotLine(line.ftm, line.fta)}</td>
                   <td className="num">{signed(line.pm)}</td>
+                  <td>{outLabel(line)}</td>
                 </tr>
               );
             })}

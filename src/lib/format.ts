@@ -27,6 +27,23 @@ export function estimatePossessions(fga: number, tov: number, fta: number, orb: 
   return fga + tov + 0.44 * fta - orb;
 }
 
+export function outLabel(line: { suspended?: boolean; ejectReason?: string; ejected?: boolean; fouledOut?: boolean }): string {
+  if (line.suspended) return "Suspended";
+  if (line.ejected || line.fouledOut) return "Ejected";
+  return "";
+}
+
+export function outWhy(line: { suspended?: boolean; suspendReason?: string; ejectReason?: string; fouledOut?: boolean; tech?: number; flagrant?: number }): string {
+  if (line.suspended) return line.suspendReason ?? "Suspended for this game";
+  if (line.ejectReason === "technicals") return "two technicals";
+  if (line.ejectReason === "flagrant") return "flagrant foul";
+  if (line.ejectReason === "fouls" || line.fouledOut) return "six fouls";
+  const parts: string[] = [];
+  if ((line.tech ?? 0) > 0) parts.push((line.tech ?? 0) === 1 ? "technical" : `${line.tech} technicals`);
+  if ((line.flagrant ?? 0) > 0) parts.push((line.flagrant ?? 0) === 1 ? "flagrant" : `${line.flagrant} flagrants`);
+  return parts.join(", ");
+}
+
 export function shotLine(made: number, att: number): string {
   return `${made}-${att}`;
 }

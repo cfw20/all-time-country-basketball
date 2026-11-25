@@ -1,5 +1,5 @@
 import { Link, useParams } from "react-router-dom";
-import { CONCORD_ID, sideById } from "../data";
+import { CONCORD_ID, playerById, sideById } from "../data";
 import { AfterNight } from "../components/AfterNight";
 import { Mark } from "../components/Marks";
 import { StylePanel } from "../components/StylePanel";
@@ -11,7 +11,7 @@ import { styleForSide, styleKicker } from "../lib/styleFor";
 import { findSeries } from "../engine/tournament";
 import { pct, shotLine } from "../lib/format";
 import { usePantheon } from "../state/store";
-import type { SeriesResult } from "../data/types";
+import type { BoxLine, SeriesResult } from "../data/types";
 
 export function SeriesPage() {
   const { id } = useParams();
@@ -105,6 +105,7 @@ export function SeriesPage() {
         </section>
       ) : null}
       <SeriesSheet series={series} />
+      <Discipline series={series} />
       <p className="note">
         The better power seed is listed at home. Games 1, 2, 5, and 7 use that card. Games 3, 4, and 6 flip it. The floor stays neutral either way. The series ends when one side wins four.
       </p>
@@ -202,6 +203,62 @@ function SeriesSheet({ series }: { series: SeriesResult }) {
         <p>{awayName} FG {shotLine(shot.away.fgm, shot.away.fga)} ({pct(shot.away.fgm, shot.away.fga)}) · 3P {shotLine(shot.away.tpm, shot.away.tpa)} ({pct(shot.away.tpm, shot.away.tpa)}) · FT {shotLine(shot.away.ftm, shot.away.fta)} ({pct(shot.away.ftm, shot.away.fta)})</p>
         <p>{homeName} FG {shotLine(shot.home.fgm, shot.home.fga)} ({pct(shot.home.fgm, shot.home.fga)}) · 3P {shotLine(shot.home.tpm, shot.home.tpa)} ({pct(shot.home.tpm, shot.home.tpa)}) · FT {shotLine(shot.home.ftm, shot.home.fta)} ({pct(shot.home.ftm, shot.home.fta)})</p>
       </div>
+    </section>
+  );
+}
+
+function Discipline({ series }: { series: SeriesResult }) {
+  const rows: { game: string; gameId: string; name: string; id: string; status: string; why: string }[] = [];
+  series.games.forEach((game, index) => {
+    const take = (lines: BoxLine[]) => {
+      for (const line of lines) {
+        const tech = line.tech ?? 0;
+        const flagrant = line.flagrant ?? 0;
+        if (!line.suspended && !line.ejected && !line.fouledOut && tech === 0 && flagrant === 0) continue;
+        const why = line.suspended
+          ? line.suspendReason ?? "Suspended for this game"
+          : line.ejectReason === "technicals"
+            ? "Two technicals. Ejected."
+            : line.ejectReason === "flagrant"
+              ? "Flagrant foul. Ejected. Suspended for the next game of this series."
+              : line.ejectReason === "fouls" || line.fouledOut
+                ? "Sixth personal foul. Ejected."
+                : [tech ? `${tech} technical${tech === 1 ? "" : "s"}` : "", flagrant ? `${flagrant} flagrant` : ""].filter(Boolean).join(", ");
+        rows.push({
+          game: `Game ${index + 1}`,
+          gameId: game.id,
+          name: playerById(line.playerId)?.name ?? line.playerId,
+          id: line.playerId,
+          status: line.suspended ? "Suspended" : line.ejected || line.fouledOut ? "Ejected" : "Played",
+          why,
+        });
+      }
+    };
+    take(game.box.away);
+    take(game.box.home);
+  });
+  return (
+    <section className="section">
+      <div className="section-head"><h3>Discipline</h3><span className="quiet">Fouls, technicals, ejections, suspensions</span></div>
+      {rows.length === 0 ? <p className="empty">No technicals, ejections, or suspensions in this series.</p> : (
+        <div className="panel" style={{ overflowX: "auto" }}>
+          <table>
+            <thead>
+              <tr><th>Game</th><th>Player</th><th>Status</th><th>Why</th></tr>
+            </thead>
+            <tbody>
+              {rows.map((row) => (
+                <tr key={`${row.gameId}-${row.id}-${row.status}`}>
+                  <td><Link to={`/games/${row.gameId}`}>{row.game}</Link></td>
+                  <td><Link to={`/players/${row.id}`}>{row.name}</Link></td>
+                  <td>{row.status}</td>
+                  <td>{row.why}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
+      )}
     </section>
   );
 }

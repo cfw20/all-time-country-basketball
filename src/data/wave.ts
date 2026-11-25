@@ -127,6 +127,54 @@ export const WAVE_TEAMS: Team[] = [
     "Johnny Moore, Bob Verga, John Brisker, Jayson Williams, and Elmore Smith. The last American cut: assists, ABA scoring, and a rim that still matters. Not a pile of fillers.",
     1.0,
   ),
+  house(
+    "trns",
+    35,
+    "The Transept",
+    "TRN",
+    "#f0a7b5",
+    "#6e2c44",
+    "diamond",
+    "The cross room still scores.",
+    "Rickey Green, John Johnson, Herb Williams, Rex Chapman, and Charles Smith. All-Star and 20-point primes the houses above them never minuted. A scoring book, in the stronger overflow band.",
+    1.02,
+  ),
+  house(
+    "cler",
+    36,
+    "The Clerestory",
+    "CLR",
+    "#9fd6ff",
+    "#1d3f5c",
+    "ring",
+    "Light from the high windows.",
+    "Brandin Podziemski, Payton Pritchard, Christian Braun, Seth Curry, and Dorian Finney-Smith, rated on primes already on record. A modern wing book the mountain never found a night for.",
+    1.03,
+  ),
+  house(
+    "ambl",
+    37,
+    "The Ambulatory",
+    "AMB",
+    "#8fd0c6",
+    "#1d4f4a",
+    "shield",
+    "The walk around the altar.",
+    "Derek Fisher, Hubert Davis, Jared Dudley, Brandon Bass, and Delonte West. Closers and connectors from the title years, on a house that can play a series.",
+    1.0,
+  ),
+  house(
+    "kyst",
+    38,
+    "The Keystone",
+    "KYS",
+    "#e7c27a",
+    "#6a4a16",
+    "arch",
+    "The stone that locks the arch.",
+    "T.R. Dunn, Dwight Jones, Kyle Macy, Dave Meyers, and Dave Corzine. Defenders and double-figure primes from 1976 through 1986. The arch holds.",
+    0.99,
+  ),
 ];
 
 export const WAVE_ROSTERS: Record<string, string> = {
@@ -321,5 +369,101 @@ Bryon Russell|SF|6-7|1998|United States|deep|standard|defender|78|12|32|0|-|def:
 Lindsey Hunter|PG|6-2|2004|United States|two-way|two-way|defender|78|12|32|0|-|def:82,ath:78|Defensive guard. The 2004 prime.
 Billy Keller|SG|5-10|1973|United States|two-way|two-way|shooter|78|14|20|0|-|shot:78,ft:84|ABA shooter on the Pacers champions.
 Kent Benson|C|6-10|1981|United States|deep|ten-day|post|77|12|2|0|-|reb:76,def:74|Bucks center. A short seat.
+`,
+  trns: `
+Rickey Green|PG|6-2|1984|United States|star|standard|point|84|22|12|1|-|play:88,shot:80,ath:84,ft:84|All-Star point guard in 1984.
+John Johnson|SF|6-7|1972|United States|star|standard|wing|84|22|8|1|PF|shot:80,play:82,reb:74|Seattle forward. All-Star in 1971 and 1972.
+Herb Williams|C|6-10|1986|United States|star|standard|post|84|24|4|1|PF|shot:80,reb:84,def:80|The 1986 scoring prime, about 20 a night.
+Rex Chapman|SG|6-4|1994|United States|star|standard|shooter|83|26|28|1|-|shot:82,ath:84,ft:82|The Charlotte scoring prime.
+Charles Smith|PF|6-10|1992|United States|star|standard|post|83|24|8|1|-|shot:82,ath:80,reb:76|Clippers forward. The 1992 scoring prime, before the Knicks years.
+Derek Smith|SG|6-6|1985|United States|starter|standard|slasher|83|26|8|0|SF|shot:84,ath:84|The 1985 Clippers scoring prime, before the knee.
+Mike Gminski|C|6-11|1985|United States|starter|standard|post|82|20|4|0|-|shot:80,reb:82,def:74|Nets center. The mid-1980s prime.
+Johnny Dawkins|PG|6-2|1987|United States|starter|standard|point|82|22|16|0|-|play:84,shot:78,ath:82|Spurs point guard. The 1987 prime.
+Greg Ballard|SF|6-7|1982|United States|starter|standard|wing|82|22|8|0|PF|shot:80,reb:80|Bullets forward. The 1982 prime, about 18 and 8.
+Lewis Lloyd|SG|6-6|1986|United States|starter|standard|slasher|82|26|10|0|-|shot:82,ath:84|Rockets scoring guard. The 1986 prime.
+Kermit Washington|PF|6-8|1978|United States|rotation|standard|post|82|16|2|0|-|reb:88,def:84,shot:74|All-defense rebounder. The 1978 prime.
+Dave Robisch|C|6-10|1976|United States|rotation|standard|post|81|18|4|0|PF|shot:78,reb:82|ABA and NBA double-double big. The 1976 prime.
+Kurt Thomas|PF|6-9|2001|United States|rotation|standard|post|81|16|6|0|C|reb:84,def:80,shot:74|Knicks glass. The 2001 prime.
+Ron Anderson|SF|6-7|1989|United States|rotation|standard|wing|80|20|12|0|-|shot:80,ath:78|Sixers scoring forward. The 1989 prime.
+Kevin Grevey|SG|6-5|1978|United States|rotation|standard|shooter|80|20|10|0|SF|shot:80,ft:82|Bullets guard. The 1978 prime.
+Walter Dukes|C|7-0|1958|United States|deep|standard|post|80|16|0|0|-|reb:88,def:74,shot:72|Rebounder. The 1958 prime is inside the window.
+Jim Brewer|PF|6-9|1976|United States|deep|standard|defender|79|12|2|0|C|def:82,reb:80|Cavaliers forward. The 1976 prime.
+Leroy Ellis|C|6-10|1969|United States|deep|standard|post|79|14|2|0|-|reb:80,shot:74|Lakers and Bullets center. The late-1960s prime.
+Mark Olberding|SF|6-9|1979|United States|deep|standard|wing|80|16|6|0|PF|shot:78,reb:76|Spurs forward. The 1979 prime.
+Allen Leavell|PG|6-1|1983|United States|two-way|two-way|point|79|16|12|0|-|play:82,ath:80|Rockets point guard. A two-way seat.
+Wayne Cooper|C|6-10|1986|United States|two-way|two-way|rim|79|12|0|0|-|reb:80,def:80|Nuggets center. A two-way seat.
+Mitchell Wiggins|SG|6-4|1986|United States|deep|ten-day|wing|78|18|16|0|-|shot:78,ath:80|Rockets wing. A short seat.
+`,
+  cler: `
+Brandin Podziemski|SG|6-5|2025|United States|star|standard|wing|84|22|36|1|PG|play:82,shot:80,def:78,reb:74|The 2025 two-way guard prime already on record.
+Payton Pritchard|PG|6-1|2025|United States|star|standard|point|83|22|42|1|-|three:88,shot:82,play:80|Sixth Man prime already on record. The lead guard of this house.
+Christian Braun|SG|6-6|2025|United States|star|standard|wing|83|22|34|1|SF|shot:82,ath:84,def:78|The 2025 starter prime already on record.
+Seth Curry|SG|6-2|2021|United States|star|standard|shooter|82|20|48|1|-|three:90,shot:84,ft:86|The 2021 shooting prime.
+Dorian Finney-Smith|SF|6-7|2022|United States|star|standard|wing|82|16|40|1|PF|def:82,three:80,reb:72|The 2022 corner-and-defense prime.
+Markelle Fultz|PG|6-4|2024|United States|starter|standard|point|82|20|28|0|-|play:84,ath:82,def:76|The 2024 Magic prime already on record.
+Max Strus|SF|6-5|2023|United States|starter|standard|shooter|81|18|44|0|SG|three:86,shot:78|The 2023 shooting prime.
+Larry Nance Jr.|PF|6-8|2022|United States|starter|standard|post|81|16|28|0|C|def:80,reb:80,ath:82|The 2022 two-way forward prime.
+Malik Beasley|SG|6-4|2024|United States|starter|standard|shooter|81|22|44|0|-|three:86,shot:80|The 2024 scoring guard prime.
+De'Anthony Melton|SG|6-2|2023|United States|starter|standard|defender|81|16|38|0|PG|def:86,ath:82,three:78|The 2023 defensive guard prime.
+Caleb Martin|SF|6-5|2023|United States|rotation|standard|wing|81|18|36|0|SG|def:80,ath:84,three:76|The 2023 two-way wing prime.
+Royce O'Neale|SF|6-6|2022|United States|rotation|standard|wing|80|14|40|0|PF|def:80,three:80,reb:72|The 2022 corner forward prime.
+Miles McBride|PG|6-1|2025|United States|rotation|standard|point|80|16|40|0|-|def:82,three:82,play:76|The 2025 backup-guard prime already on record.
+Haywood Highsmith|SF|6-7|2024|United States|deep|standard|defender|79|12|38|0|PF|def:82,ath:80,three:76|The 2024 defensive wing prime.
+Julian Champagnie|SF|6-7|2025|United States|deep|standard|shooter|80|16|42|0|-|three:84,shot:78|The 2025 shooting prime already on record.
+Jaylin Williams|PF|6-9|2025|United States|deep|standard|post|80|12|28|0|C|def:82,reb:80,three:74|Oklahoma City forward. The 2025 prime already on record. Not Jalen Williams.
+Kevon Looney|C|6-9|2022|United States|deep|standard|rim|80|12|4|0|PF|reb:84,def:80,shot:74|The 2022 glass prime.
+Gary Payton II|SG|6-3|2022|United States|deep|standard|defender|80|12|36|0|SF|def:88,ath:86|The 2022 defensive guard prime.
+Moses Moody|SG|6-5|2024|United States|deep|standard|wing|79|14|38|0|SF|def:78,three:78,ath:80|The 2024 wing prime already on record.
+Josh Richardson|SG|6-5|2021|United States|two-way|two-way|wing|79|16|36|0|SF|def:80,three:76|The 2021 two-way guard prime.
+Nick Richards|C|7-0|2024|United States|two-way|two-way|rim|78|14|0|0|-|reb:80,def:78,ath:80|The 2024 rim prime. A two-way seat.
+Cody Zeller|C|6-11|2019|United States|deep|ten-day|post|78|14|8|0|-|reb:78,shot:74|The 2019 center prime. A short seat.
+`,
+  ambl: `
+Derek Fisher|PG|6-1|2009|United States|star|standard|point|81|16|32|1|-|shot:78,three:76,def:78,clutch:86|The 2009 closer prime.
+Hubert Davis|SG|6-5|1997|United States|star|standard|shooter|80|18|40|1|-|three:84,shot:80,ft:84|Knicks shooter. The 1997 prime.
+Jared Dudley|SF|6-7|2016|United States|star|standard|wing|80|14|40|1|PF|three:80,def:76,play:74|The 2016 connector prime.
+Brandon Bass|C|6-8|2013|United States|star|standard|post|81|16|4|1|PF|shot:78,reb:78,def:76|Celtics big. The 2013 prime.
+Delonte West|SG|6-4|2008|United States|star|standard|wing|80|18|32|1|PG|shot:78,def:78,play:76|The 2008 Cavaliers prime.
+Brian Shaw|PG|6-6|1995|United States|starter|standard|point|80|16|28|0|-|play:82,def:76,shot:74|The 1995 connector prime.
+Chucky Atkins|PG|5-11|2003|United States|starter|standard|point|79|18|36|0|-|shot:78,three:76,play:76|The 2003 scoring-guard prime.
+Travis Best|PG|5-11|2001|United States|starter|standard|point|79|18|30|0|-|play:80,shot:76,ath:80|Pacers point guard. The 2001 prime.
+Gerald Henderson|SG|6-2|1985|United States|starter|standard|shooter|80|18|12|0|-|shot:80,def:78|The elder. Celtics and SuperSonics guard. Not Gerald Henderson Jr.
+Tony Delk|SG|6-1|2001|United States|starter|standard|shooter|80|20|36|0|PG|shot:80,three:78,ath:78|The 2001 scoring prime.
+Antonio Daniels|SG|6-4|2005|United States|rotation|standard|wing|79|16|30|0|PG|play:80,def:76,shot:76|The 2005 connector prime.
+Malik Rose|PF|6-7|2004|United States|rotation|standard|post|79|14|8|0|C|reb:78,def:78,shot:74|Spurs forward. The 2004 prime.
+Othella Harrington|PF|6-9|2001|United States|rotation|standard|post|78|16|6|0|C|reb:78,shot:76|The 2001 Knicks prime.
+Matt Bullard|PF|6-10|1994|United States|rotation|standard|stretch|78|14|40|0|C|three:80,shot:76|Rockets stretch big. The 1994 prime.
+Duane Ferrell|SF|6-7|1992|United States|rotation|standard|wing|78|16|16|0|-|shot:78,ath:80|Hawks wing. The 1992 prime.
+Foots Walker|PG|6-1|1976|United States|deep|standard|point|78|16|8|0|-|play:80,def:76|James Walker. Cavaliers point guard. The 1976 prime.
+Chris Childs|PG|6-3|1998|United States|deep|standard|point|78|14|28|0|-|def:80,play:78,shot:74|Knicks point guard. The 1998 prime.
+Steve Blake|PG|6-3|2012|United States|deep|standard|point|78|14|36|0|-|play:80,three:78|The 2012 connector prime.
+Greg Anthony|PG|6-0|1995|United States|deep|standard|point|78|16|24|0|-|play:78,def:78,ath:78|Knicks point guard. The 1995 prime.
+Charlie Ward|PG|6-2|1999|United States|deep|ten-day|point|77|12|28|0|-|play:78,def:74|Knicks point guard. A short seat.
+Reggie Bullock|SF|6-6|2021|United States|two-way|two-way|shooter|78|12|42|0|-|three:82,def:76|The 2021 corner wing. A two-way seat.
+Nerlens Noel|C|6-11|2021|United States|two-way|two-way|rim|78|12|0|0|-|def:82,reb:80,ath:82|The 2021 rim prime. A two-way seat.
+`,
+  kyst: `
+T.R. Dunn|SG|6-4|1984|United States|star|standard|defender|80|12|8|1|SF|def:88,ath:80,shot:70|Nuggets stopper. The 1984 prime.
+Dwight Jones|PF|6-10|1978|United States|star|standard|post|80|16|4|1|C|reb:82,shot:76,def:76|Hawks and Bulls forward. The 1978 prime.
+Kyle Macy|PG|6-3|1982|United States|star|standard|shooter|80|16|24|1|-|shot:80,ft:90,play:78|Suns shooter. The 1982 prime.
+Dave Meyers|SF|6-8|1976|United States|star|standard|wing|79|18|8|1|PF|shot:78,reb:76|Bucks forward. The 1976 prime.
+Dave Corzine|C|6-11|1985|United States|star|standard|post|79|16|4|1|-|reb:80,shot:74,def:74|Bulls center. The 1985 prime.
+Ernie Grunfeld|SG|6-6|1979|United States|starter|standard|wing|79|18|10|0|SF|shot:78,reb:72|The 1979 scoring prime. Represented the United States.
+Sonny Parker|SG|6-6|1978|United States|starter|standard|wing|79|16|8|0|SF|shot:78,def:76,ath:78|Warriors wing. The 1978 prime.
+Roy Hinson|PF|6-9|1986|United States|starter|standard|post|79|18|6|0|C|shot:78,reb:76,ath:80|Cavaliers forward. The 1986 prime.
+Allan Bristow|SF|6-7|1976|United States|starter|standard|wing|79|16|8|0|PF|shot:76,play:76,reb:74|Spurs forward. The 1976 prime.
+Darwin Cook|SG|6-3|1984|United States|starter|standard|shooter|78|18|16|0|-|shot:78,ath:78|Nets guard. The 1984 prime.
+Mike Evans|SG|6-1|1984|United States|rotation|standard|shooter|78|16|12|0|PG|shot:78,play:74|Nuggets guard. The 1984 prime.
+Mike O'Koren|SF|6-7|1983|United States|rotation|standard|wing|78|16|10|0|-|shot:76,ath:78,def:74|Nets forward. The 1983 prime.
+Joe Bryant|SF|6-9|1978|United States|rotation|standard|wing|78|18|8|0|PF|shot:78,ath:80|Jellybean Bryant. The 1978 Clippers prime.
+Pat Cummings|PF|6-9|1984|United States|rotation|standard|post|78|16|6|0|C|reb:78,shot:74|Knicks and Bucks forward. The 1984 prime.
+Cliff Robinson|PF|6-9|1987|United States|rotation|standard|post|78|16|8|0|C|shot:76,reb:76|The 76ers forward. Not Clifford Robinson of the Trail Blazers.
+Bob Weiss|PG|6-2|1968|United States|deep|standard|point|78|14|8|0|-|play:80,shot:74|The late-1960s point guard.
+Walt Wesley|C|6-11|1970|United States|deep|standard|post|78|14|2|0|-|reb:80,shot:72|Cavaliers center. The 1970 prime.
+Quintin Dailey|SG|6-3|1984|United States|deep|standard|slasher|78|20|12|0|-|shot:78,ath:80|Bulls guard. The 1984 prime.
+Gene Banks|SF|6-7|1984|United States|deep|standard|wing|78|16|10|0|PF|shot:76,reb:74|Spurs and Bulls forward. The 1984 prime.
+Sidney Green|PF|6-9|1986|United States|two-way|two-way|post|78|14|6|0|C|reb:78,shot:74|The 1986 big. A two-way seat.
+Stu Lantz|SG|6-3|1973|United States|two-way|two-way|shooter|78|16|10|0|-|shot:78,ath:76|Rockets guard. The 1973 prime. A two-way seat.
+Bill Hanzlik|SF|6-7|1986|United States|deep|ten-day|defender|78|10|12|0|SG|def:84,ath:78|Nuggets stopper. A short seat.
 `,
 };

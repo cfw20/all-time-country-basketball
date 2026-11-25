@@ -20,6 +20,9 @@ export interface Tot {
   ftm: number;
   fta: number;
   pm: number;
+  drawn: number;
+  tech: number;
+  flagrant: number;
   g: number;
   gs: number;
 }
@@ -34,11 +37,12 @@ export function tally(games: GameResult[], includeExhibition = false): Map<strin
     ] as const;
     for (const [teamId, lines] of sides) {
       for (const line of lines) {
+        if (line.suspended && line.sec <= 0) continue;
         const row = map.get(line.playerId) ?? {
           playerId: line.playerId,
           teamId,
           sec: 0, pts: 0, reb: 0, orb: 0, drb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0,
-          fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pm: 0, g: 0, gs: 0,
+          fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pm: 0, drawn: 0, tech: 0, flagrant: 0, g: 0, gs: 0,
         };
         row.sec += line.sec;
         row.pts += line.pts;
@@ -57,6 +61,9 @@ export function tally(games: GameResult[], includeExhibition = false): Map<strin
         row.ftm += line.ftm;
         row.fta += line.fta;
         row.pm += line.pm;
+        row.drawn += line.drawn ?? 0;
+        row.tech += line.tech ?? 0;
+        row.flagrant += line.flagrant ?? 0;
         row.g += 1;
         if (line.started) row.gs += 1;
         map.set(line.playerId, row);
