@@ -19,6 +19,7 @@ const LINKS = [
   ["/news", "Wire"],
   ["/trials", "Trials"],
   ["/season", "Season"],
+  ["/play", "Play"],
   ["/rules", "Rules"],
 ];
 

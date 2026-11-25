@@ -21,40 +21,34 @@ import {
   watchNight,
   yearReady,
   yearUnlock,
+  honorFor,
+  type Inscription,
   type SeasonNight,
   type YearRun,
 } from "../engine/season";
 import { usePantheon } from "../state/store";
+import { loadYear, saveYear, withFiledYear, type BestYear, type YearSave } from "../state/yearBook";
 
-const YEAR_KEY = "pantheon-year-v1";
 const POSITIONS: Pos[] = ["PG", "SG", "SF", "PF", "C"];
-
-interface BestYear {
-  wins: number;
-  losses: number;
-  seed: number;
-}
-
-interface YearSave {
-  run: YearRun | null;
-  best: BestYear | null;
-  starts: number;
-}
 
 export function Season() {
   const { trials, tournament } = usePantheon();
   const unlock = yearUnlock(trials);
-  const [saved, setSaved] = useState<YearSave>(() => readYear());
+  const [saved, setSaved] = useState<YearSave>(() => loadYear());
   const [note, setNote] = useState("");
   const [running, setRunning] = useState(false);
   const [watch, setWatch] = useState<number | null>(null);
   const nightRef = useRef<HTMLElement>(null);
 
   useEffect(() => {
-    localStorage.setItem(YEAR_KEY, JSON.stringify(saved));
+    saveYear(saved);
   }, [saved]);
 
   const run = saved.run;
+  const filedWins = run?.nights?.filter((night) => night.win).length ?? -1;
+  useEffect(() => {
+    setSaved((prev) => withFiledYear(prev));
+  }, [filedWins, run?.seed]);
   const game = useMemo(() => (run && watch !== null ? watchNight(run, watch) : null), [run, watch]);
 
   useEffect(() => {
@@ -73,7 +67,7 @@ export function Season() {
     const seed = mixSeed(tournament.seed, `unbroken-${starts}`) || starts;
     setNote("");
     setWatch(null);
-    setSaved({ ...saved, starts, run: startYear(seed) });
+    setSaved({ ...saved, starts, relic: null, run: startYear(seed, saved.relic) });
   }
 
   function fold() {
@@ -138,14 +132,17 @@ export function Season() {
         <p className="lede">
           Build The Unbroken from rolled era cards, then play an 82-game NBA regular season. The goal is a year that never loses. Humans are real primes. The country championship stays where it is.
         </p>
+        {saved.crown ? <p className="scoreline">An Unbroken Year is cut into this browser.</p> : null}
         {saved.best ? (
           <p className="scoreline">Best year {saved.best.wins}–{saved.best.losses} · seed {formatSeed(saved.best.seed)}</p>
         ) : (
           <p className="scoreline">No year in the book yet.</p>
         )}
+        {saved.relic ? <RelicNote relicId={saved.relic.honorId} gilded={saved.relic.gildedOpen} /> : null}
         <div className="filters">
-          <button className="solid" type="button" onClick={openYear}>Open a year</button>
+          <button className="solid" type="button" onClick={openYear}>{saved.relic ? "Open a year with the relic" : "Open a year"}</button>
         </div>
+        <Vault rows={saved.vault} />
       </main>
     );
   }
@@ -158,18 +155,8 @@ export function Season() {
       <main className="page" data-floor="unbroken" data-state="played">
         <p className="kicker">The Unbroken · seed {formatSeed(run.seed)}</p>
         <h2 className="display" style={{ fontSize: 68 }}>{perfect ? "82–0" : `${record.wins}–${record.losses}`}</h2>
-        <p className="lede">
-          {perfect
-            ? "The year never broke. Eighty-two nights, and The Unbroken won every one."
-            : "Gold is a win. Rose is a loss. Open a night for the line score. One loss can be played again."}
-        </p>
-        {perfect ? (
-          <div className="panel year-seal">
-            <span className="tag">Unbroken</span>
-            <h3 className="display" style={{ fontSize: 42 }}>The year held.</h3>
-            <p>A regular season with no loss. The country championship is still the main floor.</p>
-          </div>
-        ) : null}
+        <HonorBlock wins={record.wins} losses={record.losses} rosterIds={run.rosterIds} nights={run.nights} relicId={saved.relic?.honorId ?? null} />
+        <p className="quiet">Gold is a win. Rose is a loss. Open a night for the line score. One loss can be played again.</p>
         {saved.best ? <p className="scoreline">Best year in this browser {saved.best.wins}–{saved.best.losses}</p> : null}
         <div className="pips" role="list">
           {run.nights.map((item, index) => (
@@ -217,8 +204,9 @@ export function Season() {
       <p className="kicker">The Unbroken · seed {formatSeed(run.seed)} · {run.rosterIds.length}/{ROSTER_SIZE}</p>
       <h2 className="display" style={{ fontSize: 64 }}>Build the year</h2>
       <p className="lede">
-        Each roll is an era and a franchise. The names are real teammates from that season, shown in the prime already in the book. Take one. A tilted roll, or a gilded one, opens a myth year.
+        Each roll is an era and a franchise. The names are real teammates from that season, shown in the prime already in the book. Take one. Seventy wins leaves a relic for the next year. Eighty-two cuts this roster into the book.
       </p>
+      {run.openedWith ? <RelicNote relicId={run.openedWith} gilded={Boolean(run.current?.gilded)} /> : null}
       {saved.best ? <p className="scoreline">Best year {saved.best.wins}–{saved.best.losses}</p> : null}
       <ChargeRow run={run} />
       {note ? <p className="scoreline">{note}</p> : null}
@@ -469,62 +457,56 @@ function betterYear(current: BestYear | null, next: BestYear): BestYear {
   return next.losses < current.losses ? next : current;
 }
 
-function readYear(): YearSave {
-  try {
-    const raw = localStorage.getItem(YEAR_KEY);
-    if (!raw) return { run: null, best: null, starts: 0 };
-    const parsed = JSON.parse(raw) as Partial<YearSave>;
-    return {
-      run: validRun(parsed.run),
-      best: validBest(parsed.best),
-      starts: typeof parsed.starts === "number" ? parsed.starts : 0,
-    };
-  } catch {
-    return { run: null, best: null, starts: 0 };
-  }
+function HonorBlock({ wins, losses, rosterIds, nights, relicId }: { wins: number; losses: number; rosterIds: string[]; nights: SeasonNight[]; relicId: string | null }) {
+  const honor = honorFor(wins);
+  const names = rosterIds.map((id) => playerById(id)?.name).filter((name): name is string => Boolean(name));
+  const loss = nights.find((night) => !night.win);
+  return (
+    <section className={`honor honor-${honor.id}`} data-honor={honor.id}>
+      <p className="kicker">{honor.kicker}</p>
+      <h3 className="display" style={{ fontSize: honor.id === "unbroken" ? 76 : 48 }}>{honor.title}</h3>
+      <p>{honor.line}</p>
+      {loss && wins < 82 ? <p>The year broke on night {loss.n}, {loss.us}–{loss.them}, against {loss.opponent}.</p> : null}
+      {wins >= 75 ? (
+        <div className="honor-names">
+          {names.map((name) => <span key={name}>{name}</span>)}
+        </div>
+      ) : null}
+      {honor.relic ? <p>{relicId === honor.id ? `The ${honor.title} relic travels with the next year.` : "The book keeps the stronger relic already waiting."}</p> : null}
+      <p className="quiet">{wins}–{losses}</p>
+    </section>
+  );
 }
 
-function validBest(best: BestYear | null | undefined): BestYear | null {
-  if (!best || typeof best.wins !== "number" || typeof best.losses !== "number") return null;
-  return { wins: best.wins, losses: best.losses, seed: best.seed >>> 0 };
+function RelicNote({ relicId, gilded }: { relicId: string; gilded: boolean }) {
+  const honor = honorFor(relicId === "unbroken" ? 82 : relicId === "breath" ? 81 : relicId === "door" ? 78 : relicId === "deep" ? 75 : 70);
+  return (
+    <p className="scoreline">
+      {honor.title} is awake.{gilded ? " The first card can open as a myth year." : ""} {honor.line}
+    </p>
+  );
 }
 
-function validRun(run: YearRun | null | undefined): YearRun | null {
-  if (!run || typeof run.seed !== "number" || !Array.isArray(run.rosterIds) || !run.charges) return null;
-  const rosterIds = run.rosterIds.filter((id) => typeof id === "string" && playerById(id));
-  let current = run.current;
-  if (current) {
-    try {
-      eraCard(current.cardId);
-    } catch {
-      current = null;
-    }
-  }
-  return {
-    seed: run.seed >>> 0,
-    rosterIds,
-    nonce: run.nonce || 1,
-    current,
-    picksOnCard: run.picksOnCard || 0,
-    memoryIds: Array.isArray(run.memoryIds) ? run.memoryIds.filter((id) => typeof id === "string" && playerById(id) && !rosterIds.includes(id)) : [],
-    charges: {
-      reroll: num(run.charges.reroll),
-      gilded: num(run.charges.gilded),
-      double: num(run.charges.double),
-      position: num(run.charges.position),
-      recall: num(run.charges.recall),
-      banner: num(run.charges.banner),
-    },
-    doubleArmed: Boolean(run.doubleArmed),
-    nights: Array.isArray(run.nights) ? run.nights.filter(validNight) : null,
-    bannerUsed: Boolean(run.bannerUsed),
-  };
-}
-
-function validNight(night: SeasonNight): boolean {
-  return Boolean(night && typeof night.n === "number" && typeof night.cardId === "string" && typeof night.us === "number");
-}
-
-function num(value: number): number {
-  return Number.isFinite(value) ? Math.max(0, value) : 0;
+function Vault({ rows }: { rows: Inscription[] }) {
+  if (rows.length === 0) return null;
+  return (
+    <section className="section">
+      <div className="section-head">
+        <h3>Years cut into the book</h3>
+      </div>
+      <div className="team-grid">
+        {rows.slice(0, 6).map((row) => {
+          const honor = honorFor(row.wins);
+          const names = (row.rosterIds ?? []).slice(0, 4).map((id) => playerById(id)?.name).filter(Boolean);
+          return (
+            <article key={row.seed} className="panel">
+              <span className="tag">{honor.title}</span>
+              <h3>{row.wins}–{row.losses}</h3>
+              <p>{names.join(", ")}</p>
+            </article>
+          );
+        })}
+      </div>
+    </section>
+  );
 }

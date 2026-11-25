@@ -3,12 +3,14 @@ import { CONSTRUCT_ID, isConstructed, PLAYERS, playerById, sideById, TEAM_BY_ID,
 import { Mark } from "../components/Marks";
 import { formatSeed } from "../engine/rng";
 import { yearUnlock } from "../engine/season";
+import { loadYear } from "../state/yearBook";
 import { seriesRecord } from "../engine/series";
 import { usePantheon } from "../state/store";
 
 export function Home() {
   const { tournament, trials } = usePantheon();
   const year = yearUnlock(trials);
+  const book = loadYear();
   const final = tournament.series.find((item) => item.id === "final");
   const champ = final ? TEAM_BY_ID[final.winnerId] : undefined;
   const runner = final ? TEAM_BY_ID[final.loserId] : undefined;
@@ -96,12 +98,27 @@ export function Home() {
         </p>
       </Link>
 
+      <section className="section">
+        <div className="section-head">
+          <h3>Jump in</h3>
+          <Link to="/play">All side floors</Link>
+        </div>
+        <div className="doors">
+          <Link to="/play/clash" className="panel door"><span className="tag">One night</span><h3>Era Clash</h3><p>Two rolled years. One NBA game, waiting when you open the page.</p></Link>
+          <Link to="/play/series" className="panel door"><span className="tag">First to four</span><h3>A series tonight</h3><p>Any two sides, the Construct included. A best-of-seven on demand.</p></Link>
+          <Link to="/play/lamp" className="panel door"><span className="tag">Contests</span><h3>The Lamp</h3><p>Threes, dunks, and skills, lit whenever you want.</p></Link>
+          <Link to="/play/throne" className="panel door"><span className="tag">A bracket</span><h3>The Throne</h3><p>Eight era sides. Seven games. One year leaves with the floor.</p></Link>
+        </div>
+      </section>
+
       <Link to="/season" className="panel year-link">
         <span className="tag">{year.open ? "Side floor open" : "Side floor"}</span>
         <h3>The Unbroken Year</h3>
         <p>
-          {year.open
-            ? "The 82–0 season is open. Roll an era and a franchise, take one prime, and try to go a full NBA year without a loss."
+          {book.crown
+            ? "An Unbroken Year is cut into this browser. Open the floor and the roster is still in the book."
+            : year.open
+            ? "The 82–0 season is open. A year of 70 wins leaves a relic. 82–0 cuts the roster into the book."
             : `An NBA 82–0 season, built by rolls. It opens after ${year.needChampionships} championships and a series taken from the Construct. This browser has ${year.championships} championships and ${year.strikes} series taken from the Construct.`}
         </p>
       </Link>

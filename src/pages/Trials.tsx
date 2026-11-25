@@ -1,4 +1,5 @@
 import { useMemo, useState } from "react";
+import { Link } from "react-router-dom";
 import { CONSTRUCT_ID, playerById, TEAM_BY_ID } from "../data";
 import { formatSeed, parseSeed } from "../engine/rng";
 import type { TrialSummary } from "../engine/tournament";
@@ -21,7 +22,7 @@ export function Trials() {
       <p className="kicker">{trials.length} finished championships</p>
       <h2 className="display" style={{ fontSize: 68 }}>Run the field again</h2>
       <p className="lede">
-        Every trial is a full championship: the country draw, then the siege. Same human primes, the same built side, the same NBA rules, a new draw. Play-by-play is skipped so a hundred of them stay in the browser. Open any seed to watch that exact tournament. Title bars are the country championship. The floor is whether the Concord ended the threat.
+        Every trial is a full championship: the country draw, then the siege. Same human primes, the same built side, the same NBA rules, a new draw. Play-by-play is skipped so a hundred of them stay in the browser. Open any seed to watch that exact tournament. Title bars are the country championship. The floor is whether the Concord ended the threat. For a single night, a series, or a contest, the side floors are open.
       </p>
       <div className="filters">
         {[10, 25, 50, 100].map((count) => (
@@ -31,6 +32,7 @@ export function Trials() {
         ))}
         <input value={text} onChange={(event) => setText(event.target.value)} placeholder="Open a seed" aria-label="Seed" />
         <button type="button" disabled={note === null || busy} onClick={() => note !== null && loadSeed(note)}>Load seed</button>
+        <Link className="text-btn" to="/play">Side floors</Link>
         {busy ? <span className="quiet">{progress}</span> : null}
       </div>
       {trials.length === 0 ? <p className="empty">Finish the open draw, or run a batch. The lab only counts completed championships.</p> : null}

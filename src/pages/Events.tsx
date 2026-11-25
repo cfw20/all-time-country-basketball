@@ -11,6 +11,9 @@ export function Events() {
         <p className="kicker">The interval</p>
         <h2 className="display" style={{ fontSize: 68 }}>After the groups.</h2>
         <p className="empty">All-Star, the skills challenge, the three-point contest, and the dunk contest open once the group stage is complete. They do not touch the standings.</p>
+        <div className="filters">
+          <Link className="text-btn" to="/play/lamp">Light a lamp of your own</Link>
+        </div>
       </main>
     );
   }

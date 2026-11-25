@@ -1,5 +1,7 @@
 import { PLAYERS, ROSTERS, TEAMS, playerById } from "../src/data";
-import { ERA_CARDS, seasonRecord, simulateSeason, yearUnlock } from "../src/engine/season";
+import { ERA_CARDS, eraCard, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
+import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
+import { lightLamp } from "../src/engine/tournament";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
 
 const errors: string[] = [];
@@ -241,6 +243,25 @@ console.log(`YEAR strong ${strongYear.wins}-${strongYear.losses} weak ${weakYear
 if (strongYear.wins + strongYear.losses !== 82 || weakYear.wins + weakYear.losses !== 82) fail("a season did not play 82 games");
 if (strongYear.wins < 72 || strongYear.wins > 82) fail(`strong Unbroken roster went ${strongYear.wins}-${strongYear.losses}`);
 if (weakYear.wins > 65 || weakYear.wins >= strongYear.wins) fail(`thin Unbroken roster went ${weakYear.wins}-${weakYear.losses}, too close to a legend roster`);
+if (honorFor(69).id !== "filed" || honorFor(69).relic) fail("a 69-win year left a relic");
+if (honorFor(70).id !== "heard" || honorFor(75).id !== "deep" || honorFor(78).id !== "door") fail("deep-year honors are out of order");
+if (honorFor(81).id !== "breath" || !honorFor(81).relic?.gildedOpen) fail("an 81-win year did not open a myth relic");
+if (honorFor(82).id !== "unbroken" || !honorFor(82).relic) fail("82–0 did not cut an Unbroken relic");
+const relicYear = startYear(7, honorFor(82).relic);
+if (!relicYear.current?.gilded || eraCard(relicYear.current.cardId).tier !== "myth") fail("the Unbroken relic did not open a myth card");
+if (relicYear.charges.gilded < 4 || relicYear.charges.banner < 2 || relicYear.charges.reroll < 5) fail("the Unbroken relic did not fatten the boosters");
+const plainYear = startYear(7);
+if (plainYear.charges.gilded !== 2 || plainYear.charges.banner !== 1) fail("a plain year no longer starts with the base boosters");
+const clash = playClash(ERA_CARDS[0].id, ERA_CARDS[1].id, 20261125, false);
+if (clash.homeScore < 70 || clash.awayScore < 70 || !clash.winnerId) fail("era clash did not play an NBA game");
+const quick = playQuick("cont", "cstr", 20261125, false);
+const quickWins = Math.max(quick.homeWins, quick.awayWins);
+if (quickWins !== 4 || quick.games.length < 4 || quick.games.length > 7) fail("a side series did not end at four wins");
+const lamp = lightLamp(20261125);
+if (!lamp.three.winnerId || !lamp.dunk.winnerId || !lamp.skills.winnerId) fail("the lamp did not name winners");
+const throne = playThrone(20261125);
+if (throne.games.length !== 7 || drawThrone(20261125).length !== 8 || !eraCard(throne.champion)) fail("the throne did not finish an eight-team night");
+console.log(`FLOORS clash ${clash.homeScore}-${clash.awayScore} series ${quick.homeWins}-${quick.awayWins} throne ${throne.champion}`);
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

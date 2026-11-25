@@ -570,7 +570,15 @@ function countBands(list: Player[]): Record<"G" | "W" | "B", number> {
   return counts;
 }
 
-function simThree(seed: number, ranked: Player[]): Contest {
+export function lightLamp(seed: number): { three: Contest; dunk: Contest; skills: Contest } {
+  return {
+    three: simThree(seed, [], "lamp-three"),
+    dunk: simDunk(seed, "lamp-dunk"),
+    skills: simSkills(seed, "lamp-skills"),
+  };
+}
+
+function simThree(seed: number, ranked: Player[], key = "three"): Contest {
   const usa = new Set(["cont", "vngd", "aftr", "pall"]);
   const pool = PLAYERS.filter((p) => p.teamId !== CONSTRUCT_ID && p.ratings.three >= 78 && p.ratings.threeRate >= 28)
     .sort((a, b) => b.ratings.three - a.ratings.three);
@@ -589,7 +597,7 @@ function simThree(seed: number, ranked: Player[]): Contest {
     if (!field.includes(p)) field.push(p);
   }
   void ranked;
-  const rng = mulberry32(mixSeed(seed, "three"));
+  const rng = mulberry32(mixSeed(seed, key));
   const shoot = (p: Player) => {
     let score = 0;
     const pMake = Math.max(0.28, Math.min(0.7, 0.4 + (p.ratings.three - 80) * 0.0045));
@@ -611,7 +619,7 @@ function simThree(seed: number, ranked: Player[]): Contest {
   return { kind: "three", title: "Three-point contest", field: round1, finalists, winnerId: finalists[0].playerId };
 }
 
-function simSkills(seed: number): Contest {
+function simSkills(seed: number, key = "skills"): Contest {
   const usa = new Set(["cont", "vngd", "aftr", "pall"]);
   const scoreOf = (p: Player) => p.ratings.play * 0.55 + p.ratings.ath * 0.25 + p.ratings.shot * 0.2;
   const pool = PLAYERS.filter((p) => p.teamId !== CONSTRUCT_ID).sort((a, b) => scoreOf(b) - scoreOf(a));
@@ -628,7 +636,7 @@ function simSkills(seed: number): Contest {
     if (fieldPlayers.length >= 8) break;
     if (!fieldPlayers.includes(p)) fieldPlayers.push(p);
   }
-  const rng = mulberry32(mixSeed(seed, "skills"));
+  const rng = mulberry32(mixSeed(seed, key));
   const circuit = (p: Player) => {
     const handle = Math.round(clampSkill(8 + (p.ratings.play - 74) * 0.28 + rng() * 6));
     const pass = Math.round(clampSkill(8 + (p.ratings.play - 76) * 0.26 + rng() * 6));
@@ -653,7 +661,7 @@ function clampSkill(n: number): number {
   return Math.max(4, Math.min(20, n));
 }
 
-function simDunk(seed: number): Contest {
+function simDunk(seed: number, key = "dunk"): Contest {
   const usa = new Set(["cont", "vngd", "aftr", "pall"]);
   const pool = PLAYERS.filter((p) => p.teamId !== CONSTRUCT_ID && p.ratings.ath >= 84).sort((a, b) => b.ratings.ath - a.ratings.ath);
   const fieldPlayers: Player[] = [];
@@ -669,7 +677,7 @@ function simDunk(seed: number): Contest {
     if (fieldPlayers.length >= 8) break;
     if (!fieldPlayers.includes(p)) fieldPlayers.push(p);
   }
-  const rng = mulberry32(mixSeed(seed, "dunk"));
+  const rng = mulberry32(mixSeed(seed, key));
   const dunkScore = (p: Player) => Math.round(Math.max(30, Math.min(50, 34 + (p.ratings.ath - 80) * 0.38 + rng() * 9)));
   const round1: ContestEntry[] = fieldPlayers.map((p) => {
     const scores = [dunkScore(p), dunkScore(p)];

@@ -7,7 +7,12 @@ import { Events } from "./pages/Events";
 import { GamePage } from "./pages/Game";
 import { Home } from "./pages/Home";
 import { Leaders } from "./pages/Leaders";
+import { Clash } from "./pages/Clash";
+import { Lamp } from "./pages/Lamp";
+import { Play } from "./pages/Play";
 import { PlayerPage } from "./pages/Player";
+import { QuickSeries } from "./pages/QuickSeries";
+import { Throne } from "./pages/Throne";
 import { Players } from "./pages/Players";
 import { Rivalries } from "./pages/Rivalries";
 import { Rules } from "./pages/Rules";
@@ -44,6 +49,11 @@ export function App() {
         <Route path="news" element={<Wire />} />
         <Route path="trials" element={<Trials />} />
         <Route path="season" element={<Season />} />
+        <Route path="play" element={<Play />} />
+        <Route path="play/clash" element={<Clash />} />
+        <Route path="play/series" element={<QuickSeries />} />
+        <Route path="play/lamp" element={<Lamp />} />
+        <Route path="play/throne" element={<Throne />} />
         <Route path="rules" element={<Rules />} />
         <Route path="*" element={<Missing />} />
       </Route>

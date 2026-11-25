@@ -96,6 +96,8 @@ export interface YearRun {
   doubleArmed: boolean;
   nights: SeasonNight[] | null;
   bannerUsed: boolean;
+  /** Set when this year was opened with a relic from a strong finish. */
+  openedWith: HonorId | null;
 }
 
 export interface YearUnlock {
@@ -129,7 +131,129 @@ export function freshCharges(): Charges {
   return { reroll: 3, gilded: 2, double: 1, position: 2, recall: 1, banner: 1 };
 }
 
-export function startYear(seed: number): YearRun {
+export type HonorId = "heard" | "deep" | "door" | "breath" | "unbroken";
+
+export interface YearRelic {
+  honorId: HonorId;
+  /** Added on top of a fresh set of boosters. */
+  charges: Charges;
+  /** The first card of the next year is a myth year, and it does not spend a gilded charge. */
+  gildedOpen: boolean;
+}
+
+export interface YearHonor {
+  id: HonorId | "filed";
+  title: string;
+  kicker: string;
+  line: string;
+  relic: YearRelic | null;
+}
+
+const ZERO: Charges = { reroll: 0, gilded: 0, double: 0, position: 0, recall: 0, banner: 0 };
+
+export function honorFor(wins: number): YearHonor {
+  if (wins >= 82) {
+    return {
+      id: "unbroken",
+      title: "The Unbroken",
+      kicker: "82–0",
+      line: "Eighty-two nights, and the year never lost. The roster is cut into the book. The next year opens on a myth card, with a heavier set of boosters.",
+      relic: { honorId: "unbroken", gildedOpen: true, charges: { reroll: 2, gilded: 2, double: 1, position: 1, recall: 1, banner: 1 } },
+    };
+  }
+  if (wins >= 81) {
+    return {
+      id: "breath",
+      title: "One night short",
+      kicker: "81–1",
+      line: "One loss in an entire season. The next year opens on a myth card, and a second replay comes with it.",
+      relic: { honorId: "breath", gildedOpen: true, charges: { ...ZERO, gilded: 1, banner: 1 } },
+    };
+  }
+  if (wins >= 78) {
+    return {
+      id: "door",
+      title: "The door",
+      kicker: `${wins} wins`,
+      line: "Deep enough that the book keeps the roster. A gilded roll and a position call come with the next year.",
+      relic: { honorId: "door", gildedOpen: false, charges: { ...ZERO, gilded: 1, position: 1 } },
+    };
+  }
+  if (wins >= 75) {
+    return {
+      id: "deep",
+      title: "Deep in the book",
+      kicker: `${wins} wins`,
+      line: "A strong year. The next one starts with an extra gilded roll.",
+      relic: { honorId: "deep", gildedOpen: false, charges: { ...ZERO, gilded: 1 } },
+    };
+  }
+  if (wins >= 70) {
+    return {
+      id: "heard",
+      title: "The year was heard",
+      kicker: `${wins} wins`,
+      line: "Seventy wins leaves a mark. The next year starts with an extra roll-again.",
+      relic: { honorId: "heard", gildedOpen: false, charges: { ...ZERO, reroll: 1 } },
+    };
+  }
+  return {
+    id: "filed",
+    title: "Filed",
+    kicker: `${wins} wins`,
+    line: "The year is in the book. Seventy wins leaves a relic. Eighty-two cuts the roster in for good.",
+    relic: null,
+  };
+}
+
+export function honorRank(id: string): number {
+  if (id === "unbroken") return 5;
+  if (id === "breath") return 4;
+  if (id === "door") return 3;
+  if (id === "deep") return 2;
+  if (id === "heard") return 1;
+  return 0;
+}
+
+export interface Inscription {
+  seed: number;
+  wins: number;
+  losses: number;
+  rosterIds: string[];
+  honorId: YearHonor["id"];
+}
+
+export function fileYear(
+  state: { vault: Inscription[]; relic: YearRelic | null; crown: boolean },
+  run: YearRun,
+): { vault: Inscription[]; relic: YearRelic | null; crown: boolean } {
+  if (!run.nights) return state;
+  const record = seasonRecord(run.nights);
+  const honor = honorFor(record.wins);
+  const existing = state.vault.find((item) => item.seed === run.seed);
+  if (existing && existing.wins === record.wins && existing.losses === record.losses) return state;
+  const entry: Inscription = {
+    seed: run.seed,
+    wins: record.wins,
+    losses: record.losses,
+    rosterIds: run.rosterIds.slice(),
+    honorId: honor.id,
+  };
+  const vault = [entry, ...state.vault.filter((item) => item.seed !== run.seed)].sort((a, b) => b.wins - a.wins || a.losses - b.losses);
+  const relic = honor.relic && honorRank(honor.id) >= honorRank(state.relic?.honorId ?? "") ? honor.relic : state.relic;
+  return { vault, relic, crown: state.crown || honor.id === "unbroken" };
+}
+
+export function startYear(seed: number, relic: YearRelic | null = null): YearRun {
+  const charges = freshCharges();
+  if (relic) {
+    charges.reroll += relic.charges.reroll;
+    charges.gilded += relic.charges.gilded;
+    charges.double += relic.charges.double;
+    charges.position += relic.charges.position;
+    charges.recall += relic.charges.recall;
+    charges.banner += relic.charges.banner;
+  }
   const run: YearRun = {
     seed: seed >>> 0 || 1,
     rosterIds: [],
@@ -137,12 +261,17 @@ export function startYear(seed: number): YearRun {
     current: null,
     picksOnCard: 0,
     memoryIds: [],
-    charges: freshCharges(),
+    charges,
     doubleArmed: false,
     nights: null,
     bannerUsed: false,
+    openedWith: relic?.honorId ?? null,
   };
-  return drawInto(run, {});
+  return drawInto(run, relic?.gildedOpen ? { gilded: true } : {});
+}
+
+export function eraSide(cardId: string, exclude: Set<string>, seed: number): SideInput {
+  return opponentSide(eraCard(cardId), exclude, seed);
 }
 
 export function rosterHole(ids: string[]): string | null {

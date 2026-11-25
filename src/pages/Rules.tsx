@@ -75,6 +75,12 @@ export function Rules() {
         <h3 className="display" style={{ fontSize: 36 }}>The Unbroken Year</h3>
         <p className="lede">A side floor, separate from the country championship. The goal is an NBA regular season that never loses: 82–0. It opens after two finished championships and one series taken from the Construct. The opening draw does not count as that success when the Construct sweeps the siege. Replaying one seed does not add a second championship.</p>
         <p className="lede">The roster is twelve real primes, built by rolls. A roll is an era and a franchise the player actually played for, and the card lists those primes so the best name on it is visible. Take one. Boosters can roll again, force a myth year, take a second name from the same card, call a position, or recall someone who was passed. Each night is that era side. When the card is short, other primes from the same years fill the rotation, and the box marks them era. After the season, one loss can be played again. Humans stay in their prime. The Construct is not on this floor.</p>
+        <p className="lede">A strong year leaves a relic for the next one. Seventy wins adds a roll-again. Seventy-five adds a gilded roll. Seventy-eight adds a gilded roll and a position call, and the roster is kept on the seal. Eighty-one opens the next year on a myth card and carries a second replay. Eighty-two, The Unbroken, cuts the roster into the book for good and opens the next year on a myth card with a heavier set of boosters.</p>
+      </section>
+
+      <section className="section">
+        <h3 className="display" style={{ fontSize: 36 }}>Side floors</h3>
+        <p className="lede">The championship stays the book. Around it are nights you can start immediately. Era Clash is one NBA game between two rolled years. A series tonight is a best-of-seven between any two sides, and the Construct can be called. The Lamp is a three-point contest, a dunk contest, and a skills challenge, lit whenever you want. The Throne is eight era sides in a one-night bracket. None of them touch the standings.</p>
       </section>
 
       <section className="section">
