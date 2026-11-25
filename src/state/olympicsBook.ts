@@ -13,7 +13,7 @@ import {
   type OlympicSide,
 } from "../engine/olympics";
 
-/** Separate from pantheon-v7 and pantheon-year-v1. One finished bracket, then the window is the report. */
+/** Separate from pantheon-v8 and pantheon-year-v1. One finished bracket, then the window is the report. */
 export const OLYMPICS_KEY = "pantheon-olympics-v1";
 
 export interface OlympicSave {
