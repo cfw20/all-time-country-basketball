@@ -13,7 +13,7 @@ export function choiceStory(player: Player, team: Team): ChoiceStory {
     return {
       kicker: "Constructed",
       title: "Built for the siege",
-      body: `${player.name} is a chassis on The Construct, the one invented side. There is no country and no prime. ${dutyLabel(player.role, true)} is the minute band, filed as a ${statusLabel(player.contract, true).toLowerCase()}: how often this unit is on the floor. ${player.note ?? ""} Every human name in the book is still a real prime.`.replace(/\s+/g, " ").trim(),
+      body: `${player.name} is a chassis on The Construct, the one invented side. There is no country and no prime. ${dutyLabel(player.role, true)} is the minute band, filed as ${article(statusLabel(player.contract, true))} ${statusLabel(player.contract, true).toLowerCase()}: how often this unit is on the floor. ${player.note ?? ""} Every human name in the book is still a real prime.`.replace(/\s+/g, " ").trim(),
     };
   }
   if (team.kind === "country") {
@@ -21,7 +21,7 @@ export function choiceStory(player: Player, team: Team): ChoiceStory {
       kicker: "Country path",
       title: `Made ${team.country}'s roster`,
       body: join(
-        `${player.name} took the default path: their own country. They made ${team.name}, the playable all-time side for ${team.country}, on a ${seat}. Countries do not sign players in Pantheon. The cut had room, and they chose home.`,
+        `${player.name} took the default path: their own country. They made ${team.name}, the playable all-time side for ${team.country}, on ${article(seat)} ${seat}. Countries do not sign players in Pantheon. The cut had room, and they chose home.`,
         player.note,
       ),
     };
@@ -52,6 +52,10 @@ export function choiceStory(player: Player, team: Team): ChoiceStory {
       player.note,
     ),
   };
+}
+
+function article(phrase: string): string {
+  return /^[aeiou]/i.test(phrase) ? "an" : "a";
 }
 
 function join(body: string, note?: string): string {

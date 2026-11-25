@@ -234,3 +234,78 @@ export function slug(name: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
+
+export function archLabel(arch: Arch): string {
+  switch (arch) {
+    case "point":
+      return "Point";
+    case "shooter":
+      return "Shooter";
+    case "slasher":
+      return "Slasher";
+    case "creator":
+      return "Creator";
+    case "wing":
+      return "Wing";
+    case "defender":
+      return "Defender";
+    case "stretch":
+      return "Stretch";
+    case "post":
+      return "Post";
+    case "rim":
+      return "Rim";
+    case "glue":
+      return "Glue";
+  }
+}
+
+/** What the card is asked to do, from the archetype already on it. */
+export function archJob(arch: Arch): string {
+  switch (arch) {
+    case "point":
+      return "run the offense";
+    case "shooter":
+      return "space the floor and take the three";
+    case "slasher":
+      return "attack the rim";
+    case "creator":
+      return "create a shot and the next pass";
+    case "wing":
+      return "score and guard on the wing";
+    case "defender":
+      return "guard the other side's main option";
+    case "stretch":
+      return "space the floor from the frontcourt";
+    case "post":
+      return "score in the post";
+    case "rim":
+      return "protect the rim and finish inside";
+    case "glue":
+      return "connect the lineup";
+  }
+}
+
+export function roleRank(role: Role): number {
+  switch (role) {
+    case "star":
+      return 0;
+    case "starter":
+      return 1;
+    case "rotation":
+      return 2;
+    case "deep":
+      return 3;
+    case "two-way":
+      return 4;
+  }
+}
+
+/** One plain sentence from the role, archetype, and minute target already on the card. */
+export function askedToDo(player: Player, constructed: boolean): string {
+  const band = minuteTarget(player);
+  const seat = dutyLabel(player.role, constructed).toLowerCase();
+  const open = player.starts ? "This card opens." : "This card comes in with the rotation.";
+  const who = constructed ? "This chassis" : `The ${player.primeYear} prime`;
+  return `${who} is filed as ${seat} and asked to ${archJob(player.arch)}, with a ${band}-minute target. ${open}`;
+}
