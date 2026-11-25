@@ -46,6 +46,7 @@ export function GamePage() {
         </div>
         <Club id={game.homeId} name={game.homeName} styleName={homeStyle?.name} right />
       </div>
+      <NightCall game={game} />
       <div className="facts">
         <span>Lead changes {game.leadChanges}</span>
         <span>Biggest lead {marginName(game)} {game.biggestLead.margin}</span>
@@ -332,6 +333,52 @@ function marksFromLog(game: GameResult): { paint: { away: number; home: number }
     if (/\b(?:dunk|layup|hook)\./.test(play.text)) paint[side] += 2;
   }
   return { paint, putback };
+}
+
+function NightCall({ game }: { game: GameResult }) {
+  const last = game.plays.at(-1);
+  const winner = sideName(game, game.winnerId);
+  const margin = Math.abs(game.homeScore - game.awayScore);
+  const runSide = sideName(game, game.biggestRun.teamId);
+  const clock = last?.clock ?? "0:00";
+  const period = last ? periodName(last.q) : "";
+  const headline = game.buzzerBeater
+    ? `Buzzer. ${winner} by ${margin}, clock ${clock}. ${runSide} ran ${game.biggestRun.points}.`
+    : game.comeback
+      ? `${sideName(game, game.comeback.teamId)} erased a ${game.comeback.deficit}-point hole. ${winner} by ${margin}. ${runSide} ran ${game.biggestRun.points}.`
+      : `${winner} by ${margin}. ${game.leadChanges} lead changes. ${runSide} ran ${game.biggestRun.points}.`;
+  return (
+    <section className="night-call">
+      <p className="kicker">The night</p>
+      <h2>{headline}</h2>
+      <div className="night-pips">
+        <span>Score {game.awayScore}–{game.homeScore}</span>
+        <span>Run {game.biggestRun.points}</span>
+        <span>Clock {clock}{period ? ` · ${period}` : ""}</span>
+        <span>{game.buzzerBeater ? "Buzzer" : `Swing ${game.biggestLead.margin}`}</span>
+      </div>
+      <p>{foulCall(game)}</p>
+    </section>
+  );
+}
+
+function foulCall(game: GameResult): string {
+  const rows: string[] = [];
+  const take = (lines: BoxLine[]) => {
+    for (const line of lines) {
+      const name = playerById(line.playerId)?.name ?? line.playerId;
+      if (line.suspended) rows.push(`${name} is suspended`);
+      else if (line.ejected || line.fouledOut) rows.push(`${name} is ejected`);
+      else if ((line.tech ?? 0) > 0) rows.push(`${name} has ${line.tech} technical${line.tech === 1 ? "" : "s"}`);
+      else if (line.pf >= 5) rows.push(`${name} has ${line.pf} fouls`);
+    }
+  };
+  take(game.box.away);
+  take(game.box.home);
+  if (!rows.length) return "Foul trouble: nobody has five fouls, a technical, or an ejection.";
+  const shown = rows.slice(0, 6).join("; ");
+  const more = rows.length > 6 ? ` ${rows.length - 6} more.` : "";
+  return `Foul trouble: ${shown}.${more}`;
 }
 
 function troubleLine(game: GameResult): string | null {

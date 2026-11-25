@@ -2,6 +2,9 @@ import { Link, NavLink, Outlet } from "react-router-dom";
 import { formatSeed } from "../engine/rng";
 import { STAGE_LABELS } from "../engine/tournament";
 import { usePantheon } from "../state/store";
+import { useVisit } from "../state/visit";
+import { Guide } from "./Guide";
+import { Tour } from "./Tour";
 
 const PRIMARY = [
   ["/", "Home"],
@@ -31,6 +34,7 @@ const SECONDARY = [
 
 export function Shell() {
   const { tournament, busy, progress, newDraw, replay, simNext, simRest } = usePantheon();
+  const { openTour } = useVisit();
   const done = tournament.through >= 9;
   return (
     <div className="shell">
@@ -105,13 +109,19 @@ export function Shell() {
         </span>
       </div>
       <header className="mast">
-        <Link className="brand" to="/">
-          <span className="sigil" aria-hidden="true" />
-          <span className="brand-name">
-            <p className="kicker">Private commission · NBA rules</p>
-            <h1>Pan<em>theon</em></h1>
-          </span>
-        </Link>
+        <div className="mast-top">
+          <Link className="brand" to="/">
+            <span className="sigil" aria-hidden="true" />
+            <span className="brand-name">
+              <p className="kicker">Private commission · NBA rules</p>
+              <h1>Pan<em>theon</em></h1>
+            </span>
+          </Link>
+          <div className="mast-actions">
+            <Link to="/play/call" className="arrival-go">Play a game</Link>
+            <button type="button" className="how-to" onClick={openTour}>How to play</button>
+          </div>
+        </div>
         <nav className="site-nav" aria-label="Pages">
           <div className="nav-row">
             {PRIMARY.map(([to, label]) => (
@@ -129,7 +139,9 @@ export function Shell() {
           </div>
         </nav>
       </header>
+      <Guide />
       <Outlet />
+      <Tour />
       <footer className="dock">
         <div className="stage">
           <span className="kicker">Draw {formatSeed(tournament.seed)}</span>

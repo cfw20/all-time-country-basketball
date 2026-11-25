@@ -10,6 +10,7 @@ import { seriesShape } from "../lib/stats";
 import { styleForSide, styleKicker } from "../lib/styleFor";
 import { findSeries } from "../engine/tournament";
 import { pct, shotLine } from "../lib/format";
+import { SeriesStake } from "../components/StakeDesk";
 import { usePantheon } from "../state/store";
 import type { BoxLine, SeriesResult } from "../data/types";
 
@@ -79,6 +80,7 @@ export function SeriesPage() {
         <span>{holeFact}</span>
         <span>NBA rules. No home-court scoring bonus.</span>
       </div>
+      <SeriesStake series={series} />
       <div className="series-lamps">
         {rows.map(({ game }, index) => {
           const seriesWinnerWon = game.winnerId === series.winnerId;

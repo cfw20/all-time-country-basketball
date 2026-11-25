@@ -9,10 +9,14 @@ import { loadYear } from "../state/yearBook";
 import { seriesRecord } from "../engine/series";
 import { teamPower } from "../engine/tournament";
 import { placeLine } from "../lib/format";
+import { StakeDesk } from "../components/StakeDesk";
 import { usePantheon } from "../state/store";
+import { useVisit } from "../state/visit";
 
 export function Home() {
   const { tournament, trials } = usePantheon();
+  const { stake } = useVisit();
+  const backed = stake.ticket ? TEAM_BY_ID[stake.ticket.teamId] : undefined;
   const year = yearUnlock(trials);
   const olympics = olympicsUnlock(trials);
   const olympicSave = loadOlympics();
@@ -37,6 +41,19 @@ export function Home() {
           <div className="ring" aria-hidden="true" />
           <p className="kicker">A private all-time floor · NBA rules</p>
           <h2 className="display">Every prime<span>on one floor.</span></h2>
+          <div className="arrival">
+            <Link to="/play/call" className="arrival-go">Play a game</Link>
+            <a href="#back-a-side" className="arrival-next">Back a side</a>
+          </div>
+          {backed ? (
+            <p className="backed-line">
+              Backing {backed.name}.
+              {stake.ticket?.settled
+                ? ` ${stake.ticket.sentence}`
+                : " Their series has not started."}
+              {stake.ticket?.seriesId ? <> <Link to={`/series/${stake.ticket.seriesId}`}>Open that series</Link></> : null}
+            </p>
+          ) : null}
           <p className="lede">
             {humans} real primes. {humanSides} human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
           </p>
@@ -80,6 +97,8 @@ export function Home() {
           )}
         </div>
       </section>
+
+      <StakeDesk />
 
       <div className="paths">
         <article className="path">

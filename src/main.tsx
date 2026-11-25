@@ -3,6 +3,7 @@ import { createRoot } from "react-dom/client";
 import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { PantheonProvider } from "./state/store";
+import { VisitProvider } from "./state/visit";
 import "./styles/global.css";
 import "./styles/floor.css";
 
@@ -13,7 +14,9 @@ createRoot(document.getElementById("root")!).render(
   <StrictMode>
     <BrowserRouter basename={routerBasename}>
       <PantheonProvider>
-        <App />
+        <VisitProvider>
+          <App />
+        </VisitProvider>
       </PantheonProvider>
     </BrowserRouter>
   </StrictMode>,

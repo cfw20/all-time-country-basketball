@@ -19,6 +19,7 @@ import {
 } from "../src/engine/olympics";
 import { ERA_CARDS, eraCard, freshCharges, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
 import { OLYMPICS_KEY } from "../src/state/olympicsBook";
+import { GUIDE_KEY, STAKE_KEY, TOUR_KEY } from "../src/state/visitKeys";
 import { playDecade, playFive, playFortnight, playGauntlet, playHill, playOpen, playSurvivor } from "../src/engine/floors";
 import { TRIVIA_PLAYS } from "../src/engine/trivia";
 import { TOY_PLAYS } from "../src/engine/toys";
@@ -423,6 +424,9 @@ if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70
 console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
 
 if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-v9" || OLYMPICS_KEY === "pantheon-v10" || OLYMPICS_KEY === "pantheon-v11" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
+const saveKeys = ["pantheon-v11", "pantheon-olympics-v2", "pantheon-year-v1", TOUR_KEY, GUIDE_KEY, STAKE_KEY];
+if (new Set(saveKeys).size !== saveKeys.length) fail("tour or stake key collided with a save");
+if (TOUR_KEY === "pantheon-v11" || GUIDE_KEY === "pantheon-v11" || STAKE_KEY === "pantheon-v11") fail("tour or stake rewrote the championship key");
 if (olympicsUnlock([]).open) fail("olympics opened with no trials");
 const lockedLine = olympicsLockLine(olympicsUnlock([]));
 const lockedSentences = lockedLine.split(/[.!?]/).map((part) => part.trim()).filter(Boolean);
