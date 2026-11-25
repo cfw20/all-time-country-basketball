@@ -3,7 +3,7 @@ import type { Tournament } from "../data/types";
 import { freshSeed } from "../engine/rng";
 import { simulateTournament, simulateTrial, summarizeTournament, type TrialSummary } from "../engine/tournament";
 
-const KEY = "pantheon-v2";
+const KEY = "pantheon-v3";
 
 interface Saved {
   seed: number;
@@ -19,7 +19,7 @@ function readSaved(): Saved {
     return {
       seed: typeof parsed.seed === "number" ? parsed.seed >>> 0 : 20261125,
       through: typeof parsed.through === "number" ? Math.max(0, Math.min(8, parsed.through)) : 8,
-      trials: Array.isArray(parsed.trials) ? parsed.trials.slice(0, 200) : [],
+      trials: Array.isArray(parsed.trials) ? parsed.trials.slice(0, 400) : [],
     };
   } catch {
     return { seed: 20261125, through: 8, trials: [] };
@@ -34,7 +34,7 @@ function dedupe(list: TrialSummary[]): TrialSummary[] {
     seen.add(trial.seed);
     out.push(trial);
   }
-  return out.slice(0, 200);
+  return out.slice(0, 400);
 }
 
 interface PantheonState {
@@ -112,9 +112,13 @@ export function PantheonProvider({ children }: { children: ReactNode }) {
       setProgress(`1 of ${count}`);
       let index = 0;
       const step = () => {
-        const summary = simulateTrial(seeds[index]);
-        index += 1;
-        setTrials((prev) => dedupe([summary, ...prev]));
+        const batch: TrialSummary[] = [];
+        const stop = Math.min(seeds.length, index + 3);
+        while (index < stop) {
+          batch.push(simulateTrial(seeds[index]));
+          index += 1;
+        }
+        setTrials((prev) => dedupe([...batch].reverse().concat(prev)));
         if (index < count) {
           setProgress(`${index + 1} of ${count}`);
           window.setTimeout(step, 0);

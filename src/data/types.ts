@@ -139,6 +139,8 @@ export interface GameResult {
   winnerId: string;
   loserId: string;
   buzzerBeater: boolean;
+  /** Winner erased at least a 12-point deficit at some point in the game. */
+  comeback?: { teamId: string; deficit: number };
   exhibition?: boolean;
   homeName?: string;
   awayName?: string;

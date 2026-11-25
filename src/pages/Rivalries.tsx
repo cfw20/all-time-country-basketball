@@ -26,9 +26,9 @@ export function Rivalries() {
   return (
     <main className="page">
       <p className="kicker">This draw only</p>
-      <h2 className="display" style={{ fontSize: 72 }}>Nights that argued.</h2>
+      <h2 className="display" style={{ fontSize: 72 }}>How this draw was played.</h2>
       <p className="lede">
-        Rivalries here are whatever this seed actually played: rematches, one-possession games, buzzers, and the nights that got away. Another draw writes a different argument.
+        Rematches, games inside six points, buzzers, and the largest margins. Every number is from this seed. Another draw writes a different set of games.
       </p>
       {official.length === 0 ? (
         <p className="empty">Sim a round and the nights will collect here.</p>
@@ -64,14 +64,14 @@ export function Rivalries() {
           </article>
           <article className="panel rival">
             <p className="tag">Buzzer</p>
-            <h3>{buzzers.length ? "The ball left late" : "No buzzer yet"}</h3>
+            <h3>{buzzers.length ? "Won at the horn" : "No buzzer yet"}</h3>
             {buzzers.length === 0 ? <p>When a shot wins it at the horn, it lands here.</p> : buzzers.map((game) => (
               <p key={game.id}><Link to={`/games/${game.id}`}>{game.roundLabel} · {game.awayName} at {game.homeName}</Link></p>
             ))}
           </article>
           <article className="panel rival">
             <p className="tag">Margin</p>
-            <h3>Nights that opened up</h3>
+            <h3>Largest margins</h3>
             {blowouts.length === 0 ? <p>Nothing by 24 or more in this draw.</p> : blowouts.map((game) => (
               <p key={game.id}>
                 <Link to={`/games/${game.id}`}>{Math.abs(game.homeScore - game.awayScore)} · {game.awayName} {game.awayScore}–{game.homeScore} {game.homeName}</Link>

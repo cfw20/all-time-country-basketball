@@ -66,6 +66,33 @@ export function TeamPage() {
           </table>
         </div>
       </section>
+      <section className="section">
+        <div className="section-head"><h3>Results</h3><span className="quiet">Official games in this draw</span></div>
+        <Results teamId={team.id} games={tournament.games} />
+      </section>
     </main>
+  );
+}
+
+function Results({ teamId, games }: { teamId: string; games: { id: string; exhibition?: boolean; homeId: string; awayId: string; homeScore: number; awayScore: number; winnerId: string; roundLabel: string; ot: number; comeback?: { teamId: string; deficit: number } }[] }) {
+  const rows = games.filter((game) => !game.exhibition && (game.homeId === teamId || game.awayId === teamId));
+  if (rows.length === 0) return <p className="empty">No official games yet.</p>;
+  return (
+    <div className="team-grid">
+      {rows.map((game) => {
+        const home = game.homeId === teamId;
+        const ours = home ? game.homeScore : game.awayScore;
+        const theirs = home ? game.awayScore : game.homeScore;
+        const opp = home ? game.awayId : game.homeId;
+        const win = game.winnerId === teamId;
+        return (
+          <Link key={game.id} to={`/games/${game.id}`} className="panel">
+            <span className="tag">{game.roundLabel}{game.ot ? " · OT" : ""}</span>
+            <h3>{win ? "W" : "L"} {ours}–{theirs}</h3>
+            <p>{TEAM_BY_ID[opp]?.name}{game.comeback?.teamId === teamId ? ` · erased ${game.comeback.deficit}` : ""}</p>
+          </Link>
+        );
+      })}
+    </div>
   );
 }

@@ -103,7 +103,9 @@ Every game has quarter scores, a full box (points, rebounds, assists, steals, bl
 
 ## Comparing draws
 
-Trials rerun the whole championship with play-by-play skipped, so a batch stays quick. The Trials page keeps up to 200 finished draws in this browser and shows title rate, finals reached, average finish, win rate, and honors. Power seed does not change between draws. Finish does. Open a seed to watch that exact tournament with the logs restored. The active draw and the trial list are stored locally under `pantheon-v2`.
+Trials rerun the whole championship with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows title rate, finals, final four, average finish, win rate, honors, final margins, close games, comebacks, and upsets. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v3`.
+
+A game page has the line score, team shooting and true shooting, a short list of the plays that swung it, and the full possession log. Player pages carry a game log for the open draw. Team pages list every result. The painted floor is the look. The games are NBA basketball, played at the prime on each card.
 
 ## Where the data lives
 

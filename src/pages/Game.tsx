@@ -1,14 +1,16 @@
+import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { playerById, TEAM_BY_ID } from "../data";
 import { Mark } from "../components/Marks";
-import type { BoxLine, GameResult } from "../data/types";
+import type { BoxLine, GameResult, Play } from "../data/types";
 import { periodName } from "../engine/names";
-import { clockMin, shotLine, signed } from "../lib/format";
+import { clockMin, pct, shotLine, signed, trueShooting } from "../lib/format";
 import { usePantheon } from "../state/store";
 
 export function GamePage() {
   const { id } = useParams();
   const { tournament } = usePantheon();
+  const [fullLog, setFullLog] = useState(false);
   const game = tournament.games.find((item) => item.id === id) ?? (tournament.allStar?.id === id ? tournament.allStar : undefined);
   if (!game) {
     return (
@@ -20,6 +22,8 @@ export function GamePage() {
     );
   }
   const quarters = game.quarters.map((q, index) => `${periodName(index + 1)} ${q.away}-${q.home}`).join("  ·  ");
+  const swings = game.plays.filter((play) => play.key && (play.kind === "make" || play.kind === "note" || play.text.includes("blocks") || play.text.includes("Overtime"))).slice(-10);
+  const shown = fullLog ? game.plays : game.plays.filter((play) => play.key);
   return (
     <main className="page">
       <p className="kicker">{game.dayLabel} · {game.venue}{game.exhibition ? " · exhibition" : ""}</p>
@@ -37,8 +41,19 @@ export function GamePage() {
         <span>Biggest run {runName(game)} {game.biggestRun.points}</span>
         {game.buzzerBeater ? <span style={{ color: "var(--ember)" }}>Buzzer</span> : null}
         {game.ot ? <span>{game.ot === 1 ? "Overtime" : `${game.ot} overtimes`}</span> : null}
-        <span>Both sides are simulated only in the prime on each card</span>
+        <span>Both sides play the prime on the card. NBA rules.</span>
       </div>
+      <LineScore game={game} />
+      {swings.length > 0 ? (
+        <section className="section">
+          <div className="section-head"><h3>Plays that swung it</h3><span className="quiet">Runs, lead changes, blocks, and late makes</span></div>
+          <div className="log">
+            {swings.map((play, index) => (
+              <PlayRow key={`swing-${index}`} play={play} />
+            ))}
+          </div>
+        </section>
+      ) : null}
       <section className="section">
         <div className="section-head"><h3>Box score</h3></div>
         <Box title={sideName(game, game.awayId)} lines={game.box.away} />
@@ -46,20 +61,19 @@ export function GamePage() {
       </section>
       <section className="section">
         <div className="section-head">
-          <h3>Possession log</h3>
-          <span className="quiet">{game.plays.length} lines · score is away–home · highlighted rows are the turns</span>
+          <h3>{fullLog ? "Every possession" : "Key possessions"}</h3>
+          <button type="button" className="text-btn" onClick={() => setFullLog((value) => !value)}>
+            {fullLog ? "Show the swings" : `Show all ${game.plays.length} lines`}
+          </button>
         </div>
+        <p className="note">Score is away–home. Highlighted rows changed the game: a lead, a tie, a run, a block, a dunk, or the last two minutes.</p>
         <div className="log">
-          {game.plays.map((play, index) => {
-            const head = index === 0 || play.q !== game.plays[index - 1].q;
+          {shown.map((play, index) => {
+            const head = index === 0 || play.q !== shown[index - 1].q;
             return (
               <div key={`${play.q}-${play.clock}-${index}`}>
                 {head ? <div className="qhead">{periodName(play.q)}</div> : null}
-                <div className={`play${play.key ? " key" : ""}`}>
-                  <span className="clock">{play.clock}</span>
-                  <span>{play.text}</span>
-                  <span className="mono">{play.away}–{play.home}</span>
-                </div>
+                <PlayRow play={play} />
               </div>
             );
           })}
@@ -78,6 +92,67 @@ function Club({ id, name, right }: { id: string; name?: string; right?: boolean 
       {team ? <Link to={`/teams/${team.id}`} className="display" style={{ fontSize: 36 }}>{title}</Link> : <span className="display" style={{ fontSize: 36 }}>{title}</span>}
       <span className="quiet">{team?.country ?? "Exhibition"}</span>
     </div>
+  );
+}
+
+function PlayRow({ play }: { play: Play }) {
+  return (
+    <div className={`play${play.key ? " key" : ""}`}>
+      <span className="clock">{play.clock}</span>
+      <span>{play.text}</span>
+      <span className="mono">{play.away}–{play.home}</span>
+    </div>
+  );
+}
+
+function LineScore({ game }: { game: GameResult }) {
+  const labels = game.quarters.map((_, index) => periodName(index + 1));
+  return (
+    <div className="panel" style={{ marginTop: 8, overflowX: "auto" }}>
+      <table>
+        <thead>
+          <tr>
+            <th>Line</th>
+            {labels.map((label) => <th key={label} className="num">{label}</th>)}
+            <th className="num">Tot</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>{sideName(game, game.awayId)}</td>
+            {game.quarters.map((quarter, index) => <td key={index} className="num">{quarter.away}</td>)}
+            <td className="num">{game.awayScore}</td>
+          </tr>
+          <tr>
+            <td>{sideName(game, game.homeId)}</td>
+            {game.quarters.map((quarter, index) => <td key={index} className="num">{quarter.home}</td>)}
+            <td className="num">{game.homeScore}</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+  );
+}
+
+function sumBox(lines: BoxLine[]) {
+  return lines.reduce(
+    (row, line) => {
+      row.pts += line.pts;
+      row.reb += line.orb + line.drb;
+      row.ast += line.ast;
+      row.stl += line.stl;
+      row.blk += line.blk;
+      row.tov += line.tov;
+      row.pf += line.pf;
+      row.fgm += line.fgm;
+      row.fga += line.fga;
+      row.tpm += line.tpm;
+      row.tpa += line.tpa;
+      row.ftm += line.ftm;
+      row.fta += line.fta;
+      return row;
+    },
+    { pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0, fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0 },
   );
 }
 
@@ -124,7 +199,17 @@ function Box({ title, lines }: { title: string; lines: BoxLine[] }) {
           </tbody>
         </table>
       </div>
+      <TeamLine lines={lines} />
     </div>
+  );
+}
+
+function TeamLine({ lines }: { lines: BoxLine[] }) {
+  const row = sumBox(lines);
+  return (
+    <p className="note">
+      {row.pts} pts · FG {shotLine(row.fgm, row.fga)} ({pct(row.fgm, row.fga)}) · 3P {shotLine(row.tpm, row.tpa)} ({pct(row.tpm, row.tpa)}) · FT {shotLine(row.ftm, row.fta)} ({pct(row.ftm, row.fta)}) · TS {trueShooting(row.pts, row.fga, row.fta)} · {row.reb} reb · {row.ast} ast · {row.stl} stl · {row.blk} blk · {row.tov} tov · {row.pf} pf
+    </p>
   );
 }
 

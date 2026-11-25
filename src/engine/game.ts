@@ -221,7 +221,9 @@ export function simulateGame(input: GameInput): GameResult {
   if (rng() < 0.045) injuryAt[away.id] = 500 + Math.floor(rng() * 1900);
 
   let period = 1;
+  let clock = 0;
   let elapsed = 0;
+  const worst: Record<string, number> = { [home.id]: 0, [away.id]: 0 };
   const addPlay = (play: Play) => {
     if (log) plays.push(play);
   };
@@ -247,6 +249,48 @@ export function simulateGame(input: GameInput): GameResult {
     for (const p of def.lineup) def.live[p.id].pm -= pts;
   };
 
+  const scorePoints = (off: Side, def: Side, pts: number) => {
+    const beforeRun = runTeam === off.id ? run : 0;
+    const beforeHome = home.score;
+    const beforeAway = away.score;
+    const homeDown = Math.max(0, beforeAway - beforeHome);
+    const awayDown = Math.max(0, beforeHome - beforeAway);
+    if (homeDown > worst[home.id]) worst[home.id] = homeDown;
+    if (awayDown > worst[away.id]) worst[away.id] = awayDown;
+    creditPoints(off, def, pts);
+    let milestone = 0;
+    for (const mark of [8, 10, 12, 16]) if (run >= mark && beforeRun < mark) milestone = run;
+    if (milestone) {
+      addPlay({
+        q: period,
+        clock: clockLabel(Math.max(0, clock)),
+        text: `${off.name}, ${run}–0 run.`,
+        home: home.score,
+        away: away.score,
+        kind: "note",
+        key: true,
+        teamId: off.id,
+      });
+    }
+    const wasBehind = off.id === home.id ? beforeHome < beforeAway : beforeAway < beforeHome;
+    const ahead = off.id === home.id ? home.score > away.score : away.score > home.score;
+    const hole = off.id === home.id ? homeDown : awayDown;
+    const tied = home.score === away.score;
+    if (wasBehind && ahead && hole >= 8) {
+      addPlay({
+        q: period,
+        clock: clockLabel(Math.max(0, clock)),
+        text: `${off.name} in front after trailing by ${hole}.`,
+        home: home.score,
+        away: away.score,
+        kind: "note",
+        key: true,
+        teamId: off.id,
+      });
+    }
+    return { tied, tookLead: wasBehind && ahead };
+  };
+
   const inBonus = (fouls: number, q: number) => (q > 4 ? fouls >= 4 : fouls >= 5);
 
   const shootFT = (shooter: Player, off: Side, def: Side, n: number) => {
@@ -258,7 +302,7 @@ export function simulateGame(input: GameInput): GameResult {
         off.live[shooter.id].ftm += 1;
         off.live[shooter.id].pts += 1;
         made += 1;
-        creditPoints(off, def, 1);
+        scorePoints(off, def, 1);
       }
     }
     return made;
@@ -266,7 +310,7 @@ export function simulateGame(input: GameInput): GameResult {
 
   while (period <= 10) {
     const length = period <= 4 ? 720 : 300;
-    let clock = length;
+    clock = length;
     home.foulsQ = 0;
     away.foulsQ = 0;
     const qStartHome = home.score;
@@ -328,6 +372,7 @@ export function simulateGame(input: GameInput): GameResult {
 
       const pace = (off.pace + def.pace) / 2;
       let used = (10 + rng() * 8) / pace;
+      if (ctx.clutch) used *= 0.86;
       if (used < 6) used = 6;
       if (used > clock) used = clock;
       for (const p of off.lineup) off.live[p.id].sec += used;
@@ -359,6 +404,8 @@ export function simulateGame(input: GameInput): GameResult {
       }
 
       const net = unitOff(off.lineup) + off.heat - (unitDef(def.lineup) + def.heat * 0.15) - nerf;
+      const deficit = def.score - off.score;
+      const shotNet = net + (deficit >= 12 && period >= 2 ? Math.min(4, (deficit - 10) * 0.28) : 0);
       const ball = pickWeighted(off.lineup, (p) => {
         let u = p.ratings.usg;
         if (ctx.clutch && p.role === "star") u *= 1.45;
@@ -367,8 +414,9 @@ export function simulateGame(input: GameInput): GameResult {
       }, rng);
       const ballLive = off.live[ball.id];
       const clutchBump = ctx.clutch ? (ball.ratings.clutch - 78) * 0.0016 : 0;
-      const tovP = clamp(0.082 - net * 0.0014, 0.042, 0.14);
-      const foulP = clamp(0.095 + ball.ratings.ath * 0.00035, 0.07, 0.15);
+      const tovP = clamp(0.082 - shotNet * 0.0014, 0.042, 0.14);
+      let foulP = clamp(0.095 + ball.ratings.ath * 0.00035, 0.07, 0.15);
+      if (period >= 4 && clock <= 28 && margin >= 1 && margin <= 6) foulP = Math.min(0.28, foulP + 0.09);
       const roll = rng();
 
       const foulSomeone = () => {
@@ -402,7 +450,7 @@ export function simulateGame(input: GameInput): GameResult {
           home: home.score,
           away: away.score,
           kind: "turn",
-          key: false,
+          key: ctx.clutch,
           teamId: off.id,
         });
         offenseIsHome = !offenseIsHome;
@@ -463,8 +511,8 @@ export function simulateGame(input: GameInput): GameResult {
       const threeRate = clamp(ball.ratings.threeRate / 100 + (spacing - 72) * 0.0016, 0.02, 0.62);
       const isThree = rng() < threeRate;
       const makeP = isThree
-        ? clamp(0.4 + (ball.ratings.three - 76) * 0.0045 + net * 0.0034 + clutchBump, 0.3, 0.55)
-        : clamp(0.57 + (ball.ratings.shot - 76) * 0.0042 + net * 0.003 + (ball.ratings.ath - 78) * 0.0007 + clutchBump, 0.45, 0.74);
+        ? clamp(0.4 + (ball.ratings.three - 76) * 0.0045 + shotNet * 0.0034 + clutchBump, 0.3, 0.55)
+        : clamp(0.57 + (ball.ratings.shot - 76) * 0.0042 + shotNet * 0.003 + (ball.ratings.ath - 78) * 0.0007 + clutchBump, 0.45, 0.74);
       const madeShot = rng() < makeP;
       ballLive.fga += 1;
       if (isThree) ballLive.tpa += 1;
@@ -488,7 +536,7 @@ export function simulateGame(input: GameInput): GameResult {
             home: home.score,
             away: away.score,
             kind: "miss",
-            key: false,
+            key: period >= 3 || blocker.role === "star",
             teamId: def.id,
           });
           const reb = pickWeighted(def.lineup, (p) => p.ratings.reb, rng);
@@ -503,7 +551,9 @@ export function simulateGame(input: GameInput): GameResult {
         ballLive.fgm += 1;
         if (isThree) ballLive.tpm += 1;
         ballLive.pts += pts;
-        creditPoints(off, def, pts);
+        const beforeHome = home.score;
+        const beforeAway = away.score;
+        scorePoints(off, def, pts);
         let assist = "";
         if (rng() < 0.38 + Math.max(...off.lineup.map((p) => p.ratings.play)) * 0.0025) {
           const mates = off.lineup.filter((p) => p.id !== ball.id);
@@ -519,16 +569,19 @@ export function simulateGame(input: GameInput): GameResult {
           const ft = shootFT(ball, off, def, 1);
           andOne = ft ? ` And-one over ${names(fouler)}.` : ` Fouled by ${names(fouler)}, misses the free throw.`;
         }
-        const tookLead = period >= 4 && clock === 0 && ((off.id === home.id && home.score > away.score && home.score - pts <= away.score) || (off.id === away.id && away.score > home.score && away.score - pts <= home.score));
+        const tiedNow = home.score === away.score;
+        const tookNow = off.id === home.id ? beforeHome <= beforeAway && home.score > away.score : beforeAway <= beforeHome && away.score > home.score;
+        const tookLead = period >= 4 && clock === 0 && tookNow;
         if (tookLead) buzzer = true;
+        const stamp = tiedNow ? " Ties it." : tookNow ? " Takes the lead." : "";
         addPlay({
           q: period,
           clock: clockLabel(Math.max(0, clock)),
-          text: `${names(ball)} ${shotName}.${assist}${andOne}`,
+          text: `${names(ball)} ${shotName}.${assist}${andOne}${stamp}`,
           home: home.score,
           away: away.score,
           kind: "make",
-          key: tookLead || (period >= 4 && clock < 90) || pts === 3 && ctx.clutch,
+          key: tookLead || tiedNow || tookNow || andOne !== "" || shotName === "dunk" || (period >= 4 && clock < 90) || (pts === 3 && ctx.clutch),
           teamId: off.id,
         });
         if (period >= 4 && clock < 120 && Math.abs(home.score - away.score) <= 8 && def.players.length && rng() < 0.22) {
@@ -560,11 +613,11 @@ export function simulateGame(input: GameInput): GameResult {
           if (rng() < putP) {
             put.fgm += 1;
             put.pts += 2;
-            creditPoints(off, def, 2);
+            const swing = scorePoints(off, def, 2);
             addPlay({
               q: period,
               clock: clockLabel(clock),
-              text: `${names(reb)} offensive rebound and putback.`,
+              text: `${names(reb)} offensive rebound and putback.${swing.tied ? " Ties it." : swing.tookLead ? " Takes the lead." : ""}`,
               home: home.score,
               away: away.score,
               kind: "make",
@@ -649,6 +702,7 @@ export function simulateGame(input: GameInput): GameResult {
     winnerId,
     loserId,
     buzzerBeater: buzzer,
+    comeback: worst[winnerId] >= 12 ? { teamId: winnerId, deficit: worst[winnerId] } : undefined,
     exhibition: input.exhibition,
   };
 }

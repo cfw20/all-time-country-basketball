@@ -602,6 +602,11 @@ export interface TrialSummary {
   thirdId: string;
   fourthId: string;
   finals: string;
+  margin: number;
+  ot: number;
+  closeGames: number;
+  comebacks: number;
+  upsets: number;
   mvpId: string;
   finalsMvpId: string;
   dpoyId: string;
@@ -614,7 +619,17 @@ export function summarizeTournament(tournament: Tournament): TrialSummary {
   const final = tournament.games.find((g) => g.id === "final")!;
   const awards = tournament.awards!;
   const record = new Map<string, { w: number; l: number }>();
+  const seedOf = new Map(tournament.ranking.map((row) => [row.teamId, row.seed]));
+  let closeGames = 0;
+  let comebacks = 0;
+  let upsets = 0;
   for (const game of tournament.games) {
+    if (game.exhibition) continue;
+    if (Math.abs(game.homeScore - game.awayScore) <= 5) closeGames += 1;
+    if (game.comeback && game.comeback.teamId === game.winnerId) comebacks += 1;
+    const winnerSeed = seedOf.get(game.winnerId) ?? 16;
+    const loserSeed = seedOf.get(game.loserId) ?? 16;
+    if (winnerSeed - loserSeed >= 8) upsets += 1;
     for (const id of [game.homeId, game.awayId]) {
       const row = record.get(id) ?? { w: 0, l: 0 };
       if (id === game.winnerId) row.w += 1;
@@ -629,6 +644,11 @@ export function summarizeTournament(tournament: Tournament): TrialSummary {
     thirdId: tournament.games.find((g) => g.id === "third")!.winnerId,
     fourthId: tournament.games.find((g) => g.id === "third")!.loserId,
     finals: `${final.winnerId === final.homeId ? final.homeScore : final.awayScore}–${final.winnerId === final.homeId ? final.awayScore : final.homeScore}`,
+    margin: Math.abs(final.homeScore - final.awayScore),
+    ot: final.ot,
+    closeGames,
+    comebacks,
+    upsets,
     mvpId: awards.mvpId,
     finalsMvpId: awards.finalsMvpId,
     dpoyId: awards.dpoyId,

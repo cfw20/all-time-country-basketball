@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { playerById, TEAM_BY_ID } from "../data";
 import type { GameResult } from "../data/types";
-import { one } from "../lib/format";
+import { one, trueShooting } from "../lib/format";
 import { tally, type Tot } from "../lib/stats";
 import { usePantheon } from "../state/store";
 
@@ -28,6 +28,8 @@ export function Leaders() {
         <Board title="Rebounds" rows={top(rows, (row) => row.reb / row.g)} value={(row) => one(row.reb, row.g)} />
         <Board title="Assists" rows={top(rows, (row) => row.ast / row.g)} value={(row) => one(row.ast, row.g)} />
         <Board title="Stocks" rows={top(rows, (row) => (row.stl + row.blk) / row.g)} value={(row) => one(row.stl + row.blk, row.g)} />
+        <Board title="True shooting" rows={top(rows.filter((row) => row.fga >= 25), (row) => ts(row))} value={(row) => trueShooting(row.pts, row.fga, row.fta)} />
+        <Board title="Minutes" rows={top(rows, (row) => row.sec / row.g)} value={(row) => one(row.sec / 60, row.g)} />
       </div>
       <section className="section">
         <div className="section-head"><h3>Single-game book</h3></div>
@@ -43,6 +45,11 @@ export function Leaders() {
       </section>
     </main>
   );
+}
+
+function ts(row: Tot): number {
+  const denom = 2 * (row.fga + 0.44 * row.fta);
+  return denom ? row.pts / denom : 0;
 }
 
 function top(rows: Tot[], score: (row: Tot) => number): Tot[] {

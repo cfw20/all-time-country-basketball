@@ -359,7 +359,9 @@ tr.me td { background: rgba(201, 182, 255, 0.1); }
   border-bottom: 1px solid rgba(246, 234, 215, 0.06);
   color: var(--muted);
 }
-.play.key { color: var(--ink); }
+.play.key { color: var(--ink); box-shadow: inset 3px 0 0 var(--rose); padding-left: 8px; }
+.lab-scroll { max-height: 560px; overflow: auto; border-radius: 18px; }
+.rank-row button, button.rank-row { font: inherit; }
 .play .clock { font-family: var(--mono); color: var(--faint); }
 .bars { display: grid; gap: 8px; }
 .bar-line { display: grid; grid-template-columns: 88px 1fr 36px; gap: 8px; align-items: center; color: var(--muted); font-size: 13px; }

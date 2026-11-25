@@ -15,6 +15,13 @@ export function pct(made: number, att: number): string {
   return `${Math.round((100 * made) / att)}%`;
 }
 
+/** True shooting percentage from points, field-goal attempts, and free-throw attempts. */
+export function trueShooting(pts: number, fga: number, fta: number): string {
+  const denom = 2 * (fga + 0.44 * fta);
+  if (denom <= 0) return "—";
+  return `${Math.round((100 * pts) / denom)}%`;
+}
+
 export function shotLine(made: number, att: number): string {
   return `${made}-${att}`;
 }

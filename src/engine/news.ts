@@ -44,6 +44,16 @@ export function buildNews(input: {
       });
     }
 
+    if (game.comeback && game.comeback.teamId === winner && game.comeback.deficit >= 12) {
+      push({
+        kicker: "Comeback",
+        title: `${wName} erase a ${game.comeback.deficit}-point hole`,
+        body: `${wName} trailed by ${game.comeback.deficit} and still beat ${lName} ${score}. The run is in the possession log.`,
+        gameId: game.id,
+        importance: 80,
+      });
+    }
+
     if (game.buzzerBeater) {
       push({
         kicker: "Buzzer",

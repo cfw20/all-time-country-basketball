@@ -14,7 +14,7 @@ export function Rules() {
 
       <section className="section">
         <h3 className="display" style={{ fontSize: 36 }}>The floor</h3>
-        <p className="lede">Four quarters of 12 minutes. A 24-second shot clock. The NBA three-point line. Six fouls to foul out. Bonus on the fifth team foul of a quarter, and on the fourth in overtime. Overtime is five minutes and repeats until someone leads. Timeouts and substitutions follow an NBA shape. There is no FIBA difference in this event: no FIBA quarter length, no FIBA foul limit, no zone-only wrinkle, no Olympic roster cap.</p>
+        <p className="lede">Four quarters of 12 minutes. A 24-second shot clock. The NBA three-point line. Six fouls to foul out. Bonus on the fifth team foul of a quarter, and on the fourth in overtime. Overtime is five minutes and repeats until someone leads. Timeouts and substitutions follow an NBA shape. There is no FIBA difference in this event: no FIBA quarter length, no FIBA foul limit, no zone-only wrinkle, no Olympic roster cap. The painted sky is the look of the building. The basketball is the real game: real players, at the prime on the card, with real box scores.</p>
       </section>
 
       <section className="section">
