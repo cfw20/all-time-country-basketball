@@ -39,8 +39,9 @@ export function Home() {
           <p className="lede">
             {humans} real primes. {humanSides} human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
           </p>
+          <div className="threshold" aria-hidden="true"><span /></div>
         </div>
-        <div className="panel">
+        <div className="panel held">
           <span className="tag">{champ ? "This draw" : "The field is drawn"}</span>
           {champ && held && restoration ? (
             <>
@@ -121,6 +122,25 @@ export function Home() {
           <Link to="/play/fortnight" className="panel door"><span className="tag">Then a series</span><h3>Fortnight</h3><p>Six sides, a round robin, a best-of-seven final.</p></Link>
           <Link to="/play/survivor" className="panel door"><span className="tag">Worst loss out</span><h3>Survivor</h3><p>Eight sides. The heaviest defeat goes home.</p></Link>
           <Link to="/play/five" className="panel door"><span className="tag">Two fives</span><h3>The Five</h3><p>Ten names from the whole book. One game.</p></Link>
+        </div>
+        <h3 className="subhead">Short nights</h3>
+        <div className="doors">
+          <Link to="/play/shootaround" className="panel door"><span className="tag">Six primes</span><h3>Shootaround</h3><p>Midrange, threes, and the line. Five shots each.</p></Link>
+          <Link to="/play/ladder" className="panel door"><span className="tag">Free throws</span><h3>The Ladder</h3><p>Miss, and you leave. The last one shooting wins.</p></Link>
+          <Link to="/play/halfcourt" className="panel door"><span className="tag">First to 11</span><h3>Halfcourt</h3><p>Two primes. Baskets count 2.</p></Link>
+          <Link to="/play/cut" className="panel door"><span className="tag">Under a cap</span><h3>The Cut</h3><p>Build a five. One rating night against the book.</p></Link>
+          <Link to="/play/streak" className="panel door"><span className="tag">Hot hand</span><h3>The Streak</h3><p>Threes until a miss.</p></Link>
+          <Link to="/play/glass" className="panel door"><span className="tag">Boards and blocks</span><h3>The Glass</h3><p>Two bigs. A block counts two.</p></Link>
+          <Link to="/play/closer" className="panel door"><span className="tag">Late clock</span><h3>The Closer</h3><p>Name who, then five possessions each.</p></Link>
+          <Link to="/play/arc" className="panel door"><span className="tag">Five threes</span><h3>The Arc</h3><p>One shooter from each decade. Not the cup.</p></Link>
+        </div>
+        <h3 className="subhead">From the book</h3>
+        <div className="doors">
+          <Link to="/play/prime" className="panel door"><span className="tag">The card</span><h3>Prime year</h3><p>Which year is the prime.</p></Link>
+          <Link to="/play/flag" className="panel door"><span className="tag">Nationality</span><h3>The Flag</h3><p>Who wears it.</p></Link>
+          <Link to="/play/opens" className="panel door"><span className="tag">Same side</span><h3>Opens With</h3><p>Who is in that opening five.</p></Link>
+          <Link to="/play/edge" className="panel door"><span className="tag">Ratings</span><h3>The Edge</h3><p>Higher overall, shot, or defense.</p></Link>
+          <Link to="/play/tape" className="panel door"><span className="tag">Size and spot</span><h3>The Tape</h3><p>Taller, or the position on the card.</p></Link>
         </div>
       </section>
 

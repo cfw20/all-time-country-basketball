@@ -5,9 +5,10 @@ import { Mark } from "../components/Marks";
 import { StylePanel } from "../components/StylePanel";
 import type { SeriesResult } from "../data/types";
 import { readPlayerStyle } from "../engine/style";
-import { finishName, kindLabel, one, placeLine, trueShooting } from "../lib/format";
+import { finishName, kindLabel, one, pct, placeLine, trueShooting } from "../lib/format";
 import { styleOfTeam } from "../lib/styleFor";
 import { seriesRecord } from "../engine/series";
+import { teamPower } from "../engine/tournament";
 import { siegeGames } from "../engine/siege";
 import { seriesShape, tally, teamLine } from "../lib/stats";
 import { usePantheon } from "../state/store";
@@ -35,14 +36,15 @@ export function TeamPage() {
   const floor = tournament.siege?.restoration
     ? (tournament.siege.threatEnded ? "Turned back" : "Holds the floor")
     : "Waiting on the siege";
+  const power = Math.round(teamPower(team.id));
   return (
     <main className="page">
-      <p className="kicker">{built ? "Constructed · no nation · outside the draw" : `${kindLabel(team.kind)}${placeLine(team) ? ` · ${placeLine(team)}` : ""} · ${team.country} · power seed ${seed ?? "—"}`}</p>
-      <div className="champion-mark">
+      <p className="kicker">{built ? "Constructed · no nation · outside the draw" : `${kindLabel(team.kind)}${placeLine(team) ? ` · ${placeLine(team)}` : ""} · ${team.country} · power seed ${seed ?? "—"} · power ${power}`}</p>
+      <div className="champion-mark hall">
         <Mark team={team} size={72} />
         <div>
-          <h2 className="display" style={{ fontSize: 72 }}>{team.name}</h2>
-          <p className="lede" style={{ margin: "8px 0 0" }}>{team.motto}</p>
+          <h2 className="display">{team.name}</h2>
+          <p className="lede motto">{team.motto}</p>
         </div>
       </div>
       <p className="lede">{team.blurb}</p>
@@ -56,32 +58,34 @@ export function TeamPage() {
       <div className="stat-grid" style={{ marginTop: 18 }}>
         <div className="panel"><span className="tag">Series</span><h3>{seriesWins}-{book.length - seriesWins}</h3><p>{built ? floor : finish ? finishName(finish) : "Still in the book"} · games {record.w}-{record.l}</p></div>
         <div className="panel"><span className="tag">Points</span><h3>{record.pf}</h3><p>Allowed {record.pa}</p></div>
-        <div className="panel"><span className="tag">Group</span><h3>{built ? "Siege" : group ? `Group ${group.id}` : "—"}</h3><p>{built ? "Arrival, the gate, the Concord" : group?.teamIds.map((tid) => TEAM_BY_ID[tid]?.code).join(" · ")}</p></div>
+        <div className="panel"><span className="tag">Group</span><h3>{built ? "Siege" : group ? `Group ${group.id}` : "—"}</h3><p>{built ? "Arrival, the gate, the Concord" : <>{group?.teamIds.map((tid, index) => <span key={tid}>{index ? " · " : ""}<Link to={`/teams/${tid}`}>{TEAM_BY_ID[tid]?.code}</Link></span>)}{` · pace ${team.pace.toFixed(2)}`}</>}</p></div>
         <div className="panel"><span className="tag">Roster</span><h3>{roster.length}</h3><p>{built ? "Chassis, spare frames, and short cycles" : "Standard body, two-ways, and short deals"}</p></div>
       </div>
       <section className="section">
         <div className="section-head"><h3>Opening five</h3><span className="quiet">{built ? "The chassis that starts" : `Pace ${team.pace.toFixed(2)} · the card that starts the night`}</span></div>
-        <div className="team-grid">
+        <div className="nameplates">
           {roster.filter((player) => player.starts).map((player) => {
             const from = !built && player.nationality !== team.country ? player.nationality : null;
             return (
-              <Link key={player.id} to={`/players/${player.id}`} className="panel">
+              <Link key={player.id} to={`/players/${player.id}`} className="panel nameplate">
                 <span className="tag">{player.pos}{player.pos2 ? ` / ${player.pos2}` : ""}{from ? ` · ${from}` : ""} · {built ? "Built" : player.primeYear}</span>
                 <h3>{player.name}</h3>
+                <span className="plate-ovr">{player.ratings.ovr}</span>
                 <p className="style-name">{readPlayerStyle(player).name}</p>
-                <p>{player.ratings.ovr} overall · {minuteTarget(player)} minute band · {player.height}</p>
+                <p>card shot {player.ratings.shot} · three {player.ratings.three} · {player.height}</p>
+                <p>{minuteTarget(player)} minute band</p>
               </Link>
             );
           })}
         </div>
       </section>
       <section className="section">
-        <div className="section-head"><h3>Roster</h3><span className="quiet">{built ? "Unit class is the minute band" : "Minute target is the band, not a guarantee"}</span></div>
+        <div className="section-head"><h3>Roster</h3><span className="quiet">{built ? "Unit class is the minute band" : "Minute target is the band. FG and 3P are this draw's box."}</span></div>
         <div style={{ overflowX: "auto" }}>
           <table>
             <thead>
               <tr>
-                <th>Player</th><th>Pos</th><th className="num">Prime</th><th>Role</th><th>Status</th><th className="num">Ovr</th><th className="num">Band</th><th className="num">Min</th><th className="num">Pts</th><th className="num">TS</th>
+                <th>Player</th><th>Pos</th><th className="num">Prime</th><th>Role</th><th>Status</th><th className="num">Ovr</th><th className="num">Band</th><th className="num">Min</th><th className="num">Pts</th><th className="num">FG</th><th className="num">3P</th><th className="num">TS</th>
               </tr>
             </thead>
             <tbody>
@@ -99,6 +103,8 @@ export function TeamPage() {
                     <td className="num">{minuteTarget(player)}</td>
                     <td className="num">{line ? one(line.sec / 60, line.g) : "—"}</td>
                     <td className="num">{line ? one(line.pts, line.g) : "—"}</td>
+                    <td className="num">{line && line.fga ? pct(line.fgm, line.fga) : "—"}</td>
+                    <td className="num">{line && line.tpa ? pct(line.tpm, line.tpa) : "—"}</td>
                     <td className="num">{line ? trueShooting(line.pts, line.fga, line.fta) : "—"}</td>
                   </tr>
                 );

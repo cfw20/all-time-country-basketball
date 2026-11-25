@@ -1,6 +1,6 @@
 # Pantheon
 
-Pantheon is a fictional all-time world basketball championship. Forty-four human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
+Pantheon is a fictional all-time world basketball championship. Forty-eight human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
 
 This repository is private. It stays private until the owner decides to publish. Do not flip the repository to public, and do not deploy a public site from this project, unless the owner makes that decision.
 
@@ -56,13 +56,13 @@ No FIBA quarter length, foul limit, or roster cap is used anywhere in the event.
 
 ## The field
 
-Eighteen countries that can fill a competitive all-time book, twenty-two American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
+Eighteen countries that can fill a competitive all-time book, twenty-six American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
 
 Countries that cannot fill twenty-two competitive primes are not in the draw. Their best players chose a homeland house instead of carrying a weak national side. The Teams page lists every side.
 
 ## The competition
 
-Eleven groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
+Twelve groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
 
 Those sixteen are seeded by pre-draw power, 1 against 16. Every knockout round is first to four, including the final and the third-place series. Neutral floors. The better power seed is listed as home for games 1, 2, 5, and 7. Games 3, 4, and 6 flip the card. There is no home-court scoring bonus.
 
@@ -83,6 +83,8 @@ A series page lists every game, the running tally, and the series sheet. A game 
 The Unbroken Year is a side floor at `/season`. It does not replace the championship. It opens after two finished championships and one series taken from the Construct. The roster is built by rolling an era and a real franchise, then taking one prime from that card. Boosters can reroll, force a myth year, take two from one card, call a position, or recall a passed prime. The season is 82 NBA games. One loss can be replayed. Seventy wins leaves a relic for the next year. An 82–0, The Unbroken, is kept in the book and opens the next year on a myth card with extra boosters. The year is stored locally under `pantheon-year-v1`, apart from the championship save.
 
 Other side floors live at `/play`. Era Clash is one game between two rolled years. A series tonight is a best-of-seven between any two sides. The Lamp runs the three-point, dunk, and skills contests on demand. The Throne is an eight-team era bracket. King of the Hill keeps the winner on the floor. The Gauntlet is seven games up the field, ending at the Construct. The Decade Cup sorts primes by the decade on the card. The Open is a sixteen-side one-game bracket. Fortnight is a six-side round robin and a best-of-seven final. Survivor eliminates the heaviest loss each night. The Five is two drawn lineups and one game. They are exhibitions. They do not change the championship.
+
+Short nights on that hall do not call a full game. Shootaround is midrange, threes, and free throws. The Ladder is a free-throw elimination. Halfcourt is first to 11, one prime against another. The Cut is a five under an overall cap. The Streak is makes until a miss. The Glass is boards and blocks. The Closer is five late possessions after you name who. The Arc is five threes, one shooter from each decade. Trivia on the same hall is prime year, flag, opening teammates, the higher rating, and height or position. Nine questions a run. A miss shows the right name. None of it changes the championship.
 
 ## Where the data lives
 

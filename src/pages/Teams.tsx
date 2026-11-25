@@ -1,8 +1,9 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import { TEAMS } from "../data";
+import { rosterOf, TEAMS } from "../data";
 import { Mark } from "../components/Marks";
-import { kindLabel } from "../lib/format";
+import { teamPower } from "../engine/tournament";
+import { kindLabel, placeLine } from "../lib/format";
 import { styleOfTeam } from "../lib/styleFor";
 
 const FILTERS = ["All", "Country", "Overflow", "Homeland", "Construct"] as const;
@@ -24,10 +25,12 @@ export function Teams() {
         {list.map((team) => (
           <Link key={team.id} to={`/teams/${team.id}`} className="panel" style={{ borderTop: `3px solid ${team.colors.primary}` }}>
             <Mark team={team} size={42} />
-            <span className="tag">{kindLabel(team.kind)} · {team.country}</span>
+            <span className="tag">{kindLabel(team.kind)} · {team.country}{placeLine(team) ? ` · ${placeLine(team)}` : ""}</span>
             <h3>{team.name}</h3>
             <p className="style-name">{styleOfTeam(team).name}</p>
             <p>{team.motto}</p>
+            <p className="openers">{rosterOf(team.id).filter((player) => player.starts).map((player) => player.name.split(" ").at(-1)).join(" · ")}</p>
+            <p className="quiet">Pace {team.pace.toFixed(2)} · power {Math.round(teamPower(team.id))}</p>
           </Link>
         ))}
       </div>

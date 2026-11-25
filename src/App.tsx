@@ -12,6 +12,8 @@ import { Decade, Five, Fortnight, Gauntlet, Hill, OpenFloor, Survivor } from "./
 import { Lamp } from "./pages/Lamp";
 import { Olympics } from "./pages/Olympics";
 import { Play } from "./pages/Play";
+import { Edge, Flag, Opens, PrimeYear, Tape } from "./pages/Trivia";
+import { Arc, Closer, Cut, Glass, Halfcourt, Ladder, Shootaround, Streak } from "./pages/Toys";
 import { PlayerPage } from "./pages/Player";
 import { QuickSeries } from "./pages/QuickSeries";
 import { Throne } from "./pages/Throne";
@@ -64,6 +66,19 @@ export function App() {
         <Route path="play/fortnight" element={<Fortnight />} />
         <Route path="play/survivor" element={<Survivor />} />
         <Route path="play/five" element={<Five />} />
+        <Route path="play/shootaround" element={<Shootaround />} />
+        <Route path="play/ladder" element={<Ladder />} />
+        <Route path="play/halfcourt" element={<Halfcourt />} />
+        <Route path="play/cut" element={<Cut />} />
+        <Route path="play/streak" element={<Streak />} />
+        <Route path="play/glass" element={<Glass />} />
+        <Route path="play/closer" element={<Closer />} />
+        <Route path="play/arc" element={<Arc />} />
+        <Route path="play/prime" element={<PrimeYear />} />
+        <Route path="play/flag" element={<Flag />} />
+        <Route path="play/opens" element={<Opens />} />
+        <Route path="play/edge" element={<Edge />} />
+        <Route path="play/tape" element={<Tape />} />
         <Route path="rules" element={<Rules />} />
         <Route path="*" element={<Missing />} />
       </Route>

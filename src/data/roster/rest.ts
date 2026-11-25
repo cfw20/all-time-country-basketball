@@ -32,9 +32,9 @@ Gabriel Deck|SF|6-8|2021|Argentina|rotation|standard|glue|76|14|30|0|PF|
 Nicolas Laprovittola|PG|6-3|2018|Argentina|rotation|standard|point|75|16|36|0|-|
 Pepe Sanchez|PG|6-4|2002|Argentina|deep|standard|point|74|10|20|0|-|def:80,play:78
 Walter Herrmann|SF|6-9|2007|Argentina|deep|standard|stretch|75|16|38|0|-|
-Ruben Wolkowyski|C|6-10|2001|Argentina|deep|standard|post|72|12|0|0|-|
+Hector Campana|SG|6-5|1992|Argentina|deep|standard|slasher|82|24|16|0|-|shot:84,ath:78|The scoring guard of the Argentine generation before the NBA wave.
 Marcelo Nicola|PF|6-9|1996|Argentina|deep|standard|stretch|73|12|28|0|-|
-Hernan Jasen|SF|6-7|2008|Argentina|deep|standard|glue|72|10|24|0|-|
+Juan Espil|SG|6-3|2001|Argentina|deep|standard|shooter|80|18|32|0|PG|shot:78,three:74|National-team guard. A real Argentine prime.
 Nicolas Brussino|SF|6-8|2017|Argentina|deep|standard|wing|72|12|40|0|-|
 Paolo Quinteros|SG|6-2|2010|Argentina|two-way|two-way|shooter|72|14|38|0|-|
 Leonardo Gutierrez|SF|6-8|2006|Argentina|two-way|two-way|wing|73|12|28|0|-|
@@ -54,7 +54,7 @@ Vitor Benite|SG|6-4|2016|Brazil|rotation|standard|shooter|74|14|42|0|-|
 Guilherme Giovannoni|PF|6-9|2010|Brazil|deep|standard|stretch|73|12|32|0|-|
 Rafael Hettsheimeir|C|6-10|2012|Brazil|deep|standard|post|72|12|8|0|-|
 Augusto Lima|PF|6-10|2016|Brazil|deep|standard|glue|72|12|28|0|-|
-Murilo Becker|C|6-11|2012|Brazil|deep|standard|post|70|12|4|0|-|
+Carlos Olivinha|PF|6-9|2015|Brazil|deep|standard|stretch|78|16|28|0|C|shot:76,three:72|Known as Olivinha. Flamengo and the Brazilian national team.
 Bruno Caboclo|SF|6-9|2016|Brazil|deep|standard|wing|71|12|32|0|-|ath:80
 Cristiano Felicio|C|6-10|2016|Brazil|two-way|two-way|rim|69|10|0|0|-|
 Lucas Nogueira|C|7-0|2016|Brazil|two-way|two-way|rim|70|10|4|0|-|ath:78

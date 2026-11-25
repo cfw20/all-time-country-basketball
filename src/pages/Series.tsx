@@ -9,6 +9,7 @@ import { seriesRecord } from "../engine/series";
 import { seriesShape } from "../lib/stats";
 import { styleForSide, styleKicker } from "../lib/styleFor";
 import { findSeries } from "../engine/tournament";
+import { pct, shotLine } from "../lib/format";
 import { usePantheon } from "../state/store";
 import type { SeriesResult } from "../data/types";
 
@@ -35,6 +36,12 @@ export function SeriesPage() {
   const homeTitle = series.homeName ?? home?.name ?? series.homeId;
   const awayStyle = styleForSide(series.awayId, concordIds);
   const homeStyle = styleForSide(series.homeId, concordIds);
+  const floorNote = (id: string) => {
+    const side = sideById(id);
+    if (!side) return undefined;
+    const seed = tournament.ranking.find((row) => row.teamId === id)?.seed;
+    return `pace ${side.pace.toFixed(2)}${seed ? ` · seed ${seed}` : ""}`;
+  };
   let homeWins = 0;
   let awayWins = 0;
   const rows = series.games.map((game) => {
@@ -59,12 +66,12 @@ export function SeriesPage() {
     <main className="page">
       <p className="kicker">{slate} · first to four · neutral floor</p>
       <div className="game-top">
-        <Club id={series.awayId} name={awayTitle} styleName={awayStyle?.name} />
+        <Club id={series.awayId} name={awayTitle} styleName={awayStyle?.name} note={floorNote(series.awayId)} />
         <div style={{ textAlign: "center" }}>
           <div className="big mono">{series.awayWins}<span style={{ color: "var(--faint)" }}>–</span>{series.homeWins}</div>
           <div className="quarters"><span>{winner?.name ?? series.winnerId} take it {winnerWins}–{loserWins}</span></div>
         </div>
-        <Club id={series.homeId} name={homeTitle} styleName={homeStyle?.name} right />
+        <Club id={series.homeId} name={homeTitle} styleName={homeStyle?.name} note={floorNote(series.homeId)} right />
       </div>
       <div className="facts">
         <span>{seriesShape(series)}</span>
@@ -120,6 +127,10 @@ function SeriesSheet({ series }: { series: SeriesResult }) {
   let biggest = 0;
   let biggestName = homeName;
   const glass = { home: 0, away: 0, homeOrb: 0, awayOrb: 0, homeDrb: 0, awayDrb: 0 };
+  const shot = {
+    home: { fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0 },
+    away: { fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0 },
+  };
   const points = { home: 0, away: 0 };
   for (const game of series.games) {
     if (game.ot) ot += 1;
@@ -138,11 +149,23 @@ function SeriesSheet({ series }: { series: SeriesResult }) {
       glass.home += line.orb + line.drb;
       glass.homeOrb += line.orb;
       glass.homeDrb += line.drb;
+      shot.home.fgm += line.fgm;
+      shot.home.fga += line.fga;
+      shot.home.tpm += line.tpm;
+      shot.home.tpa += line.tpa;
+      shot.home.ftm += line.ftm;
+      shot.home.fta += line.fta;
     }
     for (const line of awayLines) {
       glass.away += line.orb + line.drb;
       glass.awayOrb += line.orb;
       glass.awayDrb += line.drb;
+      shot.away.fgm += line.fgm;
+      shot.away.fga += line.fga;
+      shot.away.tpm += line.tpm;
+      shot.away.tpa += line.tpa;
+      shot.away.ftm += line.ftm;
+      shot.away.fta += line.fta;
     }
     if (margin > biggest) {
       biggest = margin;
@@ -162,11 +185,16 @@ function SeriesSheet({ series }: { series: SeriesResult }) {
         <div className="panel"><span className="tag">Points</span><h3>{points.away}–{points.home}</h3><p>{awayName} to {homeName}. {buzzers ? `${buzzers} buzzer${buzzers === 1 ? "" : "s"}.` : "No buzzer."}</p></div>
         <div className="panel"><span className="tag">Glass</span><h3>{glass.away}–{glass.home}</h3><p>{glassLine} Offensive {glass.awayOrb}–{glass.homeOrb}. Defensive {glass.awayDrb}–{glass.homeDrb}.</p></div>
       </div>
+      <div className="panel shoot-line" style={{ marginTop: 12 }}>
+        <span className="tag">Shooting</span>
+        <p>{awayName} FG {shotLine(shot.away.fgm, shot.away.fga)} ({pct(shot.away.fgm, shot.away.fga)}) · 3P {shotLine(shot.away.tpm, shot.away.tpa)} ({pct(shot.away.tpm, shot.away.tpa)}) · FT {shotLine(shot.away.ftm, shot.away.fta)} ({pct(shot.away.ftm, shot.away.fta)})</p>
+        <p>{homeName} FG {shotLine(shot.home.fgm, shot.home.fga)} ({pct(shot.home.fgm, shot.home.fga)}) · 3P {shotLine(shot.home.tpm, shot.home.tpa)} ({pct(shot.home.tpm, shot.home.tpa)}) · FT {shotLine(shot.home.ftm, shot.home.fta)} ({pct(shot.home.ftm, shot.home.fta)})</p>
+      </div>
     </section>
   );
 }
 
-function Club({ id, name, right, styleName }: { id: string; name?: string; right?: boolean; styleName?: string }) {
+function Club({ id, name, right, styleName, note }: { id: string; name?: string; right?: boolean; styleName?: string; note?: string }) {
   const side = sideById(id);
   const title = name ?? side?.name ?? id;
   const to = id === CONCORD_ID ? "/siege" : side ? `/teams/${side.id}` : undefined;
@@ -174,7 +202,7 @@ function Club({ id, name, right, styleName }: { id: string; name?: string; right
     <div className={`club${right ? " right" : ""}`}>
       {side ? <Mark team={side} size={48} /> : null}
       {to ? <Link to={to} className="display" style={{ fontSize: 36 }}>{title}</Link> : <span className="display" style={{ fontSize: 36 }}>{title}</span>}
-      <span className="quiet">{side?.country ?? "Series"}{styleName ? ` · ${styleName}` : ""}</span>
+      <span className="quiet">{side?.country ?? "Series"}{styleName ? ` · ${styleName}` : ""}{note ? ` · ${note}` : ""}</span>
     </div>
   );
 }

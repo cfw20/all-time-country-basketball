@@ -13,7 +13,7 @@ Sergio Rodriguez|PG|6-3|2014|Spain|rotation|standard|point|80|18|30|0|-|play:90,
 Felipe Reyes|C|6-9|2010|Spain|rotation|standard|rim|78|16|2|0|PF|reb:84,def:78
 Jorge Garbajosa|SF|6-10|2006|Spain|deep|standard|wing|76|16|28|0|-|def:78,reb:70
 Willy Hernangomez|C|6-11|2017|Spain|deep|standard|post|76|16|4|0|-|reb:84,shot:74
-Juancho Hernangomez|PF|6-9|2018|Spain|deep|standard|stretch|74|14|36|0|-|three:76
+Andres Jimenez|PF|6-9|1988|Spain|deep|standard|post|80|18|8|0|-|shot:80,reb:74|Barcelona and the Spanish teams of the 1980s.
 Raul Lopez|PG|6-0|2004|Spain|deep|standard|point|74|16|22|0|-|play:80
 Fernando Martin|PF|6-9|1986|Spain|deep|standard|post|77|18|2|0|-|shot:78,ath:80|Prime of the 1980s. Included at that peak.
 Victor Claver|SF|6-10|2012|Spain|two-way|two-way|glue|73|12|30|0|-|def:76
@@ -32,9 +32,9 @@ Boris Diaw|PF|6-8|2006|France|rotation|standard|glue|80|16|24|0|-|play:84,reb:70
 Mickael Pietrus|SG|6-6|2008|France|rotation|standard|defender|76|14|36|0|SF|def:82,ath:86
 Ronny Turiaf|C|6-10|2008|France|deep|standard|rim|74|12|0|0|-|def:80,reb:74
 Rodrigue Beaubois|PG|6-2|2011|France|deep|standard|slasher|78|18|34|0|-|ath:88,shot:76
-Guerschon Yabusele|PF|6-8|2024|France|deep|standard|stretch|74|14|32|0|-|ath:84,three:74
+Antoine Rigaudeau|SG|6-6|1998|France|deep|standard|shooter|82|22|30|0|-|three:78,play:80,shot:80|EuroLeague peak. He did not have an NBA star season.
 Bilal Coulibaly|SF|6-7|2026|France|deep|standard|defender|76|14|30|0|-|def:80,ath:86|Rated on the prime already on record.
-Killian Hayes|PG|6-5|2023|France|deep|standard|point|73|16|32|0|-|play:74
+Jim Bilba|PF|6-8|1998|France|deep|standard|glue|78|16|20|0|SF|def:78,reb:72|EuroLeague forward on the French teams of the 1990s.
 Tariq Abdul-Wahad|SG|6-6|1999|France|deep|standard|wing|74|16|12|0|-|def:76
 Ian Mahinmi|C|6-11|2014|France|two-way|two-way|rim|73|12|0|0|-|def:76
 Alexis Ajinca|C|7-2|2015|France|two-way|two-way|post|72|14|8|0|-|shot:74
@@ -50,12 +50,12 @@ Vlade Divac|C|7-1|1996|Serbia|starter|standard|post|84|18|2|0|-|play:80,reb:84,d
 Aleksandar Djordjevic|PG|6-2|1995|Serbia|rotation|standard|shooter|83|20|38|0|-|three:84,play:80,clutch:90
 Predrag Danilovic|SG|6-6|1995|Serbia|rotation|standard|slasher|82|22|16|0|-|shot:84,ath:82
 Nemanja Bjelica|PF|6-10|2018|Serbia|rotation|standard|stretch|78|16|36|0|-|three:78,play:74
-Vladimir Radmanovic|SF|6-10|2005|Serbia|rotation|standard|stretch|76|14|40|0|-|three:78
+Radivoj Korac|SF|6-5|1965|Serbia|rotation|standard|slasher|85|24|4|0|-|shot:86,ath:82,ft:80|Yugoslav scoring great. Assigned to Serbia, the modern country of his birth.
 Nikola Jovic|PF|6-10|2025|Serbia|deep|standard|stretch|76|16|36|0|-|play:72,three:76|Rated on the prime already on record.
-Boban Marjanovic|C|7-4|2016|Serbia|deep|standard|post|74|14|0|0|-|shot:78,reb:80
+Zarko Paspalj|SF|6-9|1989|Serbia|deep|standard|wing|82|24|12|0|-|shot:84,ath:80|European scoring peak. Assigned to Serbia.
 Nenad Krstic|C|7-0|2008|Serbia|deep|standard|post|75|16|0|0|-|shot:76,reb:74
 Marko Jaric|PG|6-7|2005|Serbia|deep|standard|glue|74|12|24|0|-|play:78,def:76
-Darko Milicic|C|7-0|2006|Serbia|deep|standard|rim|70|12|0|0|-|def:72,ath:74|Rated on the prime he actually reached, not the draft billing.
+Dragan Kicanovic|SG|6-4|1980|Serbia|deep|standard|shooter|84|26|8|0|-|shot:86,play:78,ath:82|Olympic champion. Assigned to Serbia.
 Vasilije Micic|PG|6-4|2021|Serbia|two-way|two-way|point|80|20|34|0|-|play:86,three:76
 Aleksej Pokusevski|PF|7-0|2022|Serbia|two-way|two-way|stretch|73|14|40|0|-|three:74,ath:78
 Miroslav Raduljica|C|7-0|2014|Serbia|deep|hardship|post|73|14|0|0|-|shot:74,reb:72
@@ -83,7 +83,7 @@ Dragan Bender|PF|7-0|2018|Croatia|deep|ten-day|stretch|71|12|36|0|-|three:72
   alps: `
 Luka Doncic|PG|6-7|2024|Slovenia|star|standard|creator|94|34|40|1|-|shot:86,three:82,play:96,reb:78,def:68,ath:74,ft:78,clutch:94
 Goran Dragic|SG|6-3|2014|Slovenia|star|standard|slasher|84|26|30|1|-|shot:82,three:70,play:78,ath:82,ft:76
-Bostjan Nachbar|SF|6-9|2006|Slovenia|starter|standard|wing|74|16|34|1|-|three:74
+Erazem Lorbek|PF|6-11|2011|Slovenia|starter|standard|post|84|22|18|1|C|shot:82,reb:80,def:74,ft:80|EuroLeague MVP. The Slovenian big the opening five was missing.
 Vlatko Cancar|SF|6-8|2021|Slovenia|starter|standard|stretch|75|16|36|1|-|three:76,def:74
 Radoslav Nesterovic|C|7-0|2003|Slovenia|starter|standard|rim|75|14|0|1|-|def:76,reb:74
 Primoz Brezec|C|7-1|2006|Slovenia|starter|standard|post|73|14|0|0|-|reb:74
@@ -93,7 +93,7 @@ Zoran Dragic|SG|6-5|2015|Slovenia|rotation|standard|wing|72|14|32|0|-|
 Jaka Lakovic|PG|6-1|2008|Slovenia|rotation|standard|shooter|76|18|40|0|-|three:80,play:74
 Jure Zdovc|PG|6-4|1994|Slovenia|deep|standard|point|74|14|22|0|-|def:78,play:78
 Marko Milic|SF|6-7|1999|Slovenia|deep|standard|wing|72|14|20|0|-|
-Uros Slokar|PF|6-10|2008|Slovenia|deep|standard|stretch|70|12|30|0|-|
+Sani Becirovic|SG|6-5|2005|Slovenia|deep|standard|shooter|80|18|36|0|-|three:78,shot:78|National-team guard through the Olympic years.
 Gasper Vidmar|C|6-11|2012|Slovenia|deep|standard|rim|71|12|0|0|-|reb:74
 Klemen Prepelic|SG|6-3|2017|Slovenia|deep|standard|shooter|73|16|40|0|-|three:78
 Edo Muric|SF|6-8|2016|Slovenia|two-way|two-way|wing|72|12|32|0|-|
@@ -112,7 +112,7 @@ Linas Kleiza|SF|6-8|2010|Lithuania|rotation|standard|wing|76|16|32|0|PF|
 Donatas Motiejunas|PF|7-0|2016|Lithuania|rotation|standard|post|75|14|16|0|-|
 Arvydas Macijauskas|SG|6-4|2005|Lithuania|rotation|standard|shooter|76|18|40|0|-|three:80
 Rimantas Kaukenas|SG|6-5|2006|Lithuania|rotation|standard|shooter|74|14|38|0|-|
-Mindaugas Kuzminskas|SF|6-9|2017|Lithuania|deep|standard|wing|73|14|32|0|-|
+Saulius Stombergas|SF|6-8|2003|Lithuania|deep|standard|wing|79|16|28|0|-|shot:78,three:74|EuroLeague champion on the national team.
 Darius Songaila|PF|6-9|2007|Lithuania|deep|standard|glue|74|12|16|0|-|def:76
 Jonas Maciulis|SF|6-7|2013|Lithuania|deep|standard|defender|75|12|34|0|-|def:80
 Paulius Jankunas|PF|6-8|2012|Lithuania|deep|standard|glue|76|14|20|0|-|def:78,reb:72
@@ -125,7 +125,7 @@ Giannis Antetokounmpo|PF|6-11|2021|Greece|star|standard|slasher|96|32|22|1|C|sho
 Nikos Galis|SG|6-0|1987|Greece|star|standard|slasher|90|34|8|1|-|shot:92,play:78,ath:84,ft:82,def:64|EuroLeague peak. Rated for that dominance. He did not play in the NBA.
 Vassilis Spanoulis|PG|6-4|2009|Greece|starter|standard|point|85|26|30|1|-|play:88,shot:80,three:74,clutch:96,ft:84
 Dimitris Diamantidis|SF|6-5|2007|Greece|starter|standard|defender|84|16|24|1|-|def:96,play:84,reb:60,ath:82
-Ioannis Bourousis|C|7-0|2012|Greece|starter|standard|post|76|14|8|1|-|reb:78,def:74
+Panagiotis Fasoulas|C|7-0|1989|Greece|starter|standard|post|83|18|4|1|-|shot:80,reb:84,def:78|The center next to Galis. Rated for that EuroBasket prime.
 Theodoros Papaloukas|PG|6-6|2006|Greece|starter|standard|point|82|18|16|0|-|play:90,def:80,reb:60
 Panagiotis Giannakis|SG|6-4|1987|Greece|rotation|standard|wing|80|18|16|0|-|shot:80,play:78
 Antonis Fotsis|PF|6-10|2006|Greece|rotation|standard|stretch|76|14|32|0|-|
@@ -135,7 +135,7 @@ Georgios Printezis|PF|6-9|2012|Greece|rotation|standard|post|77|16|16|0|-|shot:7
 Nick Calathes|PG|6-6|2014|Greece|deep|standard|point|78|16|30|0|-|play:86,def:74
 Tyler Dorsey|SG|6-4|2019|Greece|deep|standard|shooter|76|18|40|0|-|three:78|American-born. Represented Greece.
 Thanasis Antetokounmpo|SF|6-7|2021|Greece|deep|standard|defender|74|12|20|0|-|def:80,ath:86
-Georgios Papagiannis|C|7-1|2018|Greece|deep|standard|rim|72|12|0|0|-|
+Fanis Christodoulou|SF|6-8|1989|Greece|deep|standard|wing|82|22|12|0|-|shot:82,ath:80|The wing of the Galis teams.
 Sofoklis Schortsanitis|C|6-9|2006|Greece|two-way|two-way|post|74|16|0|0|-|shot:78,ath:70
 Kostas Antetokounmpo|PF|6-10|2020|Greece|two-way|two-way|defender|70|10|10|0|C|ath:84,def:74
 Kostas Sloukas|PG|6-2|2018|Greece|deep|short|point|80|16|34|0|-|play:82,three:78
@@ -152,9 +152,9 @@ Daniel Theis|C|6-8|2020|Germany|rotation|standard|rim|76|12|20|0|PF|def:78
 Moritz Wagner|PF|6-11|2021|Germany|rotation|standard|stretch|76|16|34|0|C|three:74
 Ademola Okulaja|PF|6-8|2002|Germany|rotation|standard|glue|74|12|20|0|-|def:76|Nigerian heritage. Represented Germany.
 Patrick Femerling|C|7-1|2004|Germany|deep|standard|rim|72|10|0|0|-|
-Tibor Pleiss|C|7-3|2015|Germany|deep|standard|post|70|12|4|0|-|
-Isaac Bonga|SF|6-8|2020|Germany|deep|standard|defender|70|10|24|0|-|ath:82
-Paul Zipser|SF|6-8|2017|Germany|deep|standard|wing|69|12|34|0|-|
+Uwe Blab|C|7-0|1986|Germany|deep|standard|post|78|14|2|0|-|shot:74,reb:74|Dallas prime. A German center the later benches did not replace.
+Michael Koch|PG|6-2|1997|Germany|deep|standard|point|78|16|24|0|-|play:80,shot:74|Alba Berlin point guard and a long national-team prime.
+Henning Harnisch|SF|6-7|1996|Germany|deep|standard|wing|80|18|16|0|-|shot:78,ath:76|Alba Berlin wing. The German prime before the NBA wave.
 Niels Giffey|SF|6-7|2016|Germany|deep|standard|shooter|71|10|42|0|-|three:76
 Maodo Lo|PG|6-3|2018|Germany|two-way|two-way|shooter|73|14|40|0|-|
 Robin Benzing|SF|6-10|2014|Germany|two-way|two-way|stretch|72|12|36|0|-|
@@ -172,9 +172,9 @@ Luigi Datome|SF|6-8|2013|Italy|rotation|standard|stretch|76|16|40|0|-|three:80
 Gregor Fucka|PF|6-10|1998|Italy|rotation|standard|post|80|18|6|0|-|shot:78,reb:74|Born in Croatia. Represented Italy.
 Simone Fontecchio|SF|6-7|2023|Italy|rotation|standard|stretch|76|16|40|0|-|three:78
 Andrea Bargnani|PF|7-0|2011|Italy|rotation|standard|stretch|74|18|32|0|C|shot:76,three:72
-Nico Mannion|PG|6-2|2022|Italy|deep|standard|point|72|16|36|0|-|play:76
+Pierluigi Marzorati|PG|6-1|1982|Italy|deep|standard|point|80|16|8|0|-|play:86,def:78,shot:76|EuroLeague peak with Cantù. Rated for that prime, not an NBA translation.
 Daniel Hackett|PG|6-5|2016|Italy|deep|standard|point|75|14|28|0|-|play:80,def:74|American-born. Represented Italy.
-Denis Marconato|C|6-11|2004|Italy|deep|standard|rim|73|10|0|0|-|
+Gianluca Basile|SG|6-4|2003|Italy|deep|standard|shooter|80|18|36|0|-|three:78,shot:78|EuroLeague shooting guard. Olympic prime, not a projection.
 Achille Polonara|PF|6-8|2018|Italy|deep|standard|glue|74|12|32|0|-|def:76
 Amedeo Della Valle|SG|6-4|2016|Italy|two-way|two-way|shooter|72|14|44|0|-|
 Alessandro Gentile|SG|6-6|2015|Italy|two-way|two-way|slasher|73|16|28|0|-|
@@ -193,7 +193,7 @@ Mirsad Turkcan|PF|6-9|2001|Turkey|rotation|standard|post|76|16|4|0|-|reb:84
 Omer Asik|C|7-0|2013|Turkey|rotation|standard|rim|74|10|0|0|-|def:80,reb:80
 Furkan Korkmaz|SG|6-7|2021|Turkey|deep|standard|shooter|73|14|44|0|-|
 Ender Arslan|PG|6-3|2010|Turkey|deep|standard|point|74|14|32|0|-|
-Semih Erden|C|7-0|2012|Turkey|deep|standard|rim|71|10|0|0|-|
+Kerem Tunceri|PG|6-2|2010|Turkey|deep|standard|point|78|16|30|0|-|play:80,three:74|National-team point guard through the EuroBasket years.
 Omer Yurtseven|C|7-0|2022|Turkey|deep|standard|post|72|12|12|0|-|
 Sertac Sanli|C|7-0|2021|Turkey|deep|standard|stretch|73|12|36|0|-|
 Scottie Wilbekin|PG|6-2|2019|Turkey|two-way|two-way|point|76|18|36|0|-|play:80|American-born. Represented Turkey.
@@ -214,7 +214,7 @@ Anzejs Pasecniks|C|7-2|2019|Latvia|rotation|standard|rim|72|12|8|0|-|
 Arturs Zagars|PG|6-3|2022|Latvia|rotation|standard|point|74|16|34|0|-|
 Igors Miglinieks|PG|6-2|1988|Latvia|deep|standard|point|73|12|12|0|-|Latvian guard of the Soviet era. Assigned to Latvia.
 Rolands Freimanis|PF|6-10|2016|Latvia|deep|standard|stretch|71|12|34|0|-|
-Kristers Zoriks|PG|6-4|2019|Latvia|deep|standard|point|70|12|32|0|-|
+Janis Blums|SG|6-4|2009|Latvia|deep|standard|shooter|80|18|38|0|PG|three:78,shot:76|Long-time Latvian guard. Rated on that EuroLeague prime.
 Rihards Lomazs|SG|6-4|2018|Latvia|deep|standard|shooter|70|12|40|0|-|
 Kaspars Berzins|C|7-0|2012|Latvia|two-way|two-way|rim|69|10|0|0|-|
 Zanis Peiners|C|6-10|2017|Latvia|two-way|two-way|post|68|10|6|0|-|
@@ -294,8 +294,8 @@ Vitaly Fridzon|SG|6-5|2012|Russia|rotation|standard|shooter|74|14|40|0|-|
 Evgeny Voronov|SG|6-5|2012|Russia|deep|standard|defender|73|12|30|0|-|def:78
 Anton Ponkrashov|SG|6-7|2011|Russia|deep|standard|glue|72|12|28|0|-|
 Semyon Antonov|PF|6-8|2014|Russia|deep|standard|defender|73|10|24|0|-|def:78
-Dmitry Khvostov|PG|6-3|2012|Russia|deep|standard|point|72|14|30|0|-|
-Pavel Podkolzin|C|7-5|2005|Russia|deep|standard|rim|68|8|0|0|-|
+J.R. Holden|PG|6-1|2007|Russia|deep|standard|point|80|16|32|0|-|play:82,three:74|Born in the United States. Represented Russia.
+Alexander Belov|C|6-7|1974|Russia|deep|standard|post|84|20|2|0|-|shot:82,reb:84,def:80|Soviet Olympic center. Assigned to Russia. Prime is the mid-1970s.
 Nikita Kurbanov|SF|6-8|2016|Russia|two-way|two-way|glue|74|12|30|0|-|def:76
 Andrey Vorontsevich|PF|6-10|2012|Russia|two-way|two-way|stretch|73|12|34|0|-|
 Sergei Panov|SF|6-7|1998|Russia|deep|short|wing|74|14|22|0|-|

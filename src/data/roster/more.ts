@@ -37,24 +37,24 @@ Gheorghe Muresan|C|7-7|1996|Romania|deep|short|post|73|16|0|0|-|shot:70,reb:78|R
   nrth: `
 Nickeil Alexander-Walker|SG|6-5|2024|Canada|deep|standard|wing|78|16|38|0|-|def:78,ath:82,three:76
 Andrew Nembhard|PG|6-5|2024|Canada|deep|standard|point|77|14|34|0|-|play:82,def:80,three:74
-Shaedon Sharpe|SG|6-5|2025|Canada|deep|standard|slasher|76|18|32|0|-|ath:90,shot:74|Rated on the prime already on record.
-Lu Dort|SG|6-3|2023|Canada|deep|short|defender|80|14|36|0|SF|def:86
+Jamaal Magloire|C|6-11|2004|Canada|deep|standard|rim|81|16|0|0|-|reb:82,def:76|All-Star center. Born in Toronto.
+Rick Fox|SF|6-7|2001|Canada|deep|short|wing|80|16|30|0|-|shot:78,def:74|Born in Toronto. Represented Canada. The short deal stays a real prime.
 `,
   oro: `
 Serge Ibaka|PF|6-10|2016|Spain|deep|standard|rim|82|16|22|0|C|def:88,reb:80,ath:84|Born in Brazzaville. Represented Spain.
 Santi Aldama|PF|7-0|2024|Spain|deep|standard|stretch|76|14|36|0|-|three:78,reb:74,play:70
-Alex Abrines|SG|6-6|2017|Spain|deep|standard|shooter|74|12|44|0|-|three:82,def:72
+Jordi Villacampa|SG|6-5|1990|Spain|deep|standard|shooter|80|20|28|0|-|shot:80,three:74|Joventut and the Spanish national team.
 Usman Garuba|PF|6-8|2023|Spain|deep|short|defender|73|10|16|0|-|def:82,reb:74
 `,
   roya: `
 Isaia Cordinier|SG|6-5|2024|France|deep|standard|wing|76|16|36|0|-|ath:86,def:78,three:74
-Joffrey Lauvergne|PF|6-11|2016|France|deep|standard|stretch|74|14|28|0|C|reb:74,shot:72
-Vincent Poirier|C|7-0|2019|France|deep|standard|rim|74|12|8|0|-|def:78,reb:78
+Richard Dacoury|SF|6-5|1988|France|deep|standard|wing|80|18|16|0|-|shot:80,ath:78,def:74|Limoges and the French teams of the 1980s.
+Adrien Moerman|PF|6-8|2018|France|deep|standard|glue|79|14|28|0|SF|def:78,reb:74|EuroLeague forward. The French bench, not a projection.
 Andrew Albicy|PG|5-10|2014|France|deep|short|point|73|12|28|0|-|play:82,def:80
 `,
   eagl: `
 Nemanja Nedovic|SG|6-4|2016|Serbia|deep|standard|slasher|75|18|32|0|-|ath:84,shot:76
-Nikola Kalinic|SF|6-8|2016|Serbia|deep|standard|wing|75|14|34|0|-|three:74,play:76
+Igor Rakocevic|SG|6-3|2009|Serbia|deep|standard|shooter|82|22|32|0|-|shot:84,three:76|EuroLeague scoring guard. Assigned to Serbia.
 Filip Petrusev|C|6-11|2023|Serbia|deep|standard|post|76|16|16|0|-|shot:78,reb:76
 Stefan Jovic|PG|6-2|2017|Serbia|deep|short|point|74|14|30|0|-|play:84,def:72
 `,
@@ -96,8 +96,8 @@ Davi Rossetto|PG|6-1|2022|Brazil|deep|short|point|72|12|32|0|-|play:74
 `,
   sun: `
 Josh Green|SG|6-5|2024|Australia|deep|standard|wing|76|14|36|0|-|ath:86,def:80,three:74
-Duop Reath|C|6-10|2024|Australia|deep|standard|stretch|74|14|34|0|-|three:76,reb:72|Born in South Sudan. Represented Australia.
-Chris Goulding|SG|6-4|2014|Australia|deep|standard|shooter|74|16|44|0|-|three:82
+Chris Anstey|C|7-0|1999|Australia|deep|standard|post|79|16|6|0|-|shot:74,reb:76|Dallas and the Australian national team.
+Matthew Nielsen|PF|6-10|2004|Australia|deep|standard|stretch|78|14|28|0|C|shot:74,reb:76|Olympic frontcourt piece. The Australian bench, in a real prime.
 Jack White|SF|6-7|2023|Australia|deep|short|defender|73|10|34|0|-|def:80,ath:82
 `,
   iron: `

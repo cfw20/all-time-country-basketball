@@ -125,7 +125,7 @@ const RAW: Team[] = [
     mark: "shield",
     motto: "The royal house.",
     blurb:
-      "France at prime, from Tony Parker to Victor Wembanyama. Wembanyama is rated on the prime already on record, not a projection. Joakim Noah was born in New York and represented France.",
+      "France at prime, from Tony Parker to Victor Wembanyama. Antoine Rigaudeau is the EuroLeague guard on the deep seat. Wembanyama is rated on the prime already on record, not a projection. Joakim Noah was born in New York and represented France.",
     pace: 1.02,
   },
   {
@@ -140,7 +140,7 @@ const RAW: Team[] = [
     mark: "ring",
     motto: "Wings, not a revived state.",
     blurb:
-      "Serbia, not Yugoslavia. Divac, Bodiroga, Peja, Djordjevic, and Jokic are here because this is the modern country they belong to. Croatian and Slovenian greats are on their own sides.",
+      "Serbia, not Yugoslavia. Divac, Bodiroga, Peja, Djordjevic, Jokic, Radivoj Korac, and Dragan Kicanovic are here because this is the modern country they belong to. Croatian and Slovenian greats are on their own sides.",
     pace: 0.98,
   },
   {
@@ -170,7 +170,7 @@ const RAW: Team[] = [
     mark: "diamond",
     motto: "The high country.",
     blurb:
-      "Luka Doncic and Goran Dragic at their peaks, with the Slovenian generation around them. A small country, a real side, and one of the highest ceilings in the draw.",
+      "Luka Doncic and Goran Dragic at their peaks, with Erazem Lorbek in the frontcourt. A small country, a real side, and one of the highest ceilings in the draw.",
     pace: 1.01,
   },
   {
@@ -200,7 +200,7 @@ const RAW: Team[] = [
     mark: "arch",
     motto: "An order, not a museum.",
     blurb:
-      "Galis and Spanoulis beside Giannis Antetokounmpo. Giannis was born in Lagos and represents Greece. The Order is a Greek side, not a Nigerian one.",
+      "Galis, Spanoulis, and Fasoulas beside Giannis Antetokounmpo. Giannis was born in Lagos and represents Greece. The Order is a Greek side, not a Nigerian one.",
     pace: 0.99,
   },
   {
@@ -275,7 +275,7 @@ const RAW: Team[] = [
     mark: "arch",
     motto: "Craft, then noise.",
     blurb:
-      "Dino Meneghin and Antonello Riva beside Gallinari and Belinelli. Carlton Myers and Mike D'Antoni represented Italy and are noted as such.",
+      "Dino Meneghin and Antonello Riva beside Gallinari and Belinelli. Pierluigi Marzorati is the Cantù point guard on a deep seat. Carlton Myers and Mike D'Antoni represented Italy and are noted as such.",
     pace: 0.98,
   },
   {
@@ -485,7 +485,7 @@ const RAW: Team[] = [
     mark: "shield",
     motto: "The northern court.",
     blurb:
-      "Sergei Belov and Andrei Kirilenko, then the EuroBasket generation. Lithuanians, Latvians, Georgians, and Ukrainians are not folded back into a Soviet side. They play for the modern country they belong to.",
+      "Sergei Belov, Alexander Belov, and Andrei Kirilenko, then the EuroBasket generation. Lithuanians, Latvians, Georgians, and Ukrainians are not folded back into a Soviet side. They play for the modern country they belong to.",
     pace: 0.97,
   },
   {

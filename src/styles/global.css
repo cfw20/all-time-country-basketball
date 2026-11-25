@@ -171,7 +171,7 @@ button { cursor: pointer; }
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.55;
+  opacity: 0.46;
 }
 
 .shell { position: relative; z-index: 1; min-height: 100vh; padding-bottom: 108px; }
@@ -845,3 +845,57 @@ h3.subhead {
 [data-floor="olympics"] .era-pick { grid-template-columns: minmax(0, 1fr) auto; }
 [data-floor="olympics"] .slot strong,
 [data-floor="olympics"] .era-pick strong { overflow-wrap: anywhere; }
+
+[data-night="short"] { min-width: 0; }
+[data-night="short"] h2.display {
+  font-size: clamp(36px, 8vw, 64px);
+  line-height: 0.96;
+  overflow-wrap: anywhere;
+}
+[data-night="short"] .door,
+[data-night="short"] .cut-col,
+[data-night="short"] .toy-list { min-width: 0; }
+[data-night="short"] .door h3,
+[data-night="short"] .door p,
+[data-night="short"] .toy-prompt,
+[data-night="short"] .scoreline { overflow-wrap: anywhere; }
+[data-night="short"] button.door:disabled { opacity: 1; cursor: default; }
+.toy-prompt {
+  font-family: var(--serif);
+  font-size: clamp(26px, 4vw, 36px);
+  font-weight: 560;
+  line-height: 1.15;
+  margin: 8px 0 12px;
+  overflow-wrap: anywhere;
+}
+.toy-list { display: grid; gap: 8px; min-width: 0; }
+.toy-log { margin: 12px 0 0; padding-left: 18px; color: var(--muted); }
+.toy-log li { margin: 4px 0; overflow-wrap: anywhere; }
+.cut-board { display: grid; grid-template-columns: repeat(5, minmax(0, 1fr)); gap: 10px; }
+.cut-col { min-width: 0; display: grid; gap: 8px; align-content: start; }
+.cut-col h3 { margin: 0; font-family: var(--serif); font-size: 22px; font-weight: 560; }
+button.pick {
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  width: 100%;
+  min-width: 0;
+  max-width: 100%;
+  cursor: pointer;
+}
+button.pick:disabled { cursor: default; opacity: 1; color: inherit; }
+button.pick strong,
+.pick .meta { display: block; overflow-wrap: anywhere; }
+.pick .meta { margin-top: 4px; color: var(--faint); font-size: 13px; }
+.panel.pick.right { border-color: rgba(231, 194, 122, 0.95); background: rgba(231, 194, 122, 0.14); }
+.panel.pick.wrong { border-color: rgba(240, 167, 181, 0.95); background: rgba(240, 167, 181, 0.12); }
+.panel.pick.on { border-color: rgba(159, 214, 255, 0.95); }
+[data-floor="play"] .door { min-width: 0; }
+[data-floor="play"] .door h3,
+[data-floor="play"] .door p { overflow-wrap: anywhere; }
+@media (max-width: 980px) {
+  .cut-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+}
+@media (max-width: 640px) {
+  .cut-board { grid-template-columns: minmax(0, 1fr); }
+}

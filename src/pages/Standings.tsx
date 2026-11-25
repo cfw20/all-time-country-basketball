@@ -42,7 +42,7 @@ export function Standings() {
                             {team?.code} {team?.name}
                           </Link>
                           {advancing.has(row.teamId) ? <div className="quiet">Through</div> : null}
-                          <div className="quiet">Seed {seedOf.get(row.teamId) ?? "—"} · {row.pf} scored</div>
+                          <div className="quiet">Seed {seedOf.get(row.teamId) ?? "—"} · pace {team?.pace.toFixed(2) ?? "—"} · {row.pf} scored</div>
                         </td>
                         <td className="num">{row.w}–{row.l}</td>
                         <td className="num">{row.gw}–{row.gl}</td>

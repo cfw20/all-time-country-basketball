@@ -16,21 +16,23 @@ import {
 import { ERA_CARDS, eraCard, freshCharges, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
 import { OLYMPICS_KEY } from "../src/state/olympicsBook";
 import { playDecade, playFive, playFortnight, playGauntlet, playHill, playOpen, playSurvivor } from "../src/engine/floors";
+import { TRIVIA_PLAYS } from "../src/engine/trivia";
+import { TOY_PLAYS } from "../src/engine/toys";
 import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
 import { castFromGame, playAfter, type AfterKind } from "../src/engine/after";
-import { readPlayerStyle, readStyle } from "../src/engine/style";
 import { lightLamp } from "../src/engine/tournament";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
+import { readPlayerStyle, readStyle } from "../src/engine/style";
 
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
 
-if (TEAMS.length !== 45) fail(`expected 45 sides, got ${TEAMS.length}`);
+if (TEAMS.length !== 49) fail(`expected 49 sides, got ${TEAMS.length}`);
 const overflow = TEAMS.filter((t) => t.kind === "overflow");
 const homeland = TEAMS.filter((t) => t.kind === "homeland");
 const countries = TEAMS.filter((t) => t.kind === "country");
 const built = TEAMS.filter((t) => t.kind === "construct");
-if (overflow.length !== 22) fail(`expected 22 overflow houses, got ${overflow.length}`);
+if (overflow.length !== 26) fail(`expected 26 overflow houses, got ${overflow.length}`);
 if (homeland.length !== 4) fail(`expected 4 homeland houses, got ${homeland.length}`);
 if (countries.length !== 18) fail(`expected 18 countries, got ${countries.length}`);
 if (built.length !== 1) fail(`expected 1 constructed side, got ${built.length}`);
@@ -70,18 +72,20 @@ for (const team of TEAMS) {
     if (prior) fail(`duplicate name ${player.name} (${prior} and ${team.id})`);
     seen.set(player.name, team.id);
   }
-  const beforeStarts = roster.map((player) => player.starts);
+  const startsBefore = roster.map((player) => player.starts);
   const style = readStyle({ pace: team.pace, players: roster, built: team.kind === "construct" });
-  if (roster.some((player, index) => player.starts !== beforeStarts[index])) fail(`${team.name} style rewrote the opening five`);
-  if (!style.name.trim() || !style.line.trim()) fail(`${team.name} has an empty style`);
-  if (style.facets.length < 3 || style.facets.length > 5) fail(`${team.name} style has ${style.facets.length} facets`);
-  if (team.kind === "construct" && !/built/i.test(style.line)) fail("the Construct style does not say it is built");
-  if (team.kind !== "construct" && style.built) fail(`${team.name} was marked built`);
+  if (roster.some((player, index) => player.starts !== startsBefore[index])) fail(`${team.name} style mutated the roster`);
+  if (!style.name.trim()) fail(`${team.name} style name is empty`);
+  if (style.facets.length < 3 || style.facets.length > 5) fail(`${team.name} has ${style.facets.length} style facets`);
+  if (team.kind === "construct" && !/built/i.test(style.line)) fail("Construct style does not say it is built");
+  if (team.kind !== "construct" && style.built) fail(`${team.name} style is marked built`);
 }
+
 for (const player of PLAYERS) {
   const look = readPlayerStyle(player);
   if (!look.name.trim() || !look.line.trim()) fail(`${player.name} has an empty style`);
 }
+
 const expect = (name: string, teamId: string) => {
   const player = PLAYERS.find((p) => p.name === name);
   if (!player) fail(`missing ${name}`);
@@ -131,7 +135,7 @@ const fullMs = Date.now() - started;
 const officialSeries = tournament.series.filter((s) => !s.exhibition);
 const official = tournament.games.filter((g) => !g.exhibition);
 const mean = official.reduce((sum, g) => sum + (g.homeScore + g.awayScore) / 2, 0) / official.length;
-console.log(`\nFULL ${fullMs}ms series=${officialSeries.length} games=${official.length} news=${tournament.news.length} mean=${mean.toFixed(1)}`);
+console.log(`\nFULL ${fullMs}ms groups=${tournament.groups.length} series=${officialSeries.length} games=${official.length} news=${tournament.news.length} mean=${mean.toFixed(1)}`);
 const finalSeries = officialSeries.find((s) => s.id === "final");
 const final = finalSeries?.games.at(-1);
 console.log("FINAL SERIES", finalSeries && `${finalSeries.homeName} ${finalSeries.homeWins}–${finalSeries.awayWins} ${finalSeries.awayName}`, "games", finalSeries?.games.length);
@@ -208,7 +212,7 @@ if (!tournament.awards) fail("missing awards");
 if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star log too thin");
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
 const expectedSeries = tournament.groups.length * 6 + 8 + 4 + 2 + 2;
-if (tournament.groups.length !== 11) fail(`expected 11 groups, got ${tournament.groups.length}`);
+if (tournament.groups.length !== 12) fail(`expected 12 groups, got ${tournament.groups.length}`);
 if (tournament.groups.some((group) => group.teamIds.length !== 4)) fail("a group is not four sides");
 const r16ids = new Set(tournament.series.filter((item) => item.round === "r16").flatMap((item) => [item.homeId, item.awayId]));
 if (r16ids.size !== 16) fail(`round of 16 has ${r16ids.size} sides`);
@@ -335,7 +339,7 @@ if (survivor.rounds.length < 3 || !survivor.champion) fail("survivor did not pla
 if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70) fail("the five did not tip");
 console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
 
-if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
+if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
 if (olympicsUnlock([]).open) fail("olympics opened with no trials");
 const lockedLine = olympicsLockLine(olympicsUnlock([]));
 const lockedSentences = lockedLine.split(/[.!?]/).map((part) => part.trim()).filter(Boolean);
@@ -392,7 +396,7 @@ for (const seed of [1, 8, 21, 99, 20261125]) {
 const olympicRoster = fillOlympic(20261125);
 const beforeTeams = TEAMS.length;
 const olympics = playOlympics(olympicRoster.rosterIds, 20261125);
-if (TEAMS.length !== beforeTeams || TEAMS.length !== 45) fail("olympics changed the championship team count");
+if (TEAMS.length !== beforeTeams || TEAMS.length !== 49) fail("olympics changed the championship team count");
 if (TEAMS.some((team) => team.id === OLY_ID)) fail("the rolled side was added to the championship");
 if (olympics.field.length !== 8 || !olympics.field.some((side) => side.id === OLY_ID) || !olympics.field.some((side) => side.id === CONSTRUCT_ID)) {
   fail("the Olympic field is not the rolled side, the Construct, and six others");
@@ -413,6 +417,41 @@ if (!openedFinal || !clincher || openedFinal.homeScore !== clincher.homeScore ||
 }
 console.log("OLYMPICS", olympicVerdict(olympics).line);
 console.log("OLY FIELD", olympics.field.map((side) => `${side.kind}:${side.name}`).join(" | "));
+
+const sideSeed = 20261125;
+for (const [name, play] of Object.entries(TOY_PLAYS)) {
+  const night = play(sideSeed, 0);
+  const again = play(sideSeed, 0);
+  if (!night.winner || night.rows.length < 2 || !night.scoreLine) fail(`${name} did not name a winner`);
+  if (again.winner !== night.winner || again.scoreLine !== night.scoreLine || again.line !== night.line) fail(`${name} moved on the same salt`);
+  if (name === "cut") {
+    const ovr = night.rows.reduce((sum, item) => sum + item.score, 0);
+    if (night.winner !== "The book" || night.rows.length !== 5 || night.cap === undefined || ovr > night.cap || night.score <= 0) {
+      fail(`cut did not file a five under the cap (${night.line})`);
+    }
+    if (new Set(night.rows.map((item) => item.playerId)).size !== 5) fail("cut repeated a prime");
+  } else if (!night.rows.some((item) => item.name === night.winner)) {
+    fail(`${name} winner ${night.winner} was not on the floor`);
+  }
+}
+const triviaCounts: string[] = [];
+for (const [name, play] of Object.entries(TRIVIA_PLAYS)) {
+  const night = play(sideSeed, 0);
+  const again = play(sideSeed, 0);
+  if (night.questions.length < 8 || night.questions.length > 10) fail(`${name} asked ${night.questions.length}`);
+  const stamp = night.questions.map((question) => `${question.prompt}|${question.answerId}|${question.choices.map((choice) => choice.id).join(",")}|${question.reveal}`).join("~");
+  const repeat = again.questions.map((question) => `${question.prompt}|${question.answerId}|${question.choices.map((choice) => choice.id).join(",")}|${question.reveal}`).join("~");
+  if (stamp !== repeat) fail(`${name} is not stable on the same salt`);
+  for (const question of night.questions) {
+    const answer = question.choices.find((choice) => choice.id === question.answerId);
+    if (!answer) fail(`${name} has a question with no answer`);
+    else if (!question.reveal.includes(answer.label)) fail(`${name} hid ${answer.label}`);
+    if (new Set(question.choices.map((choice) => choice.id)).size !== question.choices.length) fail(`${name} repeated a choice`);
+  }
+  triviaCounts.push(`${name} ${night.questions.length}`);
+}
+console.log("TOYS", Object.keys(TOY_PLAYS).join(", "));
+console.log("TRIVIA", triviaCounts.join(" · "));
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

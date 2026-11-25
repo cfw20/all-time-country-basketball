@@ -32,43 +32,56 @@ export function Shell() {
         <span className="orb orb-a" />
         <span className="orb orb-b" />
         <span className="orb orb-c" />
-        <span className="moon" />
-        <span className="planet" />
-        <span className="rings" />
-        <svg className="constellation" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-          <g fill="none" stroke="rgba(159,214,255,0.35)" strokeWidth="1">
-            <ellipse cx="240" cy="180" rx="180" ry="70" transform="rotate(-18 240 180)" />
-            <ellipse cx="240" cy="180" rx="230" ry="90" transform="rotate(-8 240 180)" />
-            <path d="M40 620 C 220 540, 380 700, 560 610 S 900 520, 1160 640" />
-            <path d="M80 140 L210 90 L260 210 L140 250 Z" />
-            <path d="M640 520 L760 470 L820 610 L680 660 Z" />
+        <span className="horizon" />
+        <svg className="constellation" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
+          <g fill="none" stroke="rgba(201,182,255,0.4)" strokeWidth="1.1">
+            <circle cx="170" cy="740" r="168" />
+            <circle cx="170" cy="740" r="104" />
+            <ellipse cx="170" cy="740" rx="168" ry="58" transform="rotate(-26 170 740)" />
           </g>
-          <g fill="none" stroke="rgba(231,194,122,0.45)" strokeWidth="1.2">
-            <path d="M900 120 C 980 40, 1120 80, 1080 180 S 900 240, 860 160" />
-            <path d="M120 300 C 200 260, 280 340, 220 400" />
+          <g fill="none" stroke="rgba(231,194,122,0.36)" strokeWidth="1.15">
+            <path d="M40 700 C 260 600, 520 640, 760 560" />
+            <path d="M880 800 C 1100 720, 1300 760, 1520 680" />
+          </g>
+          <g fill="none" stroke="rgba(159,214,255,0.36)" strokeWidth="1">
+            <path d="M1080 70 C 1200 10, 1380 60, 1340 180" />
+            <ellipse cx="1240" cy="150" rx="190" ry="58" transform="rotate(-18 1240 150)" />
+          </g>
+          <g fill="none" stroke="rgba(240,167,181,0.32)" strokeWidth="1">
+            <path d="M980 460 L1110 410 L1180 540 L1050 590 Z" />
           </g>
           <g fill="#f6ead7">
-            <circle cx="80" cy="140" r="1.8" />
-            <circle cx="210" cy="90" r="2.2" />
-            <circle cx="260" cy="210" r="1.6" />
-            <circle cx="140" cy="250" r="1.4" />
-            <circle cx="640" cy="520" r="2" />
-            <circle cx="760" cy="470" r="1.5" />
-            <circle cx="820" cy="610" r="1.8" />
-            <circle cx="680" cy="660" r="1.4" />
-            <circle cx="480" cy="90" r="1.3" />
-            <circle cx="520" cy="240" r="1.6" />
-            <circle cx="70" cy="480" r="1.5" />
-            <circle cx="980" cy="420" r="1.7" />
-            <circle cx="1100" cy="300" r="1.4" />
-            <circle cx="360" cy="640" r="1.5" />
+            <circle cx="260" cy="412" r="2" />
+            <circle cx="62" cy="610" r="1.6" />
+            <circle cx="458" cy="610" r="1.5" />
+            <circle cx="260" cy="808" r="1.4" />
+            <circle cx="680" cy="320" r="1.8" />
+            <circle cx="980" cy="460" r="1.7" />
+            <circle cx="1110" cy="410" r="1.5" />
+            <circle cx="1180" cy="540" r="1.6" />
+            <circle cx="1050" cy="590" r="1.4" />
+            <circle cx="1240" cy="92" r="1.8" />
+            <circle cx="90" cy="180" r="1.3" />
+            <circle cx="540" cy="120" r="1.4" />
+            <circle cx="760" cy="250" r="1.2" />
+            <circle cx="420" cy="780" r="1.5" />
+            <circle cx="1320" cy="360" r="1.4" />
           </g>
         </svg>
+        <span className="vignette" />
+        <span className="moon" />
+        <span className="planet-well">
+          <span className="planet" />
+          <span className="rings" />
+        </span>
       </div>
       <header className="mast">
         <Link className="brand" to="/">
-          <p className="kicker">Private commission · NBA rules</p>
-          <h1>Pan<em>theon</em></h1>
+          <span className="sigil" aria-hidden="true" />
+          <span className="brand-name">
+            <p className="kicker">Private commission · NBA rules</p>
+            <h1>Pan<em>theon</em></h1>
+          </span>
         </Link>
         <nav className="nav">
           {LINKS.map(([to, label]) => (

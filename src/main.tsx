@@ -4,6 +4,7 @@ import { BrowserRouter } from "react-router-dom";
 import { App } from "./App";
 import { PantheonProvider } from "./state/store";
 import "./styles/global.css";
+import "./styles/floor.css";
 
 createRoot(document.getElementById("root")!).render(
   <StrictMode>
