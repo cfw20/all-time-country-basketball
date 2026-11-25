@@ -2,7 +2,9 @@ import { Link, useParams } from "react-router-dom";
 import { rosterOf, sideById, TEAM_BY_ID } from "../data";
 import { dutyLabel, minuteTarget, statusLabel } from "../data/ratings";
 import { Mark } from "../components/Marks";
+import type { SeriesResult } from "../data/types";
 import { finishName, kindLabel, one } from "../lib/format";
+import { seriesRecord } from "../engine/series";
 import { siegeGames } from "../engine/siege";
 import { tally, teamLine } from "../lib/stats";
 import { usePantheon } from "../state/store";
@@ -17,6 +19,11 @@ export function TeamPage() {
   const roster = rosterOf(team.id);
   const built = team.kind === "construct";
   const nights = siegeGames(tournament.siege).filter((game) => game.homeId === team.id || game.awayId === team.id);
+  const siegeSeries = [tournament.siege?.arrival, tournament.siege?.gate, tournament.siege?.restoration]
+    .filter((item): item is SeriesResult => Boolean(item))
+    .filter((item) => item.homeId === team.id || item.awayId === team.id);
+  const book = built ? siegeSeries : tournament.series.filter((item) => item.homeId === team.id || item.awayId === team.id);
+  const seriesWins = book.filter((item) => item.winnerId === team.id).length;
   const totals = tally(built ? nights : tournament.games, built);
   const record = teamLine(built ? nights : tournament.games, team.id, built);
   const seed = tournament.ranking.find((row) => row.teamId === team.id)?.seed;
@@ -37,7 +44,7 @@ export function TeamPage() {
       </div>
       <p className="lede">{team.blurb}</p>
       <div className="stat-grid" style={{ marginTop: 18 }}>
-        <div className="panel"><span className="tag">This draw</span><h3>{record.w}-{record.l}</h3><p>{built ? floor : finish ? finishName(finish) : "Still in the book"}</p></div>
+        <div className="panel"><span className="tag">Series</span><h3>{seriesWins}-{book.length - seriesWins}</h3><p>{built ? floor : finish ? finishName(finish) : "Still in the book"} · games {record.w}-{record.l}</p></div>
         <div className="panel"><span className="tag">Points</span><h3>{record.pf}</h3><p>Allowed {record.pa}</p></div>
         <div className="panel"><span className="tag">Group</span><h3>{built ? "Siege" : group ? `Group ${group.id}` : "—"}</h3><p>{built ? "Arrival, the gate, the Concord" : group?.teamIds.map((tid) => TEAM_BY_ID[tid]?.code).join(" · ")}</p></div>
         <div className="panel"><span className="tag">Roster</span><h3>{roster.length}</h3><p>{built ? "Chassis, spare frames, and short cycles" : "Standard body, two-ways, and short deals"}</p></div>
@@ -75,18 +82,18 @@ export function TeamPage() {
       {built ? (
         <section className="section">
           <div className="section-head"><h3>The siege</h3><span className="quiet">The whole schedule. Off the country table.</span></div>
-          <Results teamId={team.id} games={nights} all />
+          <SeriesList teamId={team.id} series={siegeSeries} empty="This series has not been played." />
         </section>
       ) : (
         <>
           <section className="section">
-            <div className="section-head"><h3>Results</h3><span className="quiet">Official games in this draw</span></div>
-            <Results teamId={team.id} games={tournament.games} />
+            <div className="section-head"><h3>Results</h3><span className="quiet">Official series in this draw</span></div>
+            <SeriesList teamId={team.id} series={book} empty="No official series yet." />
           </section>
-          {nights.length > 0 ? (
+          {siegeSeries.length > 0 ? (
             <section className="section">
-              <div className="section-head"><h3>Against the Construct</h3><span className="quiet">Siege nights. Off the country record.</span></div>
-              <Results teamId={team.id} games={nights} all />
+              <div className="section-head"><h3>Against the Construct</h3><span className="quiet">Siege series. Off the country record.</span></div>
+              <SeriesList teamId={team.id} series={siegeSeries} empty="This series has not been played." />
             </section>
           ) : null}
         </>
@@ -95,22 +102,21 @@ export function TeamPage() {
   );
 }
 
-function Results({ teamId, games, all = false }: { teamId: string; games: { id: string; exhibition?: boolean; homeId: string; awayId: string; homeScore: number; awayScore: number; winnerId: string; roundLabel: string; ot: number; comeback?: { teamId: string; deficit: number } }[]; all?: boolean }) {
-  const rows = games.filter((game) => (all || !game.exhibition) && (game.homeId === teamId || game.awayId === teamId));
-  if (rows.length === 0) return <p className="empty">{all ? "This night has not been played." : "No official games yet."}</p>;
+function SeriesList({ teamId, series, empty }: { teamId: string; series: SeriesResult[]; empty: string }) {
+  if (series.length === 0) return <p className="empty">{empty}</p>;
   return (
     <div className="team-grid">
-      {rows.map((game) => {
-        const home = game.homeId === teamId;
-        const ours = home ? game.homeScore : game.awayScore;
-        const theirs = home ? game.awayScore : game.homeScore;
-        const opp = home ? game.awayId : game.homeId;
-        const win = game.winnerId === teamId;
+      {series.map((item) => {
+        const { winnerWins, loserWins } = seriesRecord(item);
+        const win = item.winnerId === teamId;
+        const opp = item.homeId === teamId ? item.awayId : item.homeId;
+        const ours = win ? winnerWins : loserWins;
+        const theirs = win ? loserWins : winnerWins;
         return (
-          <Link key={game.id} to={`/games/${game.id}`} className="panel">
-            <span className="tag">{game.roundLabel}{game.ot ? " · OT" : ""}</span>
+          <Link key={item.id} to={`/series/${item.id}`} className="panel">
+            <span className="tag">{item.roundLabel} · {item.games.length} games</span>
             <h3>{win ? "W" : "L"} {ours}–{theirs}</h3>
-            <p>{sideById(opp)?.name ?? opp}{game.comeback?.teamId === teamId ? ` · erased ${game.comeback.deficit}` : ""}</p>
+            <p>{sideById(opp)?.name ?? opp}</p>
           </Link>
         );
       })}

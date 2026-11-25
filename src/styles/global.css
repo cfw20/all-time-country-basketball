@@ -11,6 +11,7 @@
   --rose: #f0a7b5;
   --sea: #8fd0c6;
   --ember: #ffb089;
+  --ion: #9fd6ff;
   --shadow: 0 28px 70px rgba(12, 6, 22, 0.45);
   --serif: Fraunces, "Iowan Old Style", Palatino, serif;
   --sans: Syne, "Avenir Next", "Segoe UI", sans-serif;
@@ -40,9 +41,70 @@ button { cursor: pointer; }
   z-index: 0;
   overflow: hidden;
   background:
-    radial-gradient(900px 620px at 12% -10%, rgba(201, 182, 255, 0.28), transparent 60%),
-    radial-gradient(820px 560px at 100% 8%, rgba(240, 167, 181, 0.22), transparent 58%),
-    radial-gradient(700px 520px at 70% 110%, rgba(143, 208, 198, 0.16), transparent 55%);
+    radial-gradient(520px 380px at 78% 18%, rgba(159, 214, 255, 0.22), transparent 62%),
+    radial-gradient(1100px 720px at 8% -8%, rgba(201, 182, 255, 0.34), transparent 58%),
+    radial-gradient(900px 640px at 108% 6%, rgba(240, 167, 181, 0.28), transparent 56%),
+    radial-gradient(760px 520px at 62% 118%, rgba(143, 208, 198, 0.2), transparent 54%),
+    radial-gradient(420px 280px at 30% 40%, rgba(231, 194, 122, 0.1), transparent 70%);
+}
+.sky::before,
+.sky::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+.sky::before {
+  background:
+    repeating-linear-gradient(115deg, transparent 0 46px, rgba(159, 214, 255, 0.045) 46px 47px),
+    repeating-linear-gradient(18deg, transparent 0 72px, rgba(240, 167, 181, 0.04) 72px 73px);
+  mask-image: radial-gradient(circle at 70% 0%, #000 0%, transparent 42%);
+}
+.sky::after {
+  background-image: radial-gradient(rgba(246, 234, 215, 0.55) 0.6px, transparent 0.7px);
+  background-size: 3px 3px;
+  opacity: 0.14;
+  mix-blend-mode: screen;
+}
+.planet {
+  position: absolute;
+  width: 220px;
+  height: 220px;
+  right: -40px;
+  top: -30px;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 32% 28%, rgba(246, 234, 215, 0.55), transparent 26%),
+    radial-gradient(circle at 60% 70%, rgba(125, 140, 255, 0.35), transparent 40%),
+    radial-gradient(circle at 50% 50%, #3d2b5c, #140c22 74%);
+  box-shadow: 0 0 70px rgba(159, 214, 255, 0.18), inset -24px -16px 40px rgba(8, 4, 16, 0.55);
+  opacity: 0.72;
+}
+.rings {
+  position: absolute;
+  width: 380px;
+  height: 110px;
+  right: -70px;
+  top: 18px;
+  border-radius: 50%;
+  border: 1px solid rgba(231, 194, 122, 0.55);
+  box-shadow:
+    0 0 0 10px rgba(201, 182, 255, 0.08),
+    0 0 0 20px rgba(159, 214, 255, 0.06);
+  transform: rotate(-16deg);
+  opacity: 0.7;
+}
+.moon {
+  position: absolute;
+  width: 54px;
+  height: 54px;
+  left: 4%;
+  top: 18%;
+  border-radius: 50%;
+  background:
+    radial-gradient(circle at 35% 35%, rgba(246, 234, 215, 0.7), transparent 30%),
+    radial-gradient(circle at 50% 50%, #cbb6e4, #5c4b74 72%);
+  box-shadow: 0 0 24px rgba(201, 182, 255, 0.25);
+  opacity: 0.55;
 }
 .orb {
   position: absolute;
@@ -76,7 +138,7 @@ button { cursor: pointer; }
   inset: 0;
   width: 100%;
   height: 100%;
-  opacity: 0.55;
+  opacity: 0.28;
 }
 
 .shell { position: relative; z-index: 1; min-height: 100vh; padding-bottom: 108px; }
@@ -207,8 +269,8 @@ h2.display, .display {
 
 .panel {
   background:
-    linear-gradient(160deg, rgba(246, 234, 215, 0.09), rgba(201, 182, 255, 0.05) 42%, rgba(22, 16, 34, 0.2));
-  border: 1px solid rgba(246, 234, 215, 0.18);
+    linear-gradient(165deg, rgba(36, 24, 54, 0.88), rgba(18, 12, 30, 0.82));
+  border: 1px solid rgba(201, 182, 255, 0.32);
   border-radius: 22px;
   padding: 16px 16px 14px;
   box-shadow: var(--shadow);
@@ -344,6 +406,7 @@ tr.me td { background: rgba(201, 182, 255, 0.1); }
   font-family: var(--serif);
   font-size: clamp(42px, 6vw, 72px);
   line-height: 0.9;
+  color: var(--ink);
 }
 .quarters { display: flex; justify-content: center; gap: 10px; margin-top: 8px; }
 .quarters span { font-family: var(--mono); color: var(--muted); font-size: 13px; }
@@ -392,6 +455,8 @@ tr.me td { background: rgba(201, 182, 255, 0.1); }
   .page { animation: rise 520ms ease both; }
   .orb-a { animation: drift 22s ease-in-out infinite alternate; }
   .orb-b { animation: drift 28s ease-in-out infinite alternate-reverse; }
+  .rings { animation: spin 80s linear infinite; }
+  .moon { animation: drift 36s ease-in-out infinite alternate; }
   .panel, .match, .group-card { transition: transform 180ms ease, border-color 180ms ease; }
   .panel:hover, .match:hover { transform: translateY(-3px); border-color: rgba(240, 167, 181, 0.55); }
 }
@@ -402,6 +467,10 @@ tr.me td { background: rgba(201, 182, 255, 0.1); }
 @keyframes drift {
   from { transform: translate3d(0, 0, 0); }
   to { transform: translate3d(24px, -18px, 0); }
+}
+@keyframes spin {
+  from { transform: rotate(-16deg); }
+  to { transform: rotate(344deg); }
 }
 
 @media (max-width: 980px) {
@@ -420,8 +489,8 @@ tr.me td { background: rgba(201, 182, 255, 0.1); }
   .brand h1 { font-size: 36px; }
   .nav { justify-content: flex-start; }
   .folio h2 { font-size: 58px; }
-  .dock { padding: 8px 10px; gap: 8px; bottom: 8px; }
+  .dock { padding: 8px 10px; gap: 8px; bottom: 8px; flex-direction: row; align-items: center; }
   .dock .stage strong { font-size: 18px; }
   .dock button, .filters button { padding: 6px 10px; }
-  .shell { padding-bottom: 132px; }
+  .shell { padding-bottom: 148px; }
 }

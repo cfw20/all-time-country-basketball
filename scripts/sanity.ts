@@ -85,11 +85,14 @@ for (const row of ranked) console.log(row.power.toFixed(1).padStart(7), row.name
 const started = Date.now();
 const tournament = simulateTournament(20261125, { log: true, exhibitions: true });
 const fullMs = Date.now() - started;
+const officialSeries = tournament.series.filter((s) => !s.exhibition);
 const official = tournament.games.filter((g) => !g.exhibition);
 const mean = official.reduce((sum, g) => sum + (g.homeScore + g.awayScore) / 2, 0) / official.length;
-console.log(`\nFULL ${fullMs}ms games=${official.length} news=${tournament.news.length} mean=${mean.toFixed(1)}`);
-const final = official.find((g) => g.id === "final");
-console.log("FINAL", final?.homeName, final?.homeScore, final?.awayName, final?.awayScore, "plays", final?.plays.length, "q", final?.quarters.map((q) => `${q.home}-${q.away}`).join(" "));
+console.log(`\nFULL ${fullMs}ms series=${officialSeries.length} games=${official.length} news=${tournament.news.length} mean=${mean.toFixed(1)}`);
+const finalSeries = officialSeries.find((s) => s.id === "final");
+const final = finalSeries?.games.at(-1);
+console.log("FINAL SERIES", finalSeries && `${finalSeries.homeName} ${finalSeries.homeWins}–${finalSeries.awayWins} ${finalSeries.awayName}`, "games", finalSeries?.games.length);
+console.log("CLINCHER", final?.homeName, final?.homeScore, final?.awayName, final?.awayScore, "plays", final?.plays.length, "q", final?.quarters.map((q) => `${q.home}-${q.away}`).join(" "));
 if (final) {
   const lines = final.box.home.concat(final.box.away);
   const reb = lines.reduce((s, l) => s + l.orb + l.drb, 0);
@@ -152,10 +155,21 @@ console.log(`\nstar mpg ${starMpg.toFixed(1)} two-way mpg ${twMpg.toFixed(1)}`);
 if (!tournament.awards) fail("missing awards");
 if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star log too thin");
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
-if (official.length !== 48 + 8 + 4 + 2 + 2) fail(`unexpected game count ${official.length}`);
+if (officialSeries.length !== 48 + 8 + 4 + 2 + 2) fail(`unexpected series count ${officialSeries.length}`);
+for (const item of officialSeries) {
+  const wins = Math.max(item.homeWins, item.awayWins);
+  const losses = Math.min(item.homeWins, item.awayWins);
+  if (wins !== 4 || item.games.length !== 4 + losses) fail(`${item.id} did not end at four wins (${item.homeWins}-${item.awayWins}, ${item.games.length} games)`);
+}
+if (official.length < officialSeries.length * 4 || official.length > officialSeries.length * 7) fail(`unexpected game count ${official.length}`);
 if ((final?.plays.length ?? 0) < 40) fail("final play log too thin");
 const siege = tournament.siege;
-if (!siege?.arrival || !siege.gate || !siege.restoration) fail("siege is missing a night");
+if (!siege?.arrival || !siege.gate || !siege.restoration) fail("siege is missing a series");
+for (const item of [siege?.arrival, siege?.gate, siege?.restoration]) {
+  if (!item) continue;
+  const wins = Math.max(item.homeWins, item.awayWins);
+  if (wins !== 4 || item.games.length < 4 || item.games.length > 7) fail(`${item.id} is not a best-of-seven`);
+}
 if (tournament.groups.some((group) => group.teamIds.includes("cstr"))) fail("Construct was drawn into a group");
 if (tournament.ranking.some((row) => row.teamId === "cstr")) fail("Construct was given a country seed");
 if ((siege?.concordIds.length ?? 0) !== 12) fail(`Concord has ${siege?.concordIds.length} players`);
@@ -167,7 +181,9 @@ for (const id of siege?.concordIds ?? []) {
 }
 if ([...concordCountries.values()].some((count) => count > 5)) fail("Concord broke the five-player country cap");
 if (concordCountries.size < 6) fail(`Concord only spans ${concordCountries.size} sides`);
-console.log("SIEGE", siege?.arrival && `${siege.arrival.awayName} ${siege.arrival.awayScore} @ ${siege.arrival.homeName} ${siege.arrival.homeScore}`, "|", siege?.gate && `${siege.gate.awayName} ${siege.gate.awayScore} @ ${siege.gate.homeName} ${siege.gate.homeScore}`, "|", siege?.restoration && `${siege.restoration.awayName} ${siege.restoration.awayScore} @ ${siege.restoration.homeName} ${siege.restoration.homeScore}`, siege?.threatEnded ? "RESTORED" : "HELD");
+const seriesLine = (item: { awayName?: string; awayWins: number; homeName?: string; homeWins: number; games: unknown[] } | null | undefined) =>
+  item && `${item.awayName} ${item.awayWins} @ ${item.homeName} ${item.homeWins} (${item.games.length}g)`;
+console.log("SIEGE", seriesLine(siege?.arrival), "|", seriesLine(siege?.gate), "|", seriesLine(siege?.restoration), siege?.threatEnded ? "RESTORED" : "HELD");
 console.log("CONCORD", (siege?.concordIds ?? []).map((id, index) => `${index < 5 ? "*" : ""}${playerById(id)?.name}`).join(", "));
 if (mean < 102 || mean > 128) fail(`mean score ${mean.toFixed(1)} is outside 102-128`);
 const jordan = minutes("cont").find((row) => row.name === "Michael Jordan");
@@ -196,13 +212,14 @@ for (const [id, n] of [...champs.entries()].sort((a, b) => b[1] - a[1])) {
 }
 console.log(`ARRIVAL construct ${arrivalConstruct}/${TRIALS}  GATE construct ${gateConstruct}/${TRIALS}  RESTORED ${restored}/${TRIALS}`);
 const contTitles = champs.get("cont") ?? 0;
-if (contTitles > 28) fail(`Continental won ${contTitles}/${TRIALS}, too locked`);
-if (contTitles < 6) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
-if (champs.size < 3) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-if (arrivalConstruct < 18) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, too mild a threat`);
-if (gateConstruct < 22) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
-if (gateConstruct > 38) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
-if (restored < 10 || restored > 30) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
+if (contTitles > 38) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
+if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
+if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
+if (arrivalConstruct < 26) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, too mild a threat`);
+if (arrivalConstruct > 37) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, the arrival is a lock`);
+if (gateConstruct < 26) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
+if (gateConstruct > 37) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
+if (restored < 4 || restored > 18) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

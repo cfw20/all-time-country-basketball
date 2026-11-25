@@ -8,18 +8,20 @@ import type {
   GroupStanding,
   Player,
   Pos,
+  SeriesResult,
   Tournament,
 } from "../data/types";
 import { simulateGame, type SideInput } from "./game";
 import { buildNews } from "./news";
 import { mixSeed, mulberry32, shuffle } from "./rng";
+import { playSeries } from "./series";
 import { playSiege } from "./siege";
 
 export const STAGE_LABELS = [
   "Draw",
-  "Group day 1",
-  "Group day 2",
-  "Group day 3",
+  "Group series 1",
+  "Group series 2",
+  "Group series 3",
   "The interval",
   "Round of 16",
   "Quarterfinals",
@@ -76,6 +78,7 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
   const ranking = rankTeams();
   const seedOf = new Map(ranking.map((row) => [row.teamId, row.seed]));
   const groups = drawGroups(seed, ranking.map((row) => row.teamId));
+  const series: SeriesResult[] = [];
   const games: GameResult[] = [];
 
   const days = Math.min(3, through);
@@ -87,16 +90,18 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
         const b = group.teamIds[j];
         const [awayId, homeId] = betterHome(a, b, seedOf);
         const id = `g${day + 1}-${group.id}-${p}`;
-        games.push(playGame({
+        const played = playMatch({
           id,
           round: `group-${day + 1}`,
-          roundLabel: "Group stage",
-          dayLabel: `Group day ${day + 1}`,
+          roundLabel: "Group series",
+          dayLabel: `Group series ${day + 1}`,
           seed: mixSeed(seed, id),
           awayId,
           homeId,
           log,
-        }));
+        });
+        series.push(played);
+        games.push(...played.games);
       }
     }
   }
@@ -116,7 +121,7 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
   }
 
   if (through >= 5 && days === 3) {
-    const tables = new Map(groups.map((g) => [g.id, standingsFor(g.teamIds, games)]));
+    const tables = new Map(groups.map((g) => [g.id, standingsFor(g.teamIds, series)]));
     const top = (letter: string, place: number) => tables.get(letter)![place].teamId;
     const r16pairs: [string, string][] = [
       [top("A", 0), top("B", 1)],
@@ -131,53 +136,61 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
     r16pairs.forEach((pair, index) => {
       const [awayId, homeId] = betterHome(pair[0], pair[1], seedOf);
       const id = `r16-${index}`;
-      games.push(playGame({
+      const played = playMatch({
         id, round: "r16", roundLabel: "Round of 16", dayLabel: "Round of 16",
         seed: mixSeed(seed, id), awayId, homeId, log,
-      }));
+      });
+      series.push(played);
+      games.push(...played.games);
     });
-    if (through >= 6) playRound(games, seed, log, seedOf, "qf", "Quarterfinals", "Quarterfinals", [0, 1, 2, 3, 4, 5, 6, 7], "r16");
-    if (through >= 7) playRound(games, seed, log, seedOf, "sf", "Semifinals", "Semifinals", [0, 1, 2, 3], "qf");
+    if (through >= 6) playRound(series, games, seed, log, seedOf, "qf", "Quarterfinals", "Quarterfinals", [0, 1, 2, 3, 4, 5, 6, 7], "r16");
+    if (through >= 7) playRound(series, games, seed, log, seedOf, "sf", "Semifinals", "Semifinals", [0, 1, 2, 3], "qf");
     if (through >= 8) {
-      const sf0 = games.find((g) => g.id === "sf-0")!;
-      const sf1 = games.find((g) => g.id === "sf-1")!;
+      const sf0 = series.find((item) => item.id === "sf-0")!;
+      const sf1 = series.find((item) => item.id === "sf-1")!;
       const [awayF, homeF] = betterHome(sf0.winnerId, sf1.winnerId, seedOf);
-      games.push(playGame({
+      const finalSeries = playMatch({
         id: "final", round: "final", roundLabel: "Final", dayLabel: "Final night",
         seed: mixSeed(seed, "final"), awayId: awayF, homeId: homeF, log,
-      }));
+      });
+      series.push(finalSeries);
+      games.push(...finalSeries.games);
       const [awayT, homeT] = betterHome(sf0.loserId, sf1.loserId, seedOf);
-      games.push(playGame({
+      const thirdSeries = playMatch({
         id: "third", round: "third", roundLabel: "Third place", dayLabel: "Final night",
         seed: mixSeed(seed, "third"), awayId: awayT, homeId: homeT, log,
-      }));
+      });
+      series.push(thirdSeries);
+      games.push(...thirdSeries.games);
     }
   }
 
-  const finishes = through >= 8 ? assignFinishes(games, groups) : {};
+  const finishes = through >= 8 ? assignFinishes(series, groups) : {};
   const awards = through >= 8 ? computeAwards(games, finishes) : null;
+  const finalSeries = series.find((item) => item.id === "final");
   const siege = through >= 5 && days === 3
     ? playSiege({
       seed,
       through,
       log,
       games,
-      opponentId: bestGroupWinner(groups, games, seedOf),
+      opponentId: bestGroupWinner(groups, series, seedOf),
+      championId: finalSeries?.winnerId,
     })
     : null;
-  const news = buildNews({ games, seedOf, allStar, three, dunk, skills, finishes, siege });
-  return { seed, through, ranking, groups, games, allStar, allStarRosters, three, dunk, skills, awards, news, finishes, siege };
+  const news = buildNews({ games, series, seedOf, allStar, three, dunk, skills, finishes, siege });
+  return { seed, through, ranking, groups, series, games, allStar, allStarRosters, three, dunk, skills, awards, news, finishes, siege };
 }
 
 function bestGroupWinner(
   groups: Tournament["groups"],
-  games: GameResult[],
+  series: SeriesResult[],
   seedOf: Map<string, number>,
 ): string {
   let bestId = groups[0]?.teamIds[0] ?? "";
   let bestSeed = 999;
   for (const group of groups) {
-    const winner = standingsFor(group.teamIds, games)[0]?.teamId;
+    const winner = standingsFor(group.teamIds, series)[0]?.teamId;
     if (!winner) continue;
     const powerSeed = seedOf.get(winner) ?? 999;
     if (powerSeed < bestSeed) {
@@ -188,11 +201,10 @@ function bestGroupWinner(
   return bestId;
 }
 
-export function findGame(tournament: Tournament, id: string | undefined): GameResult | undefined {
+export function findSeries(tournament: Tournament, id: string | undefined): SeriesResult | undefined {
   if (!id) return undefined;
-  const official = tournament.games.find((game) => game.id === id);
+  const official = tournament.series.find((item) => item.id === id);
   if (official) return official;
-  if (tournament.allStar?.id === id) return tournament.allStar;
   const siege = tournament.siege;
   if (siege?.arrival?.id === id) return siege.arrival;
   if (siege?.gate?.id === id) return siege.gate;
@@ -200,19 +212,37 @@ export function findGame(tournament: Tournament, id: string | undefined): GameRe
   return undefined;
 }
 
-export function standingsFor(teamIds: string[], games: GameResult[]): GroupStanding[] {
+export function findGame(tournament: Tournament, id: string | undefined): GameResult | undefined {
+  if (!id) return undefined;
+  const official = tournament.games.find((game) => game.id === id);
+  if (official) return official;
+  if (tournament.allStar?.id === id) return tournament.allStar;
+  for (const item of [tournament.siege?.arrival, tournament.siege?.gate, tournament.siege?.restoration]) {
+    const game = item?.games.find((row) => row.id === id);
+    if (game) return game;
+  }
+  return undefined;
+}
+
+export function standingsFor(teamIds: string[], series: SeriesResult[]): GroupStanding[] {
   const rows = new Map<string, GroupStanding>();
-  for (const id of teamIds) rows.set(id, { teamId: id, w: 0, l: 0, pf: 0, pa: 0, h2h: {} });
-  for (const game of games) {
-    if (!game.round.startsWith("group")) continue;
-    if (!rows.has(game.homeId) || !rows.has(game.awayId)) continue;
-    const home = rows.get(game.homeId)!;
-    const away = rows.get(game.awayId)!;
-    home.pf += game.homeScore;
-    home.pa += game.awayScore;
-    away.pf += game.awayScore;
-    away.pa += game.homeScore;
-    if (game.winnerId === home.teamId) {
+  for (const id of teamIds) rows.set(id, { teamId: id, w: 0, l: 0, gw: 0, gl: 0, pf: 0, pa: 0, h2h: {} });
+  for (const item of series) {
+    if (!item.round.startsWith("group")) continue;
+    if (!rows.has(item.homeId) || !rows.has(item.awayId)) continue;
+    const home = rows.get(item.homeId)!;
+    const away = rows.get(item.awayId)!;
+    home.gw += item.homeWins;
+    home.gl += item.awayWins;
+    away.gw += item.awayWins;
+    away.gl += item.homeWins;
+    for (const game of item.games) {
+      home.pf += game.homeId === home.teamId ? game.homeScore : game.awayScore;
+      home.pa += game.homeId === home.teamId ? game.awayScore : game.homeScore;
+      away.pf += game.homeId === away.teamId ? game.homeScore : game.awayScore;
+      away.pa += game.homeId === away.teamId ? game.awayScore : game.homeScore;
+    }
+    if (item.winnerId === home.teamId) {
       home.w += 1;
       away.l += 1;
       home.h2h[away.teamId] = (home.h2h[away.teamId] ?? 0) + 1;
@@ -237,6 +267,8 @@ export function standingsFor(teamIds: string[], games: GameResult[]): GroupStand
         const edge = (a.h2h[b.teamId] ?? 0) - (b.h2h[a.teamId] ?? 0);
         if (edge !== 0) return -edge;
       }
+      const games = (b.gw - b.gl) - (a.gw - a.gl);
+      if (games !== 0) return games;
       const diff = b.pf - b.pa - (a.pf - a.pa);
       if (diff !== 0) return diff;
       if (b.pf !== a.pf) return b.pf - a.pf;
@@ -274,7 +306,7 @@ function betterHome(a: string, b: string, seedOf: Map<string, number>): [string,
   return sa <= sb ? [b, a] : [a, b];
 }
 
-function playGame(input: {
+function playMatch(input: {
   id: string;
   round: string;
   roundLabel: string;
@@ -283,17 +315,17 @@ function playGame(input: {
   awayId: string;
   homeId: string;
   log: boolean;
-}): GameResult {
-  return simulateGame({
+}): SeriesResult {
+  return playSeries({
     id: input.id,
     round: input.round,
     roundLabel: input.roundLabel,
     dayLabel: input.dayLabel,
-    venue: VENUES[mixSeed(input.seed, input.id) % VENUES.length],
     seed: input.seed,
+    log: input.log,
+    venues: VENUES,
     away: sideOf(input.awayId),
     home: sideOf(input.homeId),
-    log: input.log,
   });
 }
 
@@ -303,6 +335,7 @@ function sideOf(teamId: string): SideInput {
 }
 
 function playRound(
+  series: SeriesResult[],
   games: GameResult[],
   seed: number,
   log: boolean,
@@ -314,27 +347,29 @@ function playRound(
   prev: string,
 ) {
   for (let i = 0; i < indexes.length; i += 2) {
-    const g1 = games.find((g) => g.id === `${prev}-${indexes[i]}`)!;
-    const g2 = games.find((g) => g.id === `${prev}-${indexes[i + 1]}`)!;
+    const left = series.find((item) => item.id === `${prev}-${indexes[i]}`)!;
+    const right = series.find((item) => item.id === `${prev}-${indexes[i + 1]}`)!;
     const id = `${round}-${i / 2}`;
-    const [awayId, homeId] = betterHome(g1.winnerId, g2.winnerId, seedOf);
-    games.push(playGame({ id, round, roundLabel: label, dayLabel: day, seed: mixSeed(seed, id), awayId, homeId, log }));
+    const [awayId, homeId] = betterHome(left.winnerId, right.winnerId, seedOf);
+    const played = playMatch({ id, round, roundLabel: label, dayLabel: day, seed: mixSeed(seed, id), awayId, homeId, log });
+    series.push(played);
+    games.push(...played.games);
   }
 }
 
-function assignFinishes(games: GameResult[], groups: Tournament["groups"]): Record<string, number> {
+function assignFinishes(series: SeriesResult[], groups: Tournament["groups"]): Record<string, number> {
   const finishes: Record<string, number> = {};
-  const final = games.find((g) => g.id === "final");
-  const third = games.find((g) => g.id === "third");
+  const final = series.find((item) => item.id === "final");
+  const third = series.find((item) => item.id === "third");
   if (!final || !third) return finishes;
   finishes[final.winnerId] = 1;
   finishes[final.loserId] = 2;
   finishes[third.winnerId] = 3;
   finishes[third.loserId] = 4;
   const rankedLosers = (round: string, start: number) => {
-    const losers = games
-      .filter((g) => g.round === round)
-      .map((g) => ({ id: g.loserId, margin: Math.abs(g.homeScore - g.awayScore) }))
+    const losers = series
+      .filter((item) => item.round === round)
+      .map((item) => ({ id: item.loserId, margin: Math.abs(item.homeWins - item.awayWins) }))
       .sort((a, b) => a.margin - b.margin);
     losers.forEach((row, index) => {
       finishes[row.id] = start + index;
@@ -344,7 +379,7 @@ function assignFinishes(games: GameResult[], groups: Tournament["groups"]): Reco
   rankedLosers("r16", 9);
   const alive = new Set(Object.keys(finishes));
   const rest = groups
-    .flatMap((g) => standingsFor(g.teamIds, games))
+    .flatMap((g) => standingsFor(g.teamIds, series))
     .filter((row) => !alive.has(row.teamId))
     .sort((a, b) => b.w - a.w || b.pf - b.pa - (a.pf - a.pa) || b.pf - a.pf);
   rest.forEach((row, index) => {
@@ -384,9 +419,7 @@ function computeAwards(games: GameResult[], finishes: Record<string, number>): A
   };
   const ranked = [...acc.keys()].sort((a, b) => scoreOf(b) - scoreOf(a));
   const mvpId = ranked[0];
-  const final = games.find((g) => g.id === "final")!;
-  const champLines = final.winnerId === final.homeId ? final.box.home : final.box.away;
-  const finalsMvpId = champLines.slice().sort((a, b) => (b.pts + b.orb + b.drb + b.ast * 1.2) - (a.pts + a.orb + a.drb + a.ast * 1.2))[0]?.playerId ?? mvpId;
+  const finalsMvpId = finalsMvp(games, finishes) ?? mvpId;
   const dpoyId = [...acc.keys()].sort((a, b) => defScore(b, acc) - defScore(a, acc))[0] ?? mvpId;
   const sixthId = ranked.find((id) => {
     const row = acc.get(id)!;
@@ -397,6 +430,21 @@ function computeAwards(games: GameResult[], finishes: Record<string, number>): A
   const firstTeam = takeFive(ranked, used);
   const secondTeam = takeFive(ranked, used);
   return { mvpId, finalsMvpId, dpoyId, sixthId, breakoutId, firstTeam, secondTeam };
+}
+
+function finalsMvp(games: GameResult[], finishes: Record<string, number>): string | undefined {
+  const champ = Object.entries(finishes).find(([, place]) => place === 1)?.[0];
+  if (!champ) return undefined;
+  const acc = new Map<string, number>();
+  for (const game of games) {
+    if (game.round !== "final") continue;
+    const lines = game.homeId === champ ? game.box.home : game.awayId === champ ? game.box.away : [];
+    for (const line of lines) {
+      const value = line.pts + line.orb + line.drb + line.ast * 1.2;
+      acc.set(line.playerId, (acc.get(line.playerId) ?? 0) + value);
+    }
+  }
+  return [...acc.entries()].sort((a, b) => b[1] - a[1])[0]?.[0];
 }
 
 function defScore(id: string, acc: Map<string, { stl: number; blk: number; reb: number; sec: number }>): number {
@@ -662,13 +710,23 @@ export interface TrialSummary {
 }
 
 export function summarizeTournament(tournament: Tournament): TrialSummary {
-  const final = tournament.games.find((g) => g.id === "final")!;
+  const final = tournament.series.find((item) => item.id === "final")!;
+  const third = tournament.series.find((item) => item.id === "third")!;
   const awards = tournament.awards!;
   const record = new Map<string, { w: number; l: number }>();
   const seedOf = new Map(tournament.ranking.map((row) => [row.teamId, row.seed]));
   let closeGames = 0;
   let comebacks = 0;
   let upsets = 0;
+  for (const item of tournament.series) {
+    if (item.exhibition) continue;
+    for (const id of [item.homeId, item.awayId]) {
+      const row = record.get(id) ?? { w: 0, l: 0 };
+      if (id === item.winnerId) row.w += 1;
+      else row.l += 1;
+      record.set(id, row);
+    }
+  }
   for (const game of tournament.games) {
     if (game.exhibition) continue;
     if (Math.abs(game.homeScore - game.awayScore) <= 5) closeGames += 1;
@@ -676,26 +734,29 @@ export function summarizeTournament(tournament: Tournament): TrialSummary {
     const winnerSeed = seedOf.get(game.winnerId) ?? 16;
     const loserSeed = seedOf.get(game.loserId) ?? 16;
     if (winnerSeed - loserSeed >= 8) upsets += 1;
-    for (const id of [game.homeId, game.awayId]) {
-      const row = record.get(id) ?? { w: 0, l: 0 };
-      if (id === game.winnerId) row.w += 1;
-      else row.l += 1;
-      record.set(id, row);
-    }
   }
   const siege = tournament.siege;
   if (!siege?.arrival || !siege.gate || !siege.restoration) {
     throw new Error(`Seed ${tournament.seed} finished without the siege`);
   }
+  const loserWins = Math.min(final.homeWins, final.awayWins);
+  let pointMargin = 0;
+  let ot = 0;
+  for (const game of final.games) {
+    const winnerPts = game.winnerId === game.homeId ? game.homeScore : game.awayScore;
+    const loserPts = game.winnerId === game.homeId ? game.awayScore : game.homeScore;
+    pointMargin += game.winnerId === final.winnerId ? winnerPts - loserPts : loserPts - winnerPts;
+    ot += game.ot;
+  }
   return {
     seed: tournament.seed,
     championId: final.winnerId,
     runnerUpId: final.loserId,
-    thirdId: tournament.games.find((g) => g.id === "third")!.winnerId,
-    fourthId: tournament.games.find((g) => g.id === "third")!.loserId,
-    finals: `${final.winnerId === final.homeId ? final.homeScore : final.awayScore}–${final.winnerId === final.homeId ? final.awayScore : final.homeScore}`,
-    margin: Math.abs(final.homeScore - final.awayScore),
-    ot: final.ot,
+    thirdId: third.winnerId,
+    fourthId: third.loserId,
+    finals: `4–${loserWins}`,
+    margin: pointMargin,
+    ot,
     closeGames,
     comebacks,
     upsets,

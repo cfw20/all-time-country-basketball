@@ -1,7 +1,8 @@
 import { Link } from "react-router-dom";
 import { CONCORD_TEAM, CONSTRUCT_ID, playerById, sideById, TEAM_BY_ID } from "../data";
 import { Mark } from "../components/Marks";
-import type { GameResult } from "../data/types";
+import type { GameResult, SeriesResult } from "../data/types";
+import { seriesRecord } from "../engine/series";
 import { siegeGames } from "../engine/siege";
 import { usePantheon } from "../state/store";
 
@@ -10,26 +11,26 @@ const NIGHTS: { id: "arrival" | "gate" | "restoration"; kicker: string; title: s
     id: "arrival",
     kicker: "Night one",
     title: "Arrival",
-    body: "The Construct plays the best group winner. The country bracket continues either way.",
+    body: "The Construct plays the best group winner, first to four. The country bracket continues either way.",
   },
   {
     id: "gate",
     kicker: "Night two",
     title: "The gate",
-    body: "The country champion plays the Construct alone. One nation, the whole built side.",
+    body: "The country champion plays the Construct alone, first to four. One nation, the whole built side.",
   },
   {
     id: "restoration",
     kicker: "Night three",
     title: "The restoration",
-    body: "The Concord, twelve real primes, plays the Construct. This game decides the floor.",
+    body: "The Concord, twelve real primes, plays the Construct in a best-of-seven. This series decides the floor.",
   },
 ];
 
 export function Siege() {
   const { tournament } = usePantheon();
   const siege = tournament.siege;
-  const final = tournament.games.find((game) => game.id === "final");
+  const final = tournament.series.find((item) => item.id === "final");
   const champ = final ? TEAM_BY_ID[final.winnerId] : undefined;
   const games = {
     arrival: siege?.arrival ?? null,
@@ -42,7 +43,7 @@ export function Siege() {
 
   return (
     <main className="page">
-      <p className="kicker">The Construct · three nights · NBA rules</p>
+      <p className="kicker">The Construct · three series · NBA rules</p>
       <h2 className="display" style={{ fontSize: 68 }}>The countries, then the world.</h2>
       <p className="lede">
         The Construct is the one built side. Human games stay the real primes, under NBA rules. A Concord win ends the threat and leaves the country champion in place. A Construct win means they hold the floor.
@@ -60,7 +61,7 @@ export function Siege() {
               <p>{night.body}</p>
               {game ? (
                 <p style={{ marginTop: 10 }}>
-                  <Link to={`/games/${game.id}`}>{scoreLine(game)}{game.ot ? " · OT" : ""}</Link>
+                  <Link to={`/series/${game.id}`}>{scoreLine(game)}</Link>
                 </p>
               ) : (
                 <p style={{ marginTop: 10 }}>Waiting on this round.</p>
@@ -76,7 +77,7 @@ export function Siege() {
           <span className="quiet">{concord.length ? `${concord.length} primes · ${countries.size} countries` : "Named after the final"}</span>
         </div>
         {concord.length === 0 ? (
-          <p className="empty">The Concord is chosen after the country final, from primes already in the book. At most three from one country open, and five can dress for the night. Sim the siege once the final is in.</p>
+          <p className="empty">The Concord is chosen after the country final, from primes already in the book. At most three from one country open, and five can dress for the series. Sim the siege once the final is in.</p>
         ) : (
           <>
             <p className="note">Real players, borrowed for one night. The opening five are marked. After the tip they go back to their countries. Nobody was signed.</p>
@@ -151,14 +152,14 @@ function Status({
   siegeEnded: boolean;
   threatEnded: boolean;
   champName?: string;
-  restoration: GameResult | null;
+  restoration: SeriesResult | null;
 }) {
   if (!siegeEnded || !restoration) {
     return (
       <article className="panel siege-banner">
         <span className="tag">The floor is still in question</span>
         <h3 className="display" style={{ fontSize: 36 }}>The Construct is in the event.</h3>
-        <p>Sim through the siege. The arrival can land as early as the round of 16. The gate and the Concord wait on the country final.</p>
+        <p>Sim through the siege. The arrival series can land as early as the round of 16. The gate and the Concord wait on the country final.</p>
       </article>
     );
   }
@@ -170,7 +171,7 @@ function Status({
         <Mark team={threatEnded ? CONCORD_TEAM : construct} size={52} />
         <h3 className="display" style={{ fontSize: 40 }}>{threatEnded ? "The Concord" : construct.name}</h3>
       </div>
-      <p className="scoreline">{scoreLine(restoration)}{restoration.ot ? " · OT" : ""}</p>
+      <p className="scoreline">{scoreLine(restoration)}</p>
       <p>
         {threatEnded
           ? `The Concord beat the Construct. ${champName ?? "The country champion"} keeps the championship, and the event returns to country against country.`
@@ -180,10 +181,11 @@ function Status({
   );
 }
 
-function scoreLine(game: GameResult): string {
-  const winner = sideById(game.winnerId)?.name ?? (game.winnerId === game.homeId ? game.homeName : game.awayName) ?? game.winnerId;
-  const loser = sideById(game.loserId)?.name ?? (game.loserId === game.homeId ? game.homeName : game.awayName) ?? game.loserId;
-  return `${winner} ${Math.max(game.homeScore, game.awayScore)} · ${loser} ${Math.min(game.homeScore, game.awayScore)}`;
+function scoreLine(series: SeriesResult): string {
+  const winner = sideById(series.winnerId)?.name ?? (series.winnerId === series.homeId ? series.homeName : series.awayName) ?? series.winnerId;
+  const loser = sideById(series.loserId)?.name ?? (series.loserId === series.homeId ? series.homeName : series.awayName) ?? series.loserId;
+  const { winnerWins, loserWins } = seriesRecord(series);
+  return `${winner} ${winnerWins}–${loserWins} ${loser}`;
 }
 
 function siegeScorers(games: GameResult[]): { id: string; name: string; side: string; pts: number; reb: number; ast: number }[] {

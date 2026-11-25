@@ -1,8 +1,10 @@
 import { CONCORD_ID, CONSTRUCT_ID, playerById, teamById } from "../data";
-import type { Contest, GameResult, NewsItem, Player, Siege } from "../data/types";
+import type { Contest, GameResult, NewsItem, Player, SeriesResult, Siege } from "../data/types";
+import { seriesRecord } from "./series";
 
 export function buildNews(input: {
   games: GameResult[];
+  series: SeriesResult[];
   seedOf: Map<string, number>;
   allStar: GameResult | null;
   three: Contest | null;
@@ -17,6 +19,8 @@ export function buildNews(input: {
     items.push({ ...item, id: item.id ?? `n-${items.length}`, order: order++ });
   };
 
+  for (const item of input.series) pushSeries(item, push);
+
   for (const game of input.games) {
     const margin = Math.abs(game.homeScore - game.awayScore);
     const winner = game.winnerId;
@@ -26,24 +30,7 @@ export function buildNews(input: {
     const wName = sideName(game, winner);
     const lName = sideName(game, loser);
     const score = `${Math.max(game.homeScore, game.awayScore)}–${Math.min(game.homeScore, game.awayScore)}`;
-
-    if (game.round === "final") {
-      push({
-        kicker: "Final",
-        title: `${wName} take the Pantheon`,
-        body: `${wName} beat ${lName} ${score}${game.ot ? " in overtime" : ""}. The championship is a single night under NBA rules. The result is this draw, not a destiny.`,
-        gameId: game.id,
-        importance: 100,
-      });
-    } else if (game.round === "sf") {
-      push({
-        kicker: "Semifinal",
-        title: `${wName} are in the final`,
-        body: `${wName} ended ${lName}'s run, ${score}.`,
-        gameId: game.id,
-        importance: 86,
-      });
-    }
+    const clincher = game.seriesId && (game.id.endsWith("-4") || game.id.endsWith("-5") || game.id.endsWith("-6") || game.id.endsWith("-7"));
 
     if (game.comeback && game.comeback.teamId === winner && game.comeback.deficit >= 12) {
       push({
@@ -51,7 +38,7 @@ export function buildNews(input: {
         title: `${wName} erase a ${game.comeback.deficit}-point hole`,
         body: `${wName} trailed by ${game.comeback.deficit} and still beat ${lName} ${score}. The run is in the possession log.`,
         gameId: game.id,
-        importance: 80,
+        importance: clincher ? 82 : 68,
       });
     }
 
@@ -61,25 +48,25 @@ export function buildNews(input: {
         title: `${wName} at the horn`,
         body: `${wName} beat ${lName} ${score} on a shot that ended the period. The possession log has the make.`,
         gameId: game.id,
-        importance: 92,
+        importance: clincher ? 90 : 74,
       });
     }
 
-    if (wSeed - lSeed >= 8) {
+    if (wSeed - lSeed >= 8 && margin <= 8) {
       push({
         kicker: "Upset",
         title: `${wName} knock off ${lName}`,
         body: `Power seed ${wSeed} beat power seed ${lSeed}, ${score}. Favorites are favorites in Pantheon. They are not locks.`,
         gameId: game.id,
-        importance: 70 + Math.min(20, wSeed - lSeed),
+        importance: 60 + Math.min(12, wSeed - lSeed),
       });
-    } else if (margin >= 24) {
+    } else if (margin >= 30) {
       push({
         kicker: "Blowout",
         title: `${wName} by ${margin}`,
         body: `${wName} ran ${lName} off the floor, ${score}. The bench minutes show up in the box.`,
         gameId: game.id,
-        importance: 58,
+        importance: 42,
       });
     }
 
@@ -95,15 +82,7 @@ export function buildNews(input: {
             title: `${player.name} scores ${line.pts}`,
             body: `${player.name} put up ${line.pts} for ${sideName(game, teamId)} against ${teamId === game.homeId ? sideName(game, game.awayId) : sideName(game, game.homeId)}.`,
             gameId: game.id,
-            importance: 88,
-          });
-        } else if (line.pts >= 40) {
-          push({
-            kicker: "Forty",
-            title: `${player.name}, ${line.pts} points`,
-            body: `A forty-point night in a ${score} game. Minutes were ${Math.round(line.sec / 60)}.`,
-            gameId: game.id,
-            importance: 64,
+            importance: 78,
           });
         }
         const cats = [line.pts, reb, line.ast, line.stl, line.blk].filter((n) => n >= 10).length;
@@ -113,7 +92,7 @@ export function buildNews(input: {
             title: `${player.name} fills the box`,
             body: `${line.pts} points, ${reb} rebounds, ${line.ast} assists, ${line.stl} steals, ${line.blk} blocks.`,
             gameId: game.id,
-            importance: 66,
+            importance: 46,
           });
         }
         if (line.injured && (player.role === "star" || player.role === "starter")) {
@@ -186,22 +165,23 @@ export function buildNews(input: {
     });
   }
 
-  if (input.siege?.arrival) pushSiege(input.siege.arrival, "Arrival", 93, push);
-  if (input.siege?.gate) pushSiege(input.siege.gate, "The gate", 99, push);
+  if (input.siege?.arrival) pushSiege(input.siege.arrival, "Arrival", 96, push);
+  if (input.siege?.gate) pushSiege(input.siege.gate, "The gate", 102, push);
   if (input.siege?.restoration) {
-    const game = input.siege.restoration;
-    const score = `${Math.max(game.homeScore, game.awayScore)}–${Math.min(game.homeScore, game.awayScore)}`;
-    const held = game.winnerId === CONCORD_ID;
+    const series = input.siege.restoration;
+    const { loserWins } = seriesRecord(series);
+    const held = series.winnerId === CONCORD_ID;
+    const length = series.games.length === 4 ? "in a sweep" : `in ${series.games.length}`;
     push({
       kicker: "Restoration",
       title: held ? "The Concord ends the threat" : "The Construct holds the floor",
       body: held
-        ? `The Concord beat The Construct ${score}${game.ot ? " in overtime" : ""}. The country champion keeps the Pantheon, and the floor goes back to country against country.`
-        : `The Construct beat The Concord ${score}${game.ot ? " in overtime" : ""}. The country final stays in the book. The built side still holds the floor.`,
-      gameId: game.id,
-      importance: 104,
+        ? `The Concord beat The Construct 4–${loserWins} ${length}. The country champion keeps the Pantheon, and the floor goes back to country against country.`
+        : `The Construct beat The Concord 4–${loserWins} ${length}. The country final stays in the book. The built side still holds the floor.`,
+      gameId: series.games.at(-1)?.id,
+      importance: 108,
     });
-    pushSiegeLines(game, push);
+    pushSiegeLines(series, push);
   }
 
   items.sort((a, b) => b.importance - a.importance || a.order - b.order);
@@ -217,55 +197,92 @@ export function buildNews(input: {
   return capped;
 }
 
+function pushSeries(
+  series: SeriesResult,
+  push: (item: Omit<NewsItem, "id" | "order"> & { id?: string }) => void,
+) {
+  const { loserWins } = seriesRecord(series);
+  const winner = seriesName(series, series.winnerId);
+  const loser = seriesName(series, series.loserId);
+  const games = series.games.length;
+  const sweep = games === 4;
+  const seven = games === 7;
+  const base = series.round === "final" ? 104
+    : series.round === "sf" ? 94
+    : series.round === "qf" ? 86
+    : series.round === "r16" ? 80
+    : series.round === "third" ? 72
+    : 58;
+  const title = series.round === "final"
+    ? `${winner} take the Pantheon`
+    : series.round === "sf"
+      ? `${winner} are in the final`
+      : sweep
+        ? `${winner} sweep ${loser}`
+        : `${winner} take it 4–${loserWins}`;
+  const body = series.round === "final"
+    ? `${winner} beat ${loser} 4–${loserWins}${seven ? ", the series going the distance" : sweep ? " in a sweep" : ""}. First to four under NBA rules. The result is this draw, not a destiny.`
+    : `${winner} beat ${loser} 4–${loserWins} in the ${series.roundLabel.toLowerCase()}${seven ? ". It took seven" : sweep ? ". It was a sweep" : ""}.`;
+  push({
+    kicker: series.roundLabel,
+    title,
+    body,
+    gameId: series.games.at(-1)?.id,
+    importance: base + (seven ? 6 : 0) + (sweep ? 2 : 0),
+  });
+}
+
 function pushSiege(
-  game: GameResult,
+  series: SeriesResult,
   kicker: string,
   importance: number,
   push: (item: Omit<NewsItem, "id" | "order"> & { id?: string }) => void,
 ) {
-  const winner = named(game, game.winnerId);
-  const loser = named(game, game.loserId);
-  const score = `${Math.max(game.homeScore, game.awayScore)}–${Math.min(game.homeScore, game.awayScore)}`;
-  const extra = game.ot ? " in overtime" : "";
-  const constructWon = game.winnerId === CONSTRUCT_ID;
-  const title = game.round === "gate"
+  const winner = seriesName(series, series.winnerId);
+  const loser = seriesName(series, series.loserId);
+  const { loserWins } = seriesRecord(series);
+  const length = series.games.length === 7 ? " in seven" : series.games.length === 4 ? " in a sweep" : "";
+  const constructWon = series.winnerId === CONSTRUCT_ID;
+  const title = series.round === "gate"
     ? (constructWon ? "The gate falls" : `${winner} hold the gate`)
     : (constructWon ? "The Construct takes the arrival" : `${winner} turn the Construct away`);
-  const body = game.round === "gate"
+  const body = series.round === "gate"
     ? (constructWon
-      ? `The Construct beat ${loser} ${score}${extra}. The country champion is down. The Concord is named for the restoration.`
-      : `${winner} beat the Construct ${score}${extra}. One country held for a night. The Concord still plays, and that game decides the floor.`)
+      ? `The Construct beat ${loser} 4–${loserWins}${length}. The country champion is down. The Concord is named for the restoration.`
+      : `${winner} beat the Construct 4–${loserWins}${length}. One country held. The Concord still plays, and that series decides the floor.`)
     : (constructWon
-      ? `The Construct beat ${loser} ${score}${extra}. The country bracket keeps going. The siege is still ahead.`
-      : `${winner} beat the Construct ${score}${extra}. A country rose on arrival night. The siege is still ahead.`);
-  push({ kicker, title, body, gameId: game.id, importance });
-  pushSiegeLines(game, push);
+      ? `The Construct beat ${loser} 4–${loserWins}${length}. The country bracket keeps going. The siege is still ahead.`
+      : `${winner} beat the Construct 4–${loserWins}${length}. A country rose in the arrival series. The siege is still ahead.`);
+  push({ kicker, title, body, gameId: series.games.at(-1)?.id, importance: importance + (series.games.length === 7 ? 4 : 0) });
+  pushSiegeLines(series, push);
 }
 
 function pushSiegeLines(
-  game: GameResult,
+  series: SeriesResult,
   push: (item: Omit<NewsItem, "id" | "order"> & { id?: string }) => void,
 ) {
-  const score = `${game.awayScore}–${game.homeScore}`;
-  for (const [side, lines] of [[game.box.away, game.awayName], [game.box.home, game.homeName]] as const) {
-    for (const line of side) {
-      const player = playerById(line.playerId);
-      if (!player || line.pts < 40) continue;
-      push({
-        kicker: line.pts >= 50 ? "Fifty" : "Forty",
-        title: `${player.name}, ${line.pts} in the siege`,
-        body: `${player.name} scored ${line.pts} for ${lines} in a ${score} night. The log has the possessions.`,
-        gameId: game.id,
-        importance: line.pts >= 50 ? 90 : 84,
-      });
+  for (const game of series.games) {
+    const score = `${game.awayScore}–${game.homeScore}`;
+    for (const [side, lines] of [[game.box.away, game.awayName], [game.box.home, game.homeName]] as const) {
+      for (const line of side) {
+        const player = playerById(line.playerId);
+        if (!player || line.pts < 50) continue;
+        push({
+          kicker: "Fifty",
+          title: `${player.name}, ${line.pts} in the siege`,
+          body: `${player.name} scored ${line.pts} for ${lines} in a ${score} night. The log has the possessions.`,
+          gameId: game.id,
+          importance: 82,
+        });
+      }
     }
   }
 }
 
-function named(game: GameResult, id: string): string {
-  if (id === game.homeId) return game.homeName ?? id;
-  if (id === game.awayId) return game.awayName ?? id;
-  return id;
+function seriesName(series: SeriesResult, id: string): string {
+  if (id === series.homeId) return series.homeName ?? teamLabel(id);
+  if (id === series.awayId) return series.awayName ?? teamLabel(id);
+  return teamLabel(id);
 }
 
 function sideName(game: GameResult, id: string): string {

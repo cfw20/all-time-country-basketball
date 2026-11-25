@@ -497,7 +497,7 @@ export const TEAMS: Team[] = [
     mark: "lattice",
     motto: "Built to take the floor.",
     blurb:
-      "The one invented side. Twenty-two chassis, strong enough that a single all-time country is in real trouble. They stay out of the groups and take no human seat. They arrive at the knockout, play the best group winner, then the country champion, then the Concord: twelve real primes borrowed from the sides already in the field. A Concord win ends the threat and leaves the country champion in place. A Construct win means they hold the floor.",
+      "The one invented side, and the favorite. Twenty-two chassis, clearly ahead of the human books, and still beatable in a series. They stay out of the groups and take no human seat. They arrive at the knockout and play best-of-seven series: the best group winner, then the country champion, then the Concord of twelve real primes. A Concord series win ends the threat and leaves the country champion in place. A Construct series win means they hold the floor.",
     pace: 1.01,
   },
 ];

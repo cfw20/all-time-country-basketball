@@ -10,11 +10,11 @@ export function Standings() {
       <p className="kicker">Group stage · eight groups of four</p>
       <h2 className="display" style={{ fontSize: 68 }}>The tables</h2>
       <p className="lede">
-        Tiebreakers, in order: wins, head-to-head when exactly two sides are tied, point differential, points scored, then pre-draw power. The top two advance.
+        Each cell is a best-of-seven. Tiebreakers, in order: series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. The top two advance.
       </p>
       <div className="groups" style={{ marginTop: 22 }}>
         {tournament.groups.map((group) => {
-          const rows = standingsFor(group.teamIds, tournament.games);
+          const rows = standingsFor(group.teamIds, tournament.series);
           return (
             <section key={group.id} className="group-card">
               <h3>Group {group.id}</h3>
@@ -24,7 +24,8 @@ export function Standings() {
                     <th>Side</th>
                     <th className="num">W</th>
                     <th className="num">L</th>
-                    <th className="num">Diff</th>
+                    <th className="num">Games</th>
+                    <th className="num">Pts</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -40,6 +41,7 @@ export function Standings() {
                         </td>
                         <td className="num">{row.w}</td>
                         <td className="num">{row.l}</td>
+                        <td className="num">{row.gw - row.gl}</td>
                         <td className="num">{row.pf - row.pa}</td>
                       </tr>
                     );

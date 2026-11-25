@@ -96,21 +96,21 @@ Twenty-eight countries, three American overflow houses, one homeland house, and 
 
 ## The competition
 
-Eight groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Tiebreakers are wins, head-to-head when exactly two sides are tied, point differential, points scored, then pre-draw power. The top two advance.
+Eight groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. The top two advance.
 
-The bracket is fixed from group place: A1–B2, C1–D2, E1–F2, G1–H2, and the matching pairs on the other side. Neutral floors. A third-place game is played on final night.
+The bracket is fixed from group place: A1–B2, C1–D2, E1–F2, G1–H2, and the matching pairs on the other side. Every knockout round is first to four, including the final and the third-place series. Neutral floors. The better power seed is listed as home for games 1, 2, 5, and 7. Games 3, 4, and 6 flip the card. There is no home-court scoring bonus.
 
 After the groups, an interval that does not count: an All-Star game (First Light against Second Light), a skills challenge, a three-point contest, and a dunk contest. The Construct does not enter those nights. Honors after the final include tournament MVP, Finals MVP, defense, sixth man, breakout, and two all-tournament teams, all from the country games.
 
-The siege is three NBA games off the standings. The arrival, at the start of the knockout, is the Construct against the best group winner. The gate is the country champion against the Construct. The restoration is the Concord against the Construct, and it decides whether the country champion keeps the floor. The wire includes those nights. Nights collects rematches, close games, and margins from the country draw.
+The siege is three best-of-seven series off the standings. The arrival, at the start of the knockout, is the Construct against the best group winner. The gate is the country champion against the Construct. The restoration is the Concord against the Construct, and it decides whether the country champion keeps the floor. The Construct is the favorite. Humans can still take a series. The wire includes those series. Nights collects seven-game series, 4–3s, sweeps, and tight games from the country draw.
 
-Every game has quarter scores, a full box (points, rebounds, assists, steals, blocks, turnovers, fouls, minutes, field goals, threes, free throws), and a possession log. Favorites win more often. They are not locks.
+Every game has quarter scores, a full box (points, rebounds, assists, steals, blocks, turnovers, fouls, minutes, field goals, threes, free throws), and a possession log. Favorites win more series. They are not locks.
 
 ## Comparing draws
 
-Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, win rate, honors, final margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v4`.
+Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v5`.
 
-A game page has the line score, team shooting and true shooting, a short list of the plays that swung it, and the full possession log. Player pages carry a game log for the open draw. Team pages list every result. The painted floor is the look. The games are NBA basketball, played at the prime on each card.
+A series page lists every game and the running tally. A game page has the line score, team shooting and true shooting, a short list of the plays that swung it, and the full possession log. Player pages carry a game log for the open draw. Team pages list every series. The look is a fantasy sci-fi floor. The games are NBA basketball, played at the prime on each card.
 
 ## Where the data lives
 

@@ -1,12 +1,12 @@
 import { Link } from "react-router-dom";
 import { TEAM_BY_ID } from "../data";
-import type { GameResult, Tournament } from "../data/types";
+import type { SeriesResult, Tournament } from "../data/types";
 import { standingsFor } from "../engine/tournament";
 import { usePantheon } from "../state/store";
 
 interface Slot {
   id: string;
-  game?: GameResult;
+  series?: SeriesResult;
   awayId?: string;
   homeId?: string;
 }
@@ -16,20 +16,20 @@ export function Bracket() {
   const r16 = r16Slots(tournament);
   const qf = fromWinners(["r16-0", "r16-1", "r16-2", "r16-3", "r16-4", "r16-5", "r16-6", "r16-7"], "qf", tournament);
   const sf = fromWinners(["qf-0", "qf-1", "qf-2", "qf-3"], "sf", tournament);
-  const final = tournament.games.find((game) => game.id === "final");
-  const third = tournament.games.find((game) => game.id === "third");
-  const sf0 = tournament.games.find((game) => game.id === "sf-0");
-  const sf1 = tournament.games.find((game) => game.id === "sf-1");
+  const final = tournament.series.find((item) => item.id === "final");
+  const third = tournament.series.find((item) => item.id === "third");
+  const sf0 = tournament.series.find((item) => item.id === "sf-0");
+  const sf1 = tournament.series.find((item) => item.id === "sf-1");
 
   return (
     <main className="page">
-      <p className="kicker">Knockout · neutral floor · NBA overtime</p>
+      <p className="kicker">Knockout · first to four · neutral floor</p>
       <h2 className="display" style={{ fontSize: 68 }}>The bracket</h2>
       <p className="lede">
-        A1–B2, C1–D2, E1–F2, G1–H2, then the matching pairs on the other side. No home court. The better power seed is listed second. The country bracket ends at the final. <Link to="/siege">The siege</Link> holds the Construct and the Concord.
+        Every round is a best-of-seven. A side advances by winning four games. A1–B2, C1–D2, E1–F2, G1–H2, then the matching pairs on the other side. No home court. The better power seed is listed second. <Link to="/siege">The siege</Link> is its own set of series.
       </p>
       {tournament.through < 3 ? (
-        <p className="empty">The bracket is named after group day 3. Sim the groups and the pairings appear, still unplayed until the round of 16.</p>
+        <p className="empty">The bracket is named after the third group series. Sim the groups and the pairings appear, still unplayed until the round of 16.</p>
       ) : (
         <div className="bracket" style={{ marginTop: 18 }}>
           <Column slots={r16.slice(0, 4)} />
@@ -38,11 +38,11 @@ export function Bracket() {
           <div className="final-col">
             <div>
               <div className="label">Final</div>
-              <Match slot={{ id: "final", game: final, awayId: final?.awayId ?? sf0?.winnerId, homeId: final?.homeId ?? sf1?.winnerId }} />
+              <Match slot={{ id: "final", series: final, awayId: final?.awayId ?? sf0?.winnerId, homeId: final?.homeId ?? sf1?.winnerId }} />
             </div>
             <div>
               <div className="label">Third</div>
-              <Match slot={{ id: "third", game: third, awayId: third?.awayId ?? sf0?.loserId, homeId: third?.homeId ?? sf1?.loserId }} />
+              <Match slot={{ id: "third", series: third, awayId: third?.awayId ?? sf0?.loserId, homeId: third?.homeId ?? sf1?.loserId }} />
             </div>
           </div>
           <Column slots={sf.slice(1)} />
@@ -63,18 +63,20 @@ function Column({ slots }: { slots: Slot[] }) {
 }
 
 function Match({ slot }: { slot: Slot }) {
-  const game = slot.game;
-  const awayId = game?.awayId ?? slot.awayId;
-  const homeId = game?.homeId ?? slot.homeId;
+  const series = slot.series;
+  const awayId = series?.awayId ?? slot.awayId;
+  const homeId = series?.homeId ?? slot.homeId;
+  const awayWins = series ? (awayId === series.awayId ? series.awayWins : series.homeWins) : undefined;
+  const homeWins = series ? (homeId === series.homeId ? series.homeWins : series.awayWins) : undefined;
   const body = (
     <>
-      <Row id={awayId} score={game && awayId === game.awayId ? game.awayScore : undefined} winner={game?.winnerId} />
-      <Row id={homeId} score={game && homeId === game.homeId ? game.homeScore : undefined} winner={game?.winnerId} />
+      <Row id={awayId} score={awayWins} winner={series?.winnerId} />
+      <Row id={homeId} score={homeWins} winner={series?.winnerId} />
     </>
   );
   if (!awayId || !homeId) return <div className="match"><div className="wait">Waiting</div></div>;
-  if (!game) return <div className="match">{body}</div>;
-  return <Link to={`/games/${game.id}`} className="match">{body}</Link>;
+  if (!series) return <div className="match">{body}</div>;
+  return <Link to={`/series/${series.id}`} className="match">{body}</Link>;
 }
 
 function Row({ id, score, winner }: { id?: string; score?: number; winner?: string }) {
@@ -92,11 +94,11 @@ function Row({ id, score, winner }: { id?: string; score?: number; winner?: stri
 
 function r16Slots(tournament: Tournament): Slot[] {
   const slots: Slot[] = Array.from({ length: 8 }, (_, index) => {
-    const game = tournament.games.find((item) => item.id === `r16-${index}`);
-    return { id: `r16-${index}`, game, awayId: game?.awayId, homeId: game?.homeId };
+    const series = tournament.series.find((item) => item.id === `r16-${index}`);
+    return { id: `r16-${index}`, series, awayId: series?.awayId, homeId: series?.homeId };
   });
-  if (slots[0].game || tournament.through < 3) return slots;
-  const table = (letter: string) => standingsFor(tournament.groups.find((group) => group.id === letter)!.teamIds, tournament.games);
+  if (slots[0].series || tournament.through < 3) return slots;
+  const table = (letter: string) => standingsFor(tournament.groups.find((group) => group.id === letter)!.teamIds, tournament.series);
   const pairs: [string, string][] = [
     [table("A")[0].teamId, table("B")[1].teamId],
     [table("C")[0].teamId, table("D")[1].teamId],
@@ -120,15 +122,15 @@ function r16Slots(tournament: Tournament): Slot[] {
 function fromWinners(prev: string[], round: string, tournament: Tournament): Slot[] {
   const slots: Slot[] = [];
   for (let i = 0; i < prev.length; i += 2) {
-    const left = tournament.games.find((game) => game.id === prev[i]);
-    const right = tournament.games.find((game) => game.id === prev[i + 1]);
+    const left = tournament.series.find((item) => item.id === prev[i]);
+    const right = tournament.series.find((item) => item.id === prev[i + 1]);
     const id = `${round}-${i / 2}`;
-    const game = tournament.games.find((item) => item.id === id);
+    const series = tournament.series.find((item) => item.id === id);
     slots.push({
       id,
-      game,
-      awayId: game?.awayId ?? left?.winnerId,
-      homeId: game?.homeId ?? right?.winnerId,
+      series,
+      awayId: series?.awayId ?? left?.winnerId,
+      homeId: series?.homeId ?? right?.winnerId,
     });
   }
   return slots;

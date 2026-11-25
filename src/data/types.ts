@@ -144,14 +144,40 @@ export interface GameResult {
   exhibition?: boolean;
   homeName?: string;
   awayName?: string;
+  /** Series this game belongs to. Best-of-seven ids, not a one-off. */
+  seriesId?: string;
+}
+
+/** First to four. Games stop when one side has four wins. Neutral floor, no home-court bonus. */
+export interface SeriesResult {
+  id: string;
+  round: string;
+  roundLabel: string;
+  dayLabel: string;
+  /** Better power seed, or the side named home for a custom series. */
+  homeId: string;
+  awayId: string;
+  homeName?: string;
+  awayName?: string;
+  games: GameResult[];
+  homeWins: number;
+  awayWins: number;
+  winnerId: string;
+  loserId: string;
+  exhibition?: boolean;
 }
 
 export interface GroupStanding {
   teamId: string;
+  /** Series wins. A series is first to four games. */
   w: number;
   l: number;
+  /** Games won and lost inside those series. */
+  gw: number;
+  gl: number;
   pf: number;
   pa: number;
+  /** Series wins against each opponent. */
   h2h: Record<string, number>;
 }
 
@@ -189,11 +215,11 @@ export interface NewsItem {
   order: number;
 }
 
-/** The Construct's three nights, and the human roster borrowed to answer them. */
+/** The Construct's three series, and the human roster borrowed to answer them. */
 export interface Siege {
-  arrival: GameResult | null;
-  gate: GameResult | null;
-  restoration: GameResult | null;
+  arrival: SeriesResult | null;
+  gate: SeriesResult | null;
+  restoration: SeriesResult | null;
   /** Real human player ids, opening five first. Empty until the Concord is named. */
   concordIds: string[];
   /** The Concord won the restoration, so the country champion keeps the floor. */
@@ -205,6 +231,7 @@ export interface Tournament {
   through: number;
   ranking: { teamId: string; power: number; seed: number }[];
   groups: { id: string; teamIds: string[] }[];
+  series: SeriesResult[];
   games: GameResult[];
   allStar: GameResult | null;
   allStarRosters: { a: string[]; b: string[]; captainA: string; captainB: string } | null;

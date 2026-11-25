@@ -30,25 +30,36 @@ export function Shell() {
         <span className="orb orb-a" />
         <span className="orb orb-b" />
         <span className="orb orb-c" />
+        <span className="moon" />
+        <span className="planet" />
+        <span className="rings" />
         <svg className="constellation" viewBox="0 0 1200 800" preserveAspectRatio="xMidYMid slice">
-          <g fill="none" stroke="rgba(246,234,215,0.35)" strokeWidth="1">
+          <g fill="none" stroke="rgba(159,214,255,0.35)" strokeWidth="1">
+            <ellipse cx="240" cy="180" rx="180" ry="70" transform="rotate(-18 240 180)" />
+            <ellipse cx="240" cy="180" rx="230" ry="90" transform="rotate(-8 240 180)" />
+            <path d="M40 620 C 220 540, 380 700, 560 610 S 900 520, 1160 640" />
             <path d="M80 140 L210 90 L260 210 L140 250 Z" />
-            <path d="M860 80 L980 160 L910 280 L760 220 Z" />
             <path d="M640 520 L760 470 L820 610 L680 660 Z" />
           </g>
+          <g fill="none" stroke="rgba(231,194,122,0.45)" strokeWidth="1.2">
+            <path d="M900 120 C 980 40, 1120 80, 1080 180 S 900 240, 860 160" />
+            <path d="M120 300 C 200 260, 280 340, 220 400" />
+          </g>
           <g fill="#f6ead7">
-            <circle cx="80" cy="140" r="2.2" />
+            <circle cx="80" cy="140" r="1.8" />
             <circle cx="210" cy="90" r="2.2" />
-            <circle cx="260" cy="210" r="2.2" />
-            <circle cx="140" cy="250" r="2.2" />
-            <circle cx="860" cy="80" r="2.2" />
-            <circle cx="980" cy="160" r="2.2" />
-            <circle cx="910" cy="280" r="2.2" />
-            <circle cx="760" cy="220" r="2.2" />
-            <circle cx="640" cy="520" r="2.2" />
-            <circle cx="760" cy="470" r="2.2" />
-            <circle cx="820" cy="610" r="2.2" />
-            <circle cx="680" cy="660" r="2.2" />
+            <circle cx="260" cy="210" r="1.6" />
+            <circle cx="140" cy="250" r="1.4" />
+            <circle cx="640" cy="520" r="2" />
+            <circle cx="760" cy="470" r="1.5" />
+            <circle cx="820" cy="610" r="1.8" />
+            <circle cx="680" cy="660" r="1.4" />
+            <circle cx="480" cy="90" r="1.3" />
+            <circle cx="520" cy="240" r="1.6" />
+            <circle cx="70" cy="480" r="1.5" />
+            <circle cx="980" cy="420" r="1.7" />
+            <circle cx="1100" cy="300" r="1.4" />
+            <circle cx="360" cy="640" r="1.5" />
           </g>
         </svg>
       </div>

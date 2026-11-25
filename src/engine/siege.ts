@@ -1,11 +1,21 @@
 import { CONCORD_ID, CONCORD_TEAM, CONSTRUCT_ID, PLAYERS, rosterOf, teamById } from "../data";
-import type { GameResult, Player, Pos, Role, Siege } from "../data/types";
-import { simulateGame, type SideInput } from "./game";
-import { mixSeed } from "./rng";
+import type { GameResult, Player, Pos, Role, SeriesResult, Siege } from "../data/types";
+import type { SideInput } from "./game";
+import { playSeries } from "./series";
+
+const SIEGE_FLOORS = [
+  "The Glass Meridian, Reykjavík",
+  "The White Circuit, Vienna",
+  "The Open Ring, Cairo",
+  "The Amber Vault, Vilnius",
+  "The Quiet Court, Kyoto",
+  "The Salt Archive, Dakar",
+  "The Violet Dock, Lisbon",
+];
 
 export function siegeGames(siege: Siege | null | undefined): GameResult[] {
   if (!siege) return [];
-  return [siege.arrival, siege.gate, siege.restoration].filter((game): game is GameResult => game !== null);
+  return [siege.arrival, siege.gate, siege.restoration].flatMap((series) => series?.games ?? []);
 }
 
 export function playSiege(input: {
@@ -14,20 +24,20 @@ export function playSiege(input: {
   log: boolean;
   games: GameResult[];
   opponentId: string;
+  championId?: string;
 }): Siege {
   const arrival = playMatch({
     id: "arrival",
     round: "arrival",
     roundLabel: "Arrival",
     dayLabel: "The arrival",
-    venue: "The Glass Meridian, Reykjavík",
+    venues: ["The Glass Meridian, Reykjavík", ...SIEGE_FLOORS],
     seed: input.seed,
     log: input.log,
     home: sideOf(input.opponentId),
     away: constructSide(),
   });
-  const final = input.games.find((game) => game.id === "final");
-  if (input.through < 9 || !final) {
+  if (input.through < 9 || !input.championId) {
     return { arrival, gate: null, restoration: null, concordIds: [], threatEnded: false };
   }
   const gate = playMatch({
@@ -35,10 +45,10 @@ export function playSiege(input: {
     round: "gate",
     roundLabel: "The gate",
     dayLabel: "The siege",
-    venue: "The White Circuit, Vienna",
+    venues: ["The White Circuit, Vienna", ...SIEGE_FLOORS],
     seed: input.seed,
     log: input.log,
-    home: sideOf(final.winnerId),
+    home: sideOf(input.championId),
     away: constructSide(),
   });
   const concord = buildConcord(input.games);
@@ -47,7 +57,7 @@ export function playSiege(input: {
     round: "restoration",
     roundLabel: "The restoration",
     dayLabel: "The siege",
-    venue: "The Open Ring, Cairo",
+    venues: ["The Open Ring, Cairo", ...SIEGE_FLOORS],
     seed: input.seed,
     log: input.log,
     home: constructSide(),
@@ -67,22 +77,22 @@ function playMatch(input: {
   round: string;
   roundLabel: string;
   dayLabel: string;
-  venue: string;
+  venues: string[];
   seed: number;
   log: boolean;
   home: SideInput;
   away: SideInput;
-}): GameResult {
-  return simulateGame({
+}): SeriesResult {
+  return playSeries({
     id: input.id,
     round: input.round,
     roundLabel: input.roundLabel,
     dayLabel: input.dayLabel,
-    venue: input.venue,
-    seed: mixSeed(input.seed, input.id),
+    seed: input.seed,
+    log: input.log,
+    venues: input.venues,
     home: input.home,
     away: input.away,
-    log: input.log,
     exhibition: true,
   });
 }

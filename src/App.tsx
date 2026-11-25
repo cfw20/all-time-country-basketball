@@ -12,6 +12,7 @@ import { Players } from "./pages/Players";
 import { Rivalries } from "./pages/Rivalries";
 import { Rules } from "./pages/Rules";
 import { Schedule } from "./pages/Schedule";
+import { SeriesPage } from "./pages/Series";
 import { Siege } from "./pages/Siege";
 import { Standings } from "./pages/Standings";
 import { TeamPage } from "./pages/Team";
@@ -28,6 +29,7 @@ export function App() {
         <Route path="bracket" element={<Bracket />} />
         <Route path="siege" element={<Siege />} />
         <Route path="schedule" element={<Schedule />} />
+        <Route path="series/:id" element={<SeriesPage />} />
         <Route path="games/:id" element={<GamePage />} />
         <Route path="teams" element={<Teams />} />
         <Route path="teams/:id" element={<TeamPage />} />

@@ -44,6 +44,7 @@ export function GamePage() {
         {game.buzzerBeater ? <span style={{ color: "var(--ember)" }}>Buzzer</span> : null}
         {game.ot ? <span>{game.ot === 1 ? "Overtime" : `${game.ot} overtimes`}</span> : null}
         <span>{siegeNight ? "NBA rules. Every human on the floor is a real prime. The Construct is the built side." : "Both sides play the prime on the card. NBA rules."}</span>
+        {game.seriesId ? <Link to={`/series/${game.seriesId}`}>This series</Link> : null}
       </div>
       <LineScore game={game} />
       {swings.length > 0 ? (

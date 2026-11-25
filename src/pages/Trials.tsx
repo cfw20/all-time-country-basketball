@@ -37,7 +37,7 @@ export function Trials() {
       {trials.length > 0 ? (
         <div className="stat-grid">
           <div className="panel"><span className="tag">Champions</span><h3>{champions.length}</h3><p>Different sides have won at least once.</p></div>
-          <div className="panel"><span className="tag">Final margin</span><h3>{one(trials.reduce((sum, trial) => sum + trial.margin, 0), trials.length)}</h3><p>Average points between champion and runner-up.</p></div>
+          <div className="panel"><span className="tag">Final margin</span><h3>{one(trials.reduce((sum, trial) => sum + trial.margin, 0), trials.length)}</h3><p>Average points the champion outscored the runner-up across the final series.</p></div>
           <div className="panel"><span className="tag">Close games</span><h3>{one(trials.reduce((sum, trial) => sum + trial.closeGames, 0), trials.length)}</h3><p>Official games decided by five or fewer, per draw.</p></div>
           <div className="panel"><span className="tag">Comebacks</span><h3>{one(trials.reduce((sum, trial) => sum + trial.comebacks, 0), trials.length)}</h3><p>Wins after trailing by 12 or more, per draw. Upsets by eight seeds: {one(trials.reduce((sum, trial) => sum + trial.upsets, 0), trials.length)}.</p></div>
         </div>
@@ -95,7 +95,7 @@ export function Trials() {
                 <th className="num">Finals</th>
                 <th className="num">Final 4</th>
                 <th className="num">Avg finish</th>
-                <th className="num">Win%</th>
+                <th className="num">Series</th>
                 <th className="num">MVP</th>
                 <th className="num">DPOY</th>
               </tr>

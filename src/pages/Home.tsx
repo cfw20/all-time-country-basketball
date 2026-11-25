@@ -2,16 +2,17 @@ import { Link } from "react-router-dom";
 import { CONSTRUCT_ID, isConstructed, PLAYERS, playerById, sideById, TEAM_BY_ID, TEAMS } from "../data";
 import { Mark } from "../components/Marks";
 import { formatSeed } from "../engine/rng";
+import { seriesRecord } from "../engine/series";
 import { usePantheon } from "../state/store";
 
 export function Home() {
   const { tournament } = usePantheon();
-  const final = tournament.games.find((game) => game.id === "final");
+  const final = tournament.series.find((item) => item.id === "final");
   const champ = final ? TEAM_BY_ID[final.winnerId] : undefined;
   const runner = final ? TEAM_BY_ID[final.loserId] : undefined;
   const mvp = tournament.awards ? playerById(tournament.awards.mvpId) : undefined;
-  const latestLabel = tournament.games.at(-1)?.dayLabel;
-  const latest = latestLabel ? tournament.games.filter((game) => game.dayLabel === latestLabel).slice(-4) : [];
+  const latestLabel = tournament.series.at(-1)?.dayLabel;
+  const latest = latestLabel ? tournament.series.filter((item) => item.dayLabel === latestLabel).slice(-4) : [];
   const houses = TEAMS.filter((team) => team.kind === "overflow" || team.kind === "homeland");
   const nations = TEAMS.filter((team) => team.kind === "country");
   const humans = PLAYERS.filter((player) => !isConstructed(player)).length;
@@ -24,7 +25,7 @@ export function Home() {
         <div className="folio">
           <div className="ring" aria-hidden="true" />
           <p className="kicker">A private all-time floor · NBA rules</p>
-          <h2 className="display">Every prime<span>on one night.</span></h2>
+          <h2 className="display">Every prime<span>on one floor.</span></h2>
           <p className="lede">
             {humans} real primes. Thirty-two human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
           </p>
@@ -38,8 +39,7 @@ export function Home() {
                 <h3 className="display" style={{ fontSize: 40 }}>The Construct</h3>
               </div>
               <p className="scoreline">
-                {Math.max(restoration.homeScore, restoration.awayScore)} · The Concord {Math.min(restoration.homeScore, restoration.awayScore)}
-                {restoration.ot ? " · OT" : ""}
+                The Construct {Math.max(restoration.homeWins, restoration.awayWins)}–{Math.min(restoration.homeWins, restoration.awayWins)} The Concord
               </p>
               <p>{champ.name} won the countries, over {runner?.name}. The Construct beat the Concord and holds the floor. {mvp ? `${mvp.name} is the country MVP.` : ""}</p>
             </>
@@ -50,8 +50,7 @@ export function Home() {
                 <h3 className="display" style={{ fontSize: 40 }}>{champ.name}</h3>
               </div>
               <p className="scoreline">
-                {Math.max(final!.homeScore, final!.awayScore)} · {runner?.name} {Math.min(final!.homeScore, final!.awayScore)}
-                {final!.ot ? " · OT" : ""}
+                {seriesRecord(final!).winnerWins}–{seriesRecord(final!).loserWins} · {runner?.name}
               </p>
               <p>
                 {tournament.siege?.threatEnded
@@ -90,27 +89,30 @@ export function Home() {
         <h3>{tournament.siege?.threatEnded ? "The countries have the floor back." : "A built side is in the championship."}</h3>
         <p>
           {restoration
-            ? `${scoreName(restoration.winnerId, restoration)} ${Math.max(restoration.homeScore, restoration.awayScore)} · ${scoreName(restoration.loserId, restoration)} ${Math.min(restoration.homeScore, restoration.awayScore)}. Open the three nights.`
-            : "Arrival, the gate, then the Concord: twelve real primes, one night, against the Construct."}
+            ? `${scoreName(restoration.winnerId, restoration)} ${seriesRecord(restoration).winnerWins}–${seriesRecord(restoration).loserWins} ${scoreName(restoration.loserId, restoration)}. Open the three series.`
+            : "Arrival, the gate, then the Concord: twelve real primes, a best-of-seven, against the Construct."}
         </p>
       </Link>
 
       <section className="section">
         <div className="section-head">
           <h3>{latestLabel ?? "Waiting on the first tip"}</h3>
-          <Link to="/schedule">All games</Link>
+          <Link to="/schedule">All series</Link>
         </div>
         {latest.length === 0 ? (
-          <p className="empty">No games yet. The draw is posted on the groups page. Sim round plays the next day.</p>
+          <p className="empty">No series yet. The draw is posted on the groups page. Sim round plays the next slate.</p>
         ) : (
           <div className="team-grid">
-            {latest.map((game) => (
-              <Link key={game.id} to={`/games/${game.id}`} className="panel">
-                <span className="tag">{game.roundLabel}</span>
-                <h4>{scoreName(game.winnerId, game)} {Math.max(game.homeScore, game.awayScore)}</h4>
-                <p>{scoreName(game.loserId, game)} {Math.min(game.homeScore, game.awayScore)}{game.buzzerBeater ? " · buzzer" : ""}</p>
-              </Link>
-            ))}
+            {latest.map((item) => {
+              const record = seriesRecord(item);
+              return (
+                <Link key={item.id} to={`/series/${item.id}`} className="panel">
+                  <span className="tag">{item.roundLabel} · {item.games.length} games</span>
+                  <h4>{scoreName(item.winnerId, item)} {record.winnerWins}–{record.loserWins}</h4>
+                  <p>{scoreName(item.loserId, item)}</p>
+                </Link>
+              );
+            })}
           </div>
         )}
       </section>
