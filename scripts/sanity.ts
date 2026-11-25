@@ -1,8 +1,24 @@
-import { PLAYERS, ROSTERS, TEAMS, playerById } from "../src/data";
-import { ERA_CARDS, eraCard, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
+import { CONSTRUCT_ID, PLAYERS, ROSTERS, TEAMS, isConstructed, playerById } from "../src/data";
+import {
+  OLY_ID,
+  OLY_ROSTER,
+  earnedOlympicBoosters,
+  olympicRosterLegal,
+  olympicVerdict,
+  olympicsLockLine,
+  olympicsUnlock,
+  openOlympicFinal,
+  playOlympics,
+  rerollOlympic,
+  startOlympicBuild,
+  takeOlympicPrime,
+} from "../src/engine/olympics";
+import { ERA_CARDS, eraCard, freshCharges, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
+import { OLYMPICS_KEY } from "../src/state/olympicsBook";
 import { playDecade, playFive, playFortnight, playGauntlet, playHill, playOpen, playSurvivor } from "../src/engine/floors";
 import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
 import { castFromGame, playAfter, type AfterKind } from "../src/engine/after";
+import { readPlayerStyle, readStyle } from "../src/engine/style";
 import { lightLamp } from "../src/engine/tournament";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
 
@@ -54,8 +70,18 @@ for (const team of TEAMS) {
     if (prior) fail(`duplicate name ${player.name} (${prior} and ${team.id})`);
     seen.set(player.name, team.id);
   }
+  const beforeStarts = roster.map((player) => player.starts);
+  const style = readStyle({ pace: team.pace, players: roster, built: team.kind === "construct" });
+  if (roster.some((player, index) => player.starts !== beforeStarts[index])) fail(`${team.name} style rewrote the opening five`);
+  if (!style.name.trim() || !style.line.trim()) fail(`${team.name} has an empty style`);
+  if (style.facets.length < 3 || style.facets.length > 5) fail(`${team.name} style has ${style.facets.length} facets`);
+  if (team.kind === "construct" && !/built/i.test(style.line)) fail("the Construct style does not say it is built");
+  if (team.kind !== "construct" && style.built) fail(`${team.name} was marked built`);
 }
-
+for (const player of PLAYERS) {
+  const look = readPlayerStyle(player);
+  if (!look.name.trim() || !look.line.trim()) fail(`${player.name} has an empty style`);
+}
 const expect = (name: string, teamId: string) => {
   const player = PLAYERS.find((p) => p.name === name);
   if (!player) fail(`missing ${name}`);
@@ -308,6 +334,85 @@ if (fortnight.games.length !== 15 || fortWins !== 4) fail("fortnight did not fin
 if (survivor.rounds.length < 3 || !survivor.champion) fail("survivor did not play down to a champion");
 if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70) fail("the five did not tip");
 console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
+
+if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
+if (olympicsUnlock([]).open) fail("olympics opened with no trials");
+const lockedLine = olympicsLockLine(olympicsUnlock([]));
+const lockedSentences = lockedLine.split(/[.!?]/).map((part) => part.trim()).filter(Boolean);
+if (lockedSentences.length !== 1 || !lockedLine.includes("0 championships") || !lockedLine.includes("0 series")) {
+  fail(`locked olympics line is not one concrete sentence: ${lockedLine}`);
+}
+if (olympicsUnlock([sweep]).open) fail("one championship opened the Olympics");
+if (!yearUnlock([sweep, strike]).open || !olympicsUnlock([sweep, strike]).open) fail("the trial list that opens the Unbroken Year left the Olympics shut");
+if (!olympicsUnlock([restoredTrial, sweep]).open) fail("a Concord restoration did not count toward the Olympics");
+const replayedSeed = [
+  { seed: 11, arrivalWinnerId: "cont", gateWinnerId: "cstr", threatEnded: false },
+  { seed: 11, arrivalWinnerId: "cstr", gateWinnerId: "cstr", threatEnded: true },
+] as TrialSummary[];
+if (olympicsUnlock(replayedSeed).open || olympicsUnlock(replayedSeed).championships !== 1) fail("replaying one seed counted twice toward the Olympics");
+if (earnedOlympicBoosters(null, freshCharges()) !== 0) fail("a fresh year counted as an earned Olympic booster");
+const heard = honorFor(70).relic;
+if (!heard || earnedOlympicBoosters(heard.charges, null) < 1) fail("a 70-win relic did not earn an Olympic roll");
+const plainCard = startOlympicBuild(5, 0);
+if (takeOlympicPrime(plainCard, "not-on-the-card") !== plainCard) fail("a name off the card was added to the Olympic side");
+let mulligan = plainCard;
+const beforeMulligan = mulligan.nonce;
+mulligan = rerollOlympic(mulligan);
+if (mulligan === plainCard || mulligan.mulligan !== 0 || mulligan.nonce === beforeMulligan) fail("the free mulligan did not roll");
+if (rerollOlympic(mulligan) !== mulligan) fail("a roll with no booster changed the card");
+let boosted = startOlympicBuild(6, 1);
+boosted = rerollOlympic(boosted);
+const spentNonce = boosted.nonce;
+boosted = rerollOlympic(boosted);
+if (boosted.boosters !== 0 || boosted.nonce === spentNonce) fail("an earned booster did not roll the Olympic card");
+
+function fillOlympic(seed: number) {
+  let build = startOlympicBuild(seed, 0);
+  for (let i = 0; i < 20 && build.rosterIds.length < OLY_ROSTER; i++) {
+    const id = build.offer?.playerIds[0];
+    if (!id) break;
+    const next = takeOlympicPrime(build, id);
+    if (next === build) break;
+    build = next;
+  }
+  return build;
+}
+
+for (const seed of [1, 8, 21, 99, 20261125]) {
+  const built = fillOlympic(seed);
+  if (!olympicRosterLegal(built.rosterIds)) fail(`olympic roster for seed ${seed} is not 12 legal humans`);
+  const counts = new Map<string, number>();
+  for (const id of built.rosterIds) {
+    const player = playerById(id);
+    if (!player || isConstructed(player)) fail(`olympic seat ${id} is not a human prime`);
+    else counts.set(player.nationality, (counts.get(player.nationality) ?? 0) + 1);
+  }
+  if ([...counts.values()].some((count) => count > 3)) fail(`olympic nationality cap broke on seed ${seed}`);
+}
+const olympicRoster = fillOlympic(20261125);
+const beforeTeams = TEAMS.length;
+const olympics = playOlympics(olympicRoster.rosterIds, 20261125);
+if (TEAMS.length !== beforeTeams || TEAMS.length !== 45) fail("olympics changed the championship team count");
+if (TEAMS.some((team) => team.id === OLY_ID)) fail("the rolled side was added to the championship");
+if (olympics.field.length !== 8 || !olympics.field.some((side) => side.id === OLY_ID) || !olympics.field.some((side) => side.id === CONSTRUCT_ID)) {
+  fail("the Olympic field is not the rolled side, the Construct, and six others");
+}
+if (!olympics.field.some((side) => side.kind === "country")) fail("the Olympic field has no country");
+if (!olympics.field.some((side) => side.kind === "overflow" || side.kind === "homeland")) fail("the Olympic field has no overflow or homeland house");
+if (olympics.series.length !== 7) fail(`olympics played ${olympics.series.length} series`);
+for (const series of olympics.series) {
+  const wins = Math.max(series.homeWins, series.awayWins);
+  const losses = Math.min(series.homeWins, series.awayWins);
+  if (wins !== 4 || series.games.length !== 4 + losses) fail(`${series.id} did not end at four wins (${series.homeWins}-${series.awayWins}, ${series.games.length} games)`);
+}
+const openedFinal = openOlympicFinal(olympics);
+const gold = olympics.series.find((series) => series.round === "gold");
+const clincher = gold?.games.at(-1);
+if (!openedFinal || !clincher || openedFinal.homeScore !== clincher.homeScore || openedFinal.awayScore !== clincher.awayScore || openedFinal.plays.length < 20) {
+  fail("the opened Olympic final did not match the bracket");
+}
+console.log("OLYMPICS", olympicVerdict(olympics).line);
+console.log("OLY FIELD", olympics.field.map((side) => `${side.kind}:${side.name}`).join(" | "));
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

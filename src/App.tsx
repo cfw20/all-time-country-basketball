@@ -10,6 +10,7 @@ import { Leaders } from "./pages/Leaders";
 import { Clash } from "./pages/Clash";
 import { Decade, Five, Fortnight, Gauntlet, Hill, OpenFloor, Survivor } from "./pages/Floors";
 import { Lamp } from "./pages/Lamp";
+import { Olympics } from "./pages/Olympics";
 import { Play } from "./pages/Play";
 import { PlayerPage } from "./pages/Player";
 import { QuickSeries } from "./pages/QuickSeries";
@@ -50,6 +51,7 @@ export function App() {
         <Route path="news" element={<Wire />} />
         <Route path="trials" element={<Trials />} />
         <Route path="season" element={<Season />} />
+        <Route path="olympics" element={<Olympics />} />
         <Route path="play" element={<Play />} />
         <Route path="play/clash" element={<Clash />} />
         <Route path="play/series" element={<QuickSeries />} />

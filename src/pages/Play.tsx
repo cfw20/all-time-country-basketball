@@ -24,7 +24,7 @@ const DOORS = [
     to: "/play/throne",
     kicker: "Eight sides, one night",
     title: "The Throne",
-    body: "A bracket of era teams. Seven games. One year leaves holding the floor.",
+    body: "Eight era sides. Single elimination, one NBA game a night. Seven games, then one year leaves holding the floor.",
   },
   {
     to: "/play/hill",
@@ -69,6 +69,12 @@ const DOORS = [
     body: "Two position-balanced fives, drawn from the whole human book. They play once.",
   },
   {
+    to: "/olympics",
+    kicker: "One bracket, then it closes",
+    title: "The Olympics",
+    body: "Roll a temporary side and see if it can live with the countries and the Construct. Every meeting is a best-of-seven. It does not join the draw.",
+  },
+  {
     to: "/season",
     kicker: "The long chase",
     title: "The Unbroken Year",
@@ -89,7 +95,7 @@ export function Play() {
       <p className="kicker">Side floors · jump in</p>
       <h2 className="display" style={{ fontSize: 68 }}>Play something now.</h2>
       <p className="lede">
-        The championship is the book. These floors are the nights around it: a game, a series, a contest, a bracket. Each one starts the moment you open it. Humans are real primes. The basketball is NBA rules.
+        The championship is the book. These floors are the nights around it: a game, a series, a contest, a bracket. Each one starts the moment you open it. A series tonight, the Fortnight final, and the Olympics are best-of-seven. The Throne, the Open, and the other one-night brackets are a single NBA game. Humans are real primes. The basketball is NBA rules. None of these nights move the groups.
       </p>
       {book.crown ? <p className="scoreline">An Unbroken Year is already cut into this browser.</p> : null}
       <div className="doors">
