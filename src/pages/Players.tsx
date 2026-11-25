@@ -20,7 +20,7 @@ export function Players() {
     <main className="page">
       <p className="kicker">{PLAYERS.length} primes</p>
       <h2 className="display" style={{ fontSize: 68 }}>The book</h2>
-      <p className="lede">Real players, rated at a prime already on record. Search a name, a side, or a nationality.</p>
+      <p className="lede">Every name is the prime on the card. Search a name, a side, or a nationality. Faded seasons and current age are not in the book.</p>
       <div className="filters">
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the book" aria-label="Search players" />
         {["All", "Country", "Overflow", "Homeland"].map((item) => (

@@ -15,7 +15,10 @@ if (countries.length !== 28) fail(`expected 28 countries, got ${countries.length
 const seen = new Map<string, string>();
 for (const team of TEAMS) {
   const roster = ROSTERS[team.id] ?? [];
-  if (roster.length !== 18) fail(`${team.name} has ${roster.length} players`);
+  const expected = 22;
+  if (roster.length !== expected) fail(`${team.name} has ${roster.length} players`);
+  const early = roster.find((p) => p.primeYear < 1955 || p.primeYear > 2026);
+  if (early) fail(`${early.name} prime ${early.primeYear} is outside 1955–2026`);
   const starts = roster.filter((p) => p.starts);
   if (starts.length !== 5) fail(`${team.name} has ${starts.length} opening starters`);
   if (roster.filter((p) => p.contract === "two-way").length < 2) fail(`${team.name} needs two two-ways`);
@@ -140,7 +143,7 @@ console.log(`\nstar mpg ${starMpg.toFixed(1)} two-way mpg ${twMpg.toFixed(1)}`);
 
 if (!tournament.awards) fail("missing awards");
 if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star log too thin");
-if (!tournament.three || !tournament.dunk) fail("missing interval contests");
+if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
 if (official.length !== 48 + 8 + 4 + 2 + 2) fail(`unexpected game count ${official.length}`);
 if ((final?.plays.length ?? 0) < 40) fail("final play log too thin");
 if (mean < 102 || mean > 128) fail(`mean score ${mean.toFixed(1)} is outside 102-128`);

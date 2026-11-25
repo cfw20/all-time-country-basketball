@@ -1,5 +1,6 @@
 import { Route, Routes } from "react-router-dom";
 import { Shell } from "./components/Shell";
+import { Atlas } from "./pages/Atlas";
 import { Awards } from "./pages/Awards";
 import { Bracket } from "./pages/Bracket";
 import { Events } from "./pages/Events";
@@ -8,6 +9,7 @@ import { Home } from "./pages/Home";
 import { Leaders } from "./pages/Leaders";
 import { PlayerPage } from "./pages/Player";
 import { Players } from "./pages/Players";
+import { Rivalries } from "./pages/Rivalries";
 import { Rules } from "./pages/Rules";
 import { Schedule } from "./pages/Schedule";
 import { Standings } from "./pages/Standings";
@@ -32,6 +34,8 @@ export function App() {
         <Route path="awards" element={<Awards />} />
         <Route path="leaders" element={<Leaders />} />
         <Route path="events" element={<Events />} />
+        <Route path="atlas" element={<Atlas />} />
+        <Route path="rivalries" element={<Rivalries />} />
         <Route path="news" element={<Wire />} />
         <Route path="trials" element={<Trials />} />
         <Route path="rules" element={<Rules />} />

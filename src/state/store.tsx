@@ -3,7 +3,7 @@ import type { Tournament } from "../data/types";
 import { freshSeed } from "../engine/rng";
 import { simulateTournament, simulateTrial, summarizeTournament, type TrialSummary } from "../engine/tournament";
 
-const KEY = "pantheon-v1";
+const KEY = "pantheon-v2";
 
 interface Saved {
   seed: number;

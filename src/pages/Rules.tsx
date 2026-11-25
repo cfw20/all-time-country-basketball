@@ -31,9 +31,14 @@ export function Rules() {
           </article>
           <article className="path">
             <strong>Homeland path</strong>
-            <span>A great player whose country cannot fill a competitive eighteen-man all-time side. They choose the Lantern Company. The Lantern is the only mixed side of that kind.</span>
+            <span>A great player whose country cannot fill a competitive all-time side. They choose the Lantern Company. The Lantern is the only mixed side of that kind.</span>
           </article>
         </div>
+      </section>
+
+      <section className="section">
+        <h3 className="display" style={{ fontSize: 36 }}>The prime</h3>
+        <p className="lede">Every player is shown and simulated in one prime already on record. A 1960s body and a 2020s body share the same rules and the same floor. Injured years after a peak, and seasons that have not been played, are outside the book. Ratings do not age anyone down to a current season.</p>
       </section>
 
       <section className="section">
@@ -43,7 +48,7 @@ export function Rules() {
 
       <section className="section">
         <h3 className="display" style={{ fontSize: 36 }}>The competition</h3>
-        <p className="lede">Eight groups of four, drawn in pots from pre-tournament power so each group gets one side from each band. Three group days, then an interval that does not count: All-Star, a three-point contest, a dunk contest. Sixteen advance. The bracket is fixed from group place. A third-place game is played. Same seed, same games. A new draw is a new seed. Trials compare finished championships: title rate, average finish, win rate, and honors.</p>
+        <p className="lede">Eight groups of four, drawn in pots from pre-tournament power so each group gets one side from each band. Three group days, then an interval that does not count: All-Star, a skills challenge, a three-point contest, and a dunk contest. Sixteen advance. The bracket is fixed from group place. A third-place game is played. Same seed, same games. A new draw is a new seed. Trials compare finished championships: title rate, average finish, win rate, and honors. The atlas sorts every prime by decade. Nights collects the rematches, close games, and buzzers of the draw you are in.</p>
       </section>
 
       <section className="section">

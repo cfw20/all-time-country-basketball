@@ -5,12 +5,12 @@ import { usePantheon } from "../state/store";
 
 export function Events() {
   const { tournament } = usePantheon();
-  if (!tournament.allStar || !tournament.three || !tournament.dunk) {
+  if (!tournament.allStar || !tournament.three || !tournament.dunk || !tournament.skills) {
     return (
       <main className="page">
         <p className="kicker">The interval</p>
         <h2 className="display" style={{ fontSize: 68 }}>After the groups.</h2>
-        <p className="empty">All-Star, the three-point contest, and the dunk contest open once the group stage is complete. They do not touch the standings.</p>
+        <p className="empty">All-Star, the skills challenge, the three-point contest, and the dunk contest open once the group stage is complete. They do not touch the standings.</p>
       </main>
     );
   }
@@ -32,10 +32,31 @@ export function Events() {
         </div>
       </section>
       <section className="section">
-        <Contest title={tournament.three.title} winner={tournament.three.winnerId} rows={tournament.three.field} finalists={tournament.three.finalists} />
+        <Contest
+          title={tournament.skills.title}
+          caption="Handle, pass, and finish. Each station is out of 20. The final is a second circuit."
+          winner={tournament.skills.winnerId}
+          rows={tournament.skills.field}
+          finalists={tournament.skills.finalists}
+        />
       </section>
       <section className="section">
-        <Contest title={tournament.dunk.title} winner={tournament.dunk.winnerId} rows={tournament.dunk.field} finalists={tournament.dunk.finalists} />
+        <Contest
+          title={tournament.three.title}
+          caption="Twenty-five shots, every fifth worth two. The final column is the final round only."
+          winner={tournament.three.winnerId}
+          rows={tournament.three.field}
+          finalists={tournament.three.finalists}
+        />
+      </section>
+      <section className="section">
+        <Contest
+          title={tournament.dunk.title}
+          caption="Two dunks to advance, two more in the final."
+          winner={tournament.dunk.winnerId}
+          rows={tournament.dunk.field}
+          finalists={tournament.dunk.finalists}
+        />
       </section>
     </main>
   );
@@ -62,11 +83,13 @@ function Roster({ title, ids, captain }: { title: string; ids: string[]; captain
 
 function Contest({
   title,
+  caption,
   winner,
   rows,
   finalists,
 }: {
   title: string;
+  caption: string;
   winner: string;
   rows: { playerId: string; scores: number[]; total: number }[];
   finalists: { playerId: string; scores: number[]; total: number }[];
@@ -77,9 +100,10 @@ function Contest({
         <h3>{title}</h3>
         <span className="quiet">Winner <PlayerLink id={winner} /></span>
       </div>
+      <p className="note">{caption}</p>
       <table>
         <thead>
-          <tr><th>Shooter</th><th>Side</th><th className="num">Round</th><th className="num">Final</th></tr>
+          <tr><th>Player</th><th>Side</th><th className="num">Stations</th><th className="num">Final</th></tr>
         </thead>
         <tbody>
           {rows.map((row) => {
@@ -89,8 +113,8 @@ function Contest({
               <tr key={row.playerId}>
                 <td><PlayerLink id={row.playerId} /></td>
                 <td>{TEAM_BY_ID[player?.teamId ?? ""]?.code}</td>
-                <td className="num">{row.scores[0]}</td>
-                <td className="num">{final ? final.total : "—"}</td>
+                <td className="num">{row.scores.join(" · ")}</td>
+                <td className="num">{final ? (row.scores.length === 1 ? final.scores[final.scores.length - 1] : final.scores.join(" · ")) : "—"}</td>
               </tr>
             );
           })}

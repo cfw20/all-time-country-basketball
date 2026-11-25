@@ -29,15 +29,15 @@ This is not a signing league and not a free-agent market. Countries and mixed si
 
 1. **Country path.** The default. The player made the playable all-time roster of their own country. A Yugoslav, Soviet, or Czechoslovak-era player is assigned to the modern country they belong to, by birthplace or the senior team they represented. Those federations are not revived.
 2. **Overflow path.** Americans who could not earn minutes on the national side. The houses, in order, are Vanguard, Afterlight, and Palladium. The national cut is positional: some all-time centers chose a house where the middle was actually open. There is no fourth American house.
-3. **Homeland path.** A great player whose country cannot fill a competitive eighteen-man all-time side. They choose the Lantern Company. It is the only house of that kind.
+3. **Homeland path.** A great player whose country cannot fill a competitive all-time side. They choose the Lantern Company. It is the only house of that kind.
 
-Player pages state which path they took.
+Player pages state which path they took, and they state the prime. Every player is shown and simulated only in that prime. There is no faded version and no current-age card.
 
 ## Rosters and status
 
-Each side carries eighteen players: a standard NBA-style body, two two-way deals, and at least one 10-day, Exhibit 10, hardship, or other short stay. Those labels are minute bands, not contracts a team handed out.
+Each side carries a deep NBA-style book, twenty-two primes: a standard body, two two-way deals, and at least one 10-day, Exhibit 10, hardship, or other short stay. The extra seats are real players in a deep minute band. Those labels are minute bands, not contracts a team handed out.
 
-Stars play the heavy minutes. Rotation players live in the teens and low twenties. Two-ways and short deals stay sparse until fouls, a blowout, an injury scare, or a call-up. An injury scare lasts that game only. Ratings describe a prime already on record, including young players, and they do not project a career that has not happened.
+Stars play the heavy minutes. Rotation players live in the teens and low twenties. Two-ways, deep bench, and short deals stay sparse until fouls, a blowout, an injury scare, or a call-up. An injury scare lasts that game only. Ratings describe a prime already on record, including young players, and they do not project a career that has not happened. The atlas page groups the whole book by decade.
 
 ## Rules
 
@@ -97,13 +97,13 @@ Eight groups of four, drawn in pots from a fixed power ranking so each group get
 
 The bracket is fixed from group place: A1–B2, C1–D2, E1–F2, G1–H2, and the matching pairs on the other side. Neutral floors. A third-place game is played on final night.
 
-After the groups, an interval that does not count: an All-Star game (First Light against Second Light), a three-point contest, and a dunk contest. Honors after the final include tournament MVP, Finals MVP, defense, sixth man, breakout, and two all-tournament teams. The wire is written from the box score of that draw: buzzers, upsets, blowouts, injury scares, and short-deal nights.
+After the groups, an interval that does not count: an All-Star game (First Light against Second Light), a skills challenge, a three-point contest, and a dunk contest. Honors after the final include tournament MVP, Finals MVP, defense, sixth man, breakout, and two all-tournament teams. The wire is written from the box score of that draw: buzzers, upsets, blowouts, injury scares, short-deal nights, and the interval winners. Nights collects rematches, close games, and margins from the active draw.
 
 Every game has quarter scores, a full box (points, rebounds, assists, steals, blocks, turnovers, fouls, minutes, field goals, threes, free throws), and a possession log. Favorites win more often. They are not locks.
 
 ## Comparing draws
 
-Trials rerun the whole championship with play-by-play skipped, so a batch stays quick. The Trials page keeps up to 200 finished draws in this browser and shows title rate, finals reached, average finish, win rate, and honors. Power seed does not change between draws. Finish does. Open a seed to watch that exact tournament with the logs restored. The active draw and the trial list are stored locally under `pantheon-v1`.
+Trials rerun the whole championship with play-by-play skipped, so a batch stays quick. The Trials page keeps up to 200 finished draws in this browser and shows title rate, finals reached, average finish, win rate, and honors. Power seed does not change between draws. Finish does. Open a seed to watch that exact tournament with the logs restored. The active draw and the trial list are stored locally under `pantheon-v2`.
 
 ## Where the data lives
 

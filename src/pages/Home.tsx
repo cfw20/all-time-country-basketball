@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { playerById, TEAM_BY_ID, TEAMS } from "../data";
+import { PLAYERS, playerById, TEAM_BY_ID, TEAMS } from "../data";
 import { Mark } from "../components/Marks";
 import { formatSeed } from "../engine/rng";
 import { usePantheon } from "../state/store";
@@ -17,36 +17,35 @@ export function Home() {
 
   return (
     <main className="page">
-      <section className="hero">
-        <div>
-          <p className="kicker">{champ ? `Champion · draw ${formatSeed(tournament.seed)}` : "The field is drawn"}</p>
+      <section className="entrance">
+        <div className="folio">
+          <div className="ring" aria-hidden="true" />
+          <p className="kicker">A private all-time floor · NBA rules</p>
+          <h2 className="display">Every prime<span>on one night.</span></h2>
+          <p className="lede">
+            {PLAYERS.length} real primes. Thirty-two sides. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and nobody is simulated at a faded age.
+          </p>
+        </div>
+        <div className="panel">
+          <span className="tag">{champ ? "This draw" : "The field is drawn"}</span>
           {champ ? (
             <>
-              <div className="champion-mark">
-                <Mark team={champ} size={64} />
-                <h2 className="display">{champ.name}</h2>
+              <div className="champion-mark" style={{ marginTop: 12 }}>
+                <Mark team={champ} size={56} />
+                <h3 className="display" style={{ fontSize: 40 }}>{champ.name}</h3>
               </div>
               <p className="scoreline">
-                {champ.name} {Math.max(final!.homeScore, final!.awayScore)} · {runner?.name} {Math.min(final!.homeScore, final!.awayScore)}
+                {Math.max(final!.homeScore, final!.awayScore)} · {runner?.name} {Math.min(final!.homeScore, final!.awayScore)}
                 {final!.ot ? " · OT" : ""}
               </p>
-              <p className="lede">
-                {mvp ? `${mvp.name} is the tournament MVP.` : ""} This is one draw under NBA rules. Favorites win more often. They do not own the night.
-              </p>
+              <p>{mvp ? `${mvp.name} is the tournament MVP. ` : ""}Favorites win more often. They do not own the night.</p>
             </>
           ) : (
             <>
-              <h2 className="display">Thirty-two primes.</h2>
-              <p className="lede">
-                The groups are set for draw {formatSeed(tournament.seed)}. Sim a round from the dock, or run the whole championship. Every result below comes from that seed.
-              </p>
+              <h3 style={{ fontSize: 32, marginTop: 8 }}>The groups are set.</h3>
+              <p>Sim a round from the ribbon, or run the whole championship. Every result comes from this seed.</p>
             </>
           )}
-        </div>
-        <div className="panel">
-          <span className="tag">How a player arrives</span>
-          <h3 style={{ fontSize: 28, marginTop: 8 }}>They choose. Sides do not sign.</h3>
-          <p>The default is a player’s own country. Mixed sides exist only when that door is shut.</p>
         </div>
       </section>
 
@@ -61,7 +60,7 @@ export function Home() {
         </article>
         <article className="path">
           <strong>Homeland</strong>
-          <span>Great players whose country cannot fill a competitive eighteen-man side. They choose the Lantern Company.</span>
+          <span>Great players whose country cannot fill a competitive all-time side. They choose the Lantern Company.</span>
         </article>
       </div>
 

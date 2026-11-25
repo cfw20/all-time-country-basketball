@@ -60,7 +60,7 @@ export const TEAMS: Team[] = [
     mark: "bars",
     motto: "The last American house.",
     blurb:
-      "The third and last overflow house. Still a prime-era roster, a step down the American mountain. There is no fourth house and no free-agent draft. Players outside these seventy-two American seats are not in the field.",
+      "The third and last overflow house. Still a prime-era roster, a step down the American mountain. There is no fourth house and no free-agent draft. Players outside these eighty-eight American seats are not in the field.",
     pace: 1.03,
     overflowRank: 3,
   },
@@ -76,7 +76,7 @@ export const TEAMS: Team[] = [
     mark: "arch",
     motto: "No homeland could carry them.",
     blurb:
-      "The only mixed side for players whose own country cannot fill a competitive eighteen-man all-time roster. Finland, the Bahamas, New Zealand, Switzerland, Poland, Czechia, the Netherlands, Great Britain, South Sudan, Angola, and the rest of this roster did not enter a signing market. Each player chose the lantern.",
+      "The only mixed side for players whose own country cannot fill a competitive all-time roster. Finland, Austria, the Bahamas, Venezuela, Romania, New Zealand, Switzerland, Poland, Czechia, the Netherlands, Great Britain, South Sudan, Angola, and the rest of this roster did not enter a signing market. Each player chose the lantern, and each is shown in a prime.",
     pace: 1.02,
   },
   {

@@ -160,7 +160,7 @@ export interface ContestEntry {
 }
 
 export interface Contest {
-  kind: "three" | "dunk";
+  kind: "three" | "dunk" | "skills";
   title: string;
   field: ContestEntry[];
   finalists: ContestEntry[];
@@ -197,6 +197,7 @@ export interface Tournament {
   allStarRosters: { a: string[]; b: string[]; captainA: string; captainB: string } | null;
   three: Contest | null;
   dunk: Contest | null;
+  skills: Contest | null;
   awards: Awards | null;
   news: NewsItem[];
   finishes: Record<string, number>;

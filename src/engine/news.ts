@@ -7,6 +7,7 @@ export function buildNews(input: {
   allStar: GameResult | null;
   three: Contest | null;
   dunk: Contest | null;
+  skills: Contest | null;
   finishes: Record<string, number>;
 }): NewsItem[] {
   const items: NewsItem[] = [];
@@ -153,6 +154,15 @@ export function buildNews(input: {
       title: `${winner?.name ?? "A shooter"} takes the three-point contest`,
       body: "Eight shooters, money balls worth two, a final round of three. Ratings set the odds. The night still has variance.",
       importance: 46,
+    });
+  }
+  if (input.skills) {
+    const winner = playerById(input.skills.winnerId);
+    push({
+      kicker: "Interval",
+      title: `${winner?.name ?? "A guard"} wins the skills challenge`,
+      body: "Handle, pass, and finish. The stations follow the prime on the card. The night still misses.",
+      importance: 44,
     });
   }
   if (input.dunk) {

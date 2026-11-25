@@ -37,6 +37,7 @@ export function GamePage() {
         <span>Biggest run {runName(game)} {game.biggestRun.points}</span>
         {game.buzzerBeater ? <span style={{ color: "var(--ember)" }}>Buzzer</span> : null}
         {game.ot ? <span>{game.ot === 1 ? "Overtime" : `${game.ot} overtimes`}</span> : null}
+        <span>Both sides are simulated only in the prime on each card</span>
       </div>
       <section className="section">
         <div className="section-head"><h3>Box score</h3></div>

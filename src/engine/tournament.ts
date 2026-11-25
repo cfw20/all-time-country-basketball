@@ -103,12 +103,14 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
   let allStarRosters: Tournament["allStarRosters"] = null;
   let three: Contest | null = null;
   let dunk: Contest | null = null;
+  let skills: Contest | null = null;
   if (through >= 4 && exhibitions && days === 3) {
     const built = buildExhibitions(seed, games);
     allStar = built.allStar;
     allStarRosters = built.rosters;
     three = built.three;
     dunk = built.dunk;
+    skills = built.skills;
   }
 
   if (through >= 5 && days === 3) {
@@ -152,8 +154,8 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
 
   const finishes = through >= 8 ? assignFinishes(games, groups) : {};
   const awards = through >= 8 ? computeAwards(games, finishes) : null;
-  const news = buildNews({ games, seedOf, allStar, three, dunk, finishes });
-  return { seed, through, ranking, groups, games, allStar, allStarRosters, three, dunk, awards, news, finishes };
+  const news = buildNews({ games, seedOf, allStar, three, dunk, skills, finishes });
+  return { seed, through, ranking, groups, games, allStar, allStarRosters, three, dunk, skills, awards, news, finishes };
 }
 
 export function standingsFor(teamIds: string[], games: GameResult[]): GroupStanding[] {
@@ -462,7 +464,8 @@ function buildExhibitions(seed: number, games: GameResult[]) {
   });
   const three = simThree(seed, ranked);
   const dunk = simDunk(seed);
-  return { allStar, rosters: { a: a.map((p) => p.id), b: b.map((p) => p.id), captainA: captainA.id, captainB: captainB.id }, three, dunk };
+  const skills = simSkills(seed);
+  return { allStar, rosters: { a: a.map((p) => p.id), b: b.map((p) => p.id), captainA: captainA.id, captainB: captainB.id }, three, dunk, skills };
 }
 
 function weakestOvr(list: Player[], captainA: string, captainB: string): number {
@@ -516,6 +519,48 @@ function simThree(seed: number, ranked: Player[]): Contest {
   });
   finalists.sort((a, b) => b.total - a.total || b.scores[0] - a.scores[0]);
   return { kind: "three", title: "Three-point contest", field: round1, finalists, winnerId: finalists[0].playerId };
+}
+
+function simSkills(seed: number): Contest {
+  const usa = new Set(["cont", "vngd", "aftr", "pall"]);
+  const scoreOf = (p: Player) => p.ratings.play * 0.55 + p.ratings.ath * 0.25 + p.ratings.shot * 0.2;
+  const pool = PLAYERS.slice().sort((a, b) => scoreOf(b) - scoreOf(a));
+  const fieldPlayers: Player[] = [];
+  for (const p of pool) {
+    if (fieldPlayers.length >= 5) break;
+    fieldPlayers.push(p);
+  }
+  for (const p of pool) {
+    if (fieldPlayers.length >= 8) break;
+    if (!usa.has(p.teamId) && !fieldPlayers.includes(p)) fieldPlayers.push(p);
+  }
+  for (const p of pool) {
+    if (fieldPlayers.length >= 8) break;
+    if (!fieldPlayers.includes(p)) fieldPlayers.push(p);
+  }
+  const rng = mulberry32(mixSeed(seed, "skills"));
+  const circuit = (p: Player) => {
+    const handle = Math.round(clampSkill(8 + (p.ratings.play - 74) * 0.28 + rng() * 6));
+    const pass = Math.round(clampSkill(8 + (p.ratings.play - 76) * 0.26 + rng() * 6));
+    const finish = Math.round(clampSkill(8 + ((p.ratings.ath + p.ratings.shot) / 2 - 76) * 0.26 + rng() * 6));
+    return [handle, pass, finish];
+  };
+  const round1: ContestEntry[] = fieldPlayers.map((p) => {
+    const scores = circuit(p);
+    return { playerId: p.id, scores, total: scores[0] + scores[1] + scores[2] };
+  });
+  round1.sort((a, b) => b.total - a.total);
+  const finalists = round1.slice(0, 3).map((row) => {
+    const player = PLAYERS.find((p) => p.id === row.playerId)!;
+    const scores = circuit(player);
+    return { playerId: row.playerId, scores, total: scores[0] + scores[1] + scores[2] };
+  });
+  finalists.sort((a, b) => b.total - a.total);
+  return { kind: "skills", title: "Skills challenge", field: round1, finalists, winnerId: finalists[0].playerId };
+}
+
+function clampSkill(n: number): number {
+  return Math.max(4, Math.min(20, n));
 }
 
 function simDunk(seed: number): Contest {

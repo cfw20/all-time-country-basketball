@@ -1,4 +1,5 @@
 import { EUROPE_ROSTERS } from "./roster/europe";
+import { MORE_ROSTERS } from "./roster/more";
 import { parseRoster } from "./roster/parse";
 import { REST_ROSTERS } from "./roster/rest";
 import { USA_ROSTERS } from "./roster/usa";
@@ -14,6 +15,8 @@ for (const team of TEAMS) {
   const block = BLOCKS[team.id];
   if (!block) throw new Error(`Missing roster for ${team.id}`);
   const roster = parseRoster(team.id, block);
+  const extra = MORE_ROSTERS[team.id];
+  if (extra) roster.push(...parseRoster(team.id, extra));
   ROSTERS[team.id] = roster;
   PLAYERS.push(...roster);
 }

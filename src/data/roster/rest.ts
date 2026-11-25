@@ -221,7 +221,7 @@ Djack Kapongo|SF|6-5|2018|DR Congo|two-way|two-way|wing|68|12|26|0|-|
 Franck Nyembo|SF|6-7|2025|DR Congo|deep|hardship|wing|67|10|24|0|-|
 `,
   lant: `
-Lauri Markkanen|PF|7-0|2023|Finland|star|standard|stretch|86|26|44|1|-|shot:82,three:86,reb:74,def:70,ath:76,ft:86|Finland cannot fill a competitive eighteen-man Pantheon roster.
+Lauri Markkanen|PF|7-0|2023|Finland|star|standard|stretch|86|26|44|1|-|shot:82,three:86,reb:74,def:70,ath:76,ft:86|Finland cannot fill a competitive Pantheon roster.
 Deandre Ayton|C|7-0|2021|Bahamas|star|standard|post|84|24|4|1|-|shot:82,reb:86,def:76,ath:80,ft:74|The Bahamas cannot fill a Pantheon roster.
 OG Anunoby|SF|6-7|2024|Great Britain|starter|standard|defender|83|16|34|0|-|def:90,ath:86,three:76,shot:74,reb:60|Born in London, Nigerian heritage. Great Britain cannot fill a Pantheon roster.
 Luol Deng|SF|6-9|2012|Great Britain|starter|standard|wing|83|20|28|1|-|shot:80,three:68,def:78,reb:68,play:66|Born in Wau, in what is now South Sudan. Represented Great Britain at the 2012 Olympics. Great Britain cannot fill a Pantheon roster.

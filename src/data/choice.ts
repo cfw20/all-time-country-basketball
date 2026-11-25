@@ -39,12 +39,13 @@ export function choiceStory(player: Player, team: Team): ChoiceStory {
     kicker: "Homeland path",
     title: `${player.nationality} could not field a side`,
     body: join(
-      `${player.name} is from ${player.nationality}. That country is outside the twenty-eight nation field because it cannot fill a competitive eighteen-man all-time roster. They chose the Lantern Company, the only house for that path. Nobody recruited them.`,
+      `${player.name} is from ${player.nationality}. That country is outside the twenty-eight nation field because it cannot fill a competitive all-time roster. They chose the Lantern Company, the only house for that path. Nobody recruited them.`,
       player.note,
     ),
   };
 }
 
 function join(body: string, note?: string): string {
-  return note ? `${body} ${note}` : body;
+  const text = note ? `${body} ${note}` : body;
+  return `${text} Shown and simulated only in this prime. Faded years are not in the book.`;
 }

@@ -26,8 +26,9 @@ export function PlayerPage() {
   const line = tally(tournament.games).get(player.id);
   return (
     <main className="page">
-      <p className="kicker">{player.nationality} · prime {player.primeYear} · {formatHeight(player.height)}</p>
+      <p className="kicker">{player.nationality} · {formatHeight(player.height)}</p>
       <h2 className="display" style={{ fontSize: 76 }}>{player.name}</h2>
+      <p className="seal">Prime only <b>{player.primeYear}</b></p>
       <p className="lede">{player.pos}{player.pos2 ? ` / ${player.pos2}` : ""} · {roleLabel(player.role)} · {contractLabel(player.contract)} · overall {player.ratings.ovr}</p>
       <div className="champion-mark" style={{ marginTop: 12 }}>
         <Mark team={team} size={42} />
@@ -55,7 +56,7 @@ export function PlayerPage() {
             </div>
           ))}
         </div>
-        <p className="note">Usage {player.ratings.usg}. Three-point share {player.ratings.threeRate}. These describe the prime, not a current season.</p>
+        <p className="note">Usage {player.ratings.usg}. Three-point share {player.ratings.threeRate}. The engine uses this prime and nothing later. There is no current-age card.</p>
       </section>
     </main>
   );
