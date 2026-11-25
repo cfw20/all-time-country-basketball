@@ -18,6 +18,7 @@ const LINKS = [
   ["/rivalries", "Nights"],
   ["/news", "Wire"],
   ["/trials", "Trials"],
+  ["/season", "Season"],
   ["/rules", "Rules"],
 ];
 

@@ -1,5 +1,6 @@
 import { PLAYERS, ROSTERS, TEAMS, playerById } from "../src/data";
-import { simulateTournament, simulateTrial, teamPower } from "../src/engine/tournament";
+import { ERA_CARDS, seasonRecord, simulateSeason, yearUnlock } from "../src/engine/season";
+import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
 
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
@@ -220,6 +221,26 @@ if (arrivalConstruct > 37) fail(`Construct won the arrival ${arrivalConstruct}/$
 if (gateConstruct < 26) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
 if (gateConstruct > 37) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
 if (restored < 4 || restored > 18) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
+
+for (const card of ERA_CARDS) {
+  if (card.playerIds.length < 2) fail(`${card.franchise} ${card.years} lists ${card.playerIds.length} primes`);
+}
+const sweep = { arrivalWinnerId: "cstr", gateWinnerId: "cstr", threatEnded: false } as TrialSummary;
+const strike = { arrivalWinnerId: "cont", gateWinnerId: "cstr", threatEnded: false } as TrialSummary;
+const restoredTrial = { arrivalWinnerId: "cstr", gateWinnerId: "cstr", threatEnded: true } as TrialSummary;
+if (yearUnlock([sweep]).open) fail("one Construct sweep opened the Unbroken Year");
+if (yearUnlock([sweep, sweep]).open) fail("two Construct sweeps opened the Unbroken Year");
+if (yearUnlock([strike]).open) fail("a single human series opened the Unbroken Year");
+if (!yearUnlock([sweep, strike]).open) fail("a second championship and a human series left the Unbroken Year shut");
+if (!yearUnlock([restoredTrial, sweep]).open) fail("a Concord restoration did not count toward the Unbroken Year");
+const strongIds = ["michael-jordan", "lebron-james", "stephen-curry", "nikola-jokic", "magic-johnson", "tim-duncan", "kareem-abdul-jabbar", "giannis-antetokounmpo", "kevin-durant", "shaquille-oneal", "larry-bird", "kobe-bryant"];
+const weakIds = ["luc-longley", "tristan-thompson", "rik-smits", "michael-cooper", "dennis-rodman", "jeremy-sochan", "boris-diaw", "josh-giddey", "steven-adams", "hidayet-turkoglu", "robert-horry", "detlef-schrempf"];
+const strongYear = seasonRecord(simulateSeason(strongIds, 20261125));
+const weakYear = seasonRecord(simulateSeason(weakIds, 20261125));
+console.log(`YEAR strong ${strongYear.wins}-${strongYear.losses} weak ${weakYear.wins}-${weakYear.losses}`);
+if (strongYear.wins + strongYear.losses !== 82 || weakYear.wins + weakYear.losses !== 82) fail("a season did not play 82 games");
+if (strongYear.wins < 72 || strongYear.wins > 82) fail(`strong Unbroken roster went ${strongYear.wins}-${strongYear.losses}`);
+if (weakYear.wins > 65 || weakYear.wins >= strongYear.wins) fail(`thin Unbroken roster went ${weakYear.wins}-${weakYear.losses}, too close to a legend roster`);
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

@@ -72,6 +72,12 @@ export function Rules() {
       </section>
 
       <section className="section">
+        <h3 className="display" style={{ fontSize: 36 }}>The Unbroken Year</h3>
+        <p className="lede">A side floor, separate from the country championship. The goal is an NBA regular season that never loses: 82–0. It opens after two finished championships and one series taken from the Construct. The opening draw does not count as that success when the Construct sweeps the siege. Replaying one seed does not add a second championship.</p>
+        <p className="lede">The roster is twelve real primes, built by rolls. A roll is an era and a franchise the player actually played for, and the card lists those primes so the best name on it is visible. Take one. Boosters can roll again, force a myth year, take a second name from the same card, call a position, or recall someone who was passed. Each night is that era side. When the card is short, other primes from the same years fill the rotation, and the box marks them era. After the season, one loss can be played again. Humans stay in their prime. The Construct is not on this floor.</p>
+      </section>
+
+      <section className="section">
         <h3 className="display" style={{ fontSize: 36 }}>The sides</h3>
         <div className="groups">
           {countries.map((team) => (

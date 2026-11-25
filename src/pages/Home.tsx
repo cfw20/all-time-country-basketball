@@ -2,11 +2,13 @@ import { Link } from "react-router-dom";
 import { CONSTRUCT_ID, isConstructed, PLAYERS, playerById, sideById, TEAM_BY_ID, TEAMS } from "../data";
 import { Mark } from "../components/Marks";
 import { formatSeed } from "../engine/rng";
+import { yearUnlock } from "../engine/season";
 import { seriesRecord } from "../engine/series";
 import { usePantheon } from "../state/store";
 
 export function Home() {
-  const { tournament } = usePantheon();
+  const { tournament, trials } = usePantheon();
+  const year = yearUnlock(trials);
   const final = tournament.series.find((item) => item.id === "final");
   const champ = final ? TEAM_BY_ID[final.winnerId] : undefined;
   const runner = final ? TEAM_BY_ID[final.loserId] : undefined;
@@ -91,6 +93,16 @@ export function Home() {
           {restoration
             ? `${scoreName(restoration.winnerId, restoration)} ${seriesRecord(restoration).winnerWins}–${seriesRecord(restoration).loserWins} ${scoreName(restoration.loserId, restoration)}. Open the three series.`
             : "Arrival, the gate, then the Concord: twelve real primes, a best-of-seven, against the Construct."}
+        </p>
+      </Link>
+
+      <Link to="/season" className="panel year-link">
+        <span className="tag">{year.open ? "Side floor open" : "Side floor"}</span>
+        <h3>The Unbroken Year</h3>
+        <p>
+          {year.open
+            ? "The 82–0 season is open. Roll an era and a franchise, take one prime, and try to go a full NBA year without a loss."
+            : `An NBA 82–0 season, built by rolls. It opens after ${year.needChampionships} championships and a series taken from the Construct. This browser has ${year.championships} championships and ${year.strikes} series taken from the Construct.`}
         </p>
       </Link>
 

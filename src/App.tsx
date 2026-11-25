@@ -12,6 +12,7 @@ import { Players } from "./pages/Players";
 import { Rivalries } from "./pages/Rivalries";
 import { Rules } from "./pages/Rules";
 import { Schedule } from "./pages/Schedule";
+import { Season } from "./pages/Season";
 import { SeriesPage } from "./pages/Series";
 import { Siege } from "./pages/Siege";
 import { Standings } from "./pages/Standings";
@@ -42,6 +43,7 @@ export function App() {
         <Route path="rivalries" element={<Rivalries />} />
         <Route path="news" element={<Wire />} />
         <Route path="trials" element={<Trials />} />
+        <Route path="season" element={<Season />} />
         <Route path="rules" element={<Rules />} />
         <Route path="*" element={<Missing />} />
       </Route>
