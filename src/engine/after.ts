@@ -1,6 +1,7 @@
 import { playerById } from "../data";
 import type { BoxLine, GameResult, Player, SeriesResult } from "../data/types";
-import { mixSeed, mulberry32 } from "./rng";
+import { notables } from "./night";
+import { mixSeed, mulberry32, shuffle } from "./rng";
 
 export type AfterKind = "horse" | "rack" | "stripe" | "poster" | "circuit" | "buzzer";
 
@@ -112,7 +113,46 @@ function clamp(lo: number, hi: number, n: number): number {
   return Math.max(lo, Math.min(hi, n));
 }
 
-function chance(player: Player, kind: "three" | "logo" | "ft" | "mid" | "dunk"): number {
+export type ShotKind = "three" | "logo" | "ft" | "mid" | "dunk";
+
+export const HORSE_SHOTS: { id: ShotKind; name: string }[] = [
+  { id: "three", name: "Corner three" },
+  { id: "mid", name: "Pull-up" },
+  { id: "ft", name: "Free throw" },
+  { id: "dunk", name: "Baseline dunk" },
+  { id: "logo", name: "Logo three" },
+];
+
+/** Same make rates Horse already uses. A called shot is not a new ruleset. */
+export function shotChance(player: Player, kind: ShotKind): number {
+  return chance(player, kind);
+}
+
+export function drawHorsePair(seed: number, salt = 0): [Player, Player] {
+  const rng = mulberry32(mixSeed(mixSeed(seed || 1, "horse-pair"), `salt:${salt}`));
+  const pool = shuffle(notables(), rng);
+  const first = pool[0];
+  const second = pool.find((player) => player.id !== first?.id);
+  if (!first || !second) throw new Error("horse pair short");
+  return [first, second];
+}
+
+/** A book cast for the after-the-horn games, so Play can open them without a finished box. */
+export function castFromBook(seed: number, salt = 0): NightCast {
+  const rng = mulberry32(mixSeed(mixSeed(seed || 1, "book-cast"), `salt:${salt}`));
+  const field = shuffle(notables(), rng).slice(0, 8);
+  if (field.length < 2) throw new Error("book cast short");
+  return {
+    seed: mixSeed(seed || 1, `cast:${salt}`),
+    lines: field.map((player) => ({
+      playerId: player.id,
+      pts: player.ratings.ovr + Math.floor(rng() * 8),
+      sec: 18 * 60,
+    })),
+  };
+}
+
+function chance(player: Player, kind: ShotKind): number {
   const r = player.ratings;
   if (kind === "three") return clamp(0.22, 0.64, 0.26 + (r.three - 70) * 0.008);
   if (kind === "logo") return clamp(0.08, 0.42, 0.08 + (r.three - 74) * 0.006);

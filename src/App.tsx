@@ -13,6 +13,9 @@ import { Lamp } from "./pages/Lamp";
 import { Olympics } from "./pages/Olympics";
 import { Play } from "./pages/Play";
 import { Edge, Flag, Opens, PrimeYear, Tape } from "./pages/Trivia";
+import { Buzzer, Circuit, Poster, Rack, Stripe } from "./pages/BookNight";
+import { Call } from "./pages/Call";
+import { Horse } from "./pages/Horse";
 import { Arc, Closer, Cut, Glass, Halfcourt, Ladder, Shootaround, Streak } from "./pages/Toys";
 import { Compare } from "./pages/Compare";
 import { PlayerPage } from "./pages/Player";
@@ -70,6 +73,13 @@ export function App() {
         <Route path="play/fortnight" element={<Fortnight />} />
         <Route path="play/survivor" element={<Survivor />} />
         <Route path="play/five" element={<Five />} />
+        <Route path="play/call" element={<Call />} />
+        <Route path="play/horse" element={<Horse />} />
+        <Route path="play/rack" element={<Rack />} />
+        <Route path="play/stripe" element={<Stripe />} />
+        <Route path="play/poster" element={<Poster />} />
+        <Route path="play/circuit" element={<Circuit />} />
+        <Route path="play/buzzer" element={<Buzzer />} />
         <Route path="play/shootaround" element={<Shootaround />} />
         <Route path="play/ladder" element={<Ladder />} />
         <Route path="play/halfcourt" element={<Halfcourt />} />

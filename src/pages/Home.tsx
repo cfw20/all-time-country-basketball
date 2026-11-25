@@ -31,7 +31,7 @@ export function Home() {
   const held = Boolean(restoration && !tournament.siege?.threatEnded);
 
   return (
-    <main className="page">
+    <main className="page" data-floor="home">
       <section className="entrance">
         <div className="folio">
           <div className="ring" aria-hidden="true" />
@@ -130,6 +130,8 @@ export function Home() {
           <Link to="/play">All side floors</Link>
         </div>
         <div className="doors">
+          <Link to="/play/call" className="panel door"><span className="tag">You pick</span><h3>The Call</h3><p>Two human sides. One NBA game. The groups stay put.</p></Link>
+          <Link to="/play/horse" className="panel door"><span className="tag">You call it</span><h3>Horse</h3><p>Take a prime and call the shot.</p></Link>
           <Link to="/play/clash" className="panel door"><span className="tag">One night</span><h3>Era Clash</h3><p>Two rolled years. One NBA game, waiting when you open the page.</p></Link>
           <Link to="/play/series" className="panel door"><span className="tag">First to four</span><h3>A series tonight</h3><p>Any two sides, the Construct included. A best-of-seven on demand.</p></Link>
           <Link to="/play/lamp" className="panel door"><span className="tag">Contests</span><h3>The Lamp</h3><p>Threes, dunks, and skills, lit whenever you want.</p></Link>

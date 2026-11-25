@@ -1044,6 +1044,37 @@ button.pick strong,
 [data-floor="play"] .door { min-width: 0; }
 [data-floor="play"] .door h3,
 [data-floor="play"] .door p { overflow-wrap: anywhere; }
+[data-floor="play"] h2.display { font-size: clamp(40px, 10vw, 68px); overflow-wrap: anywhere; }
+[data-floor="play"] .display {
+  background-image: linear-gradient(90deg, var(--gold), var(--rose) 42%, transparent 42%);
+  background-size: 100% 4px;
+  background-repeat: no-repeat;
+  background-position: 0 100%;
+  padding-bottom: 10px;
+}
+[data-floor="play"] .door,
+[data-floor="home"] .door {
+  border-color: rgba(231, 194, 122, 0.5);
+  background:
+    linear-gradient(180deg, rgba(231, 194, 122, 0.18), transparent 34%),
+    linear-gradient(180deg, rgba(42, 28, 64, 0.96), rgba(14, 9, 22, 0.96));
+}
+[data-floor="play"] .door h3,
+[data-floor="home"] .door h3 { color: #f7efe4; }
+[data-floor="play"] .door p,
+[data-floor="home"] .door p { color: #f3e6d8; }
+[data-floor="play"] .subhead {
+  padding-bottom: 6px;
+  border-bottom: 3px solid rgba(231, 194, 122, 0.85);
+  width: fit-content;
+  max-width: 100%;
+}
+.call-pair, .call-box { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 12px; min-width: 0; }
+.call-pair .door, .call-box { min-width: 0; }
+.call-pair h3, .call-box h3, .call-box a { overflow-wrap: anywhere; }
+@media (max-width: 640px) {
+  .call-pair, .call-box { grid-template-columns: minmax(0, 1fr); }
+}
 @media (max-width: 980px) {
   .cut-board { grid-template-columns: repeat(2, minmax(0, 1fr)); }
 }

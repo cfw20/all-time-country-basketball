@@ -13,19 +13,19 @@ Sam Jones|SG|6-4|1965|United States|deep|standard|slasher|85|22|8|0|-|shot:86,at
   vngd: `
 Grant Hill|SF|6-8|1997|United States|deep|standard|slasher|88|24|18|0|PF|ath:90,play:82,shot:84,def:78|Prime is the Detroit years, before the ankle injuries.
 Chauncey Billups|PG|6-3|2006|United States|deep|standard|point|86|22|36|0|-|play:88,three:80,def:80,clutch:92
-Shawn Kemp|PF|6-10|1996|United States|deep|standard|rim|85|22|4|0|-|ath:92,reb:88,def:74
+Shawn Kemp|PF|6-10|1996|United States|deep|ten-day|rim|85|22|4|0|-|ath:92,reb:88,def:74
 Alex English|SF|6-7|1983|United States|deep|standard|wing|86|26|8|0|-|shot:90,ft:84,play:70
 `,
   aftr: `
-Pete Maravich|SG|6-5|1977|United States|deep|standard|creator|87|30|10|0|-|shot:90,play:86,ath:80,ft:78
-Nate Thurmond|C|6-11|1967|United States|deep|standard|rim|86|16|0|0|-|reb:94,def:92,ath:80
+Pete Maravich|SG|6-5|1977|United States|starter|standard|creator|90|30|10|0|-|shot:92,three:46,play:88,ath:80,ft:78
+Nate Thurmond|C|6-11|1967|United States|two-way|two-way|rim|86|16|0|0|-|reb:94,def:92,ath:80
 Earl Monroe|SG|6-3|1969|United States|deep|standard|slasher|86|26|8|0|-|shot:88,ath:88,play:74
 Wes Unseld|C|6-7|1969|United States|deep|standard|glue|84|14|0|0|PF|reb:96,play:80,def:86
 `,
   pall: `
-Vince Carter|SG|6-6|2001|United States|deep|standard|slasher|88|26|28|0|SF|ath:97,shot:86,def:74
+Vince Carter|SG|6-6|2001|United States|starter|standard|slasher|90|26|28|0|SF|ath:97,shot:88,def:74
 Paul Pierce|SF|6-7|2008|United States|deep|standard|wing|87|26|34|0|-|shot:84,three:80,play:78,clutch:94
-Amar'e Stoudemire|PF|6-10|2007|United States|deep|standard|rim|86|26|6|0|-|ath:90,shot:84,reb:78
+Amar'e Stoudemire|PF|6-10|2007|United States|two-way|two-way|rim|86|26|6|0|-|ath:90,shot:84,reb:78
 Blake Griffin|PF|6-9|2014|United States|deep|standard|slasher|85|24|18|0|-|ath:94,play:76,reb:82
 `,
   lant: `

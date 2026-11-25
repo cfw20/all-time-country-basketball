@@ -23,7 +23,8 @@ import { playDecade, playFive, playFortnight, playGauntlet, playHill, playOpen, 
 import { TRIVIA_PLAYS } from "../src/engine/trivia";
 import { TOY_PLAYS } from "../src/engine/toys";
 import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
-import { castFromGame, playAfter, type AfterKind } from "../src/engine/after";
+import { AFTER_KINDS, castFromBook, castFromGame, drawHorsePair, playAfter, shotChance, type AfterKind } from "../src/engine/after";
+import { playCall } from "../src/engine/call";
 import { lightLamp } from "../src/engine/tournament";
 import { SERIES_MAX_GAMES, SERIES_WINS, seriesIsBestOfSeven } from "../src/engine/series";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
@@ -179,6 +180,27 @@ if (final) {
   }
   console.log("AFTER", kinds.map((kind) => `${kind} ${playAfter(cast, kind, 1).winner}`).join(" · "));
 }
+const bookCast = castFromBook(20261125, 0);
+const bookAgain = castFromBook(20261125, 0);
+if (bookCast.lines.length < 6 || bookAgain.lines.map((line) => line.playerId).join() !== bookCast.lines.map((line) => line.playerId).join()) {
+  fail("the book cast for after-the-horn did not hold");
+}
+for (const kind of AFTER_KINDS.map((item) => item.id)) {
+  const result = playAfter(bookCast, kind, 0);
+  if (!result.winner || result.rows.length < 2) fail(`${kind} did not play from the book`);
+  if (playAfter(bookCast, kind, 0).line !== result.line) fail(`${kind} moved on the same book cast`);
+}
+const [horseA, horseB] = drawHorsePair(20261125, 0);
+const [horseA2, horseB2] = drawHorsePair(20261125, 0);
+if (horseA.id === horseB.id || horseA.id !== horseA2.id || horseB.id !== horseB2.id) fail("horse did not draw a stable pair");
+if (shotChance(horseA, "ft") <= 0 || shotChance(horseA, "ft") >= 1) fail("horse shot chance left the court");
+const called = playCall(20261125, 0);
+const calledAgain = playCall(20261125, 0);
+if (!called.game.exhibition || called.home.kind === "construct" || called.away.kind === "construct") fail("the call wrote a real championship game");
+if (called.home.id === called.away.id || called.game.winnerId !== calledAgain.game.winnerId) fail("the call was not a stable exhibition");
+if (called.game.winnerId !== called.home.id && called.game.winnerId !== called.away.id) fail("the call named a side that did not play");
+if (TEAMS.length !== 61) fail("the call changed the field");
+console.log("CALL", `${called.away.name} ${called.game.awayScore} @ ${called.home.name} ${called.game.homeScore}`);
 
 function minutes(teamId: string) {
   const map = new Map<string, { sec: number; g: number; pts: number }>();
@@ -342,9 +364,9 @@ if (!leader || leader[0] !== "cont") fail(`Continental is not the most common ch
 if (contTitles > 34) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
 if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-// Seeds 1100 + i*97 with sixty human sides: arrival 32, gate 36, restored 5.
-if (arrivalConstruct !== 32) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 32`);
-if (gateConstruct !== 36) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 36`);
+// Seeds 1100 + i*97 after the famous-card corrections: arrival 29, gate 35, restored 5.
+if (arrivalConstruct !== 29) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 29`);
+if (gateConstruct !== 35) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 35`);
 if (restored !== 5) fail(`Concord restored the floor ${restored}/${TRIALS}, expected 5`);
 
 for (const card of ERA_CARDS) {

@@ -3,6 +3,12 @@ import { loadYear } from "../state/yearBook";
 
 const DOORS = [
   {
+    to: "/play/call",
+    kicker: "You pick",
+    title: "The Call",
+    body: "Two human sides, one NBA game. Pick before tip. The groups do not move.",
+  },
+  {
     to: "/play/clash",
     kicker: "One night",
     title: "Era Clash",
@@ -85,6 +91,45 @@ const DOORS = [
     kicker: "The whole championship",
     title: "Trials",
     body: "Run the country draw and the siege again. Same primes, a new seed, a new champion.",
+  },
+];
+
+const HORN = [
+  {
+    to: "/play/horse",
+    kicker: "You call it",
+    title: "Horse",
+    body: "Take a prime. Call the shot. The other one has to match it.",
+  },
+  {
+    to: "/play/rack",
+    kicker: "Five racks",
+    title: "The Rack",
+    body: "Four shooters. Pick who leads before the money ball.",
+  },
+  {
+    to: "/play/stripe",
+    kicker: "Free throws",
+    title: "The Stripe",
+    body: "Two primes, first to seven. Pick one, then they shoot.",
+  },
+  {
+    to: "/play/poster",
+    kicker: "Three dunks",
+    title: "The Poster",
+    body: "Two leapers. Pick who the floor judges higher.",
+  },
+  {
+    to: "/play/circuit",
+    kicker: "Handle, pass, finish",
+    title: "The Circuit",
+    body: "Four ballhandlers. Pick who runs it cleanest.",
+  },
+  {
+    to: "/play/buzzer",
+    kicker: "Clock dying",
+    title: "Buzzer",
+    body: "Five shots. The last one breaks a tie. Pick the shooter first.",
   },
 ];
 
@@ -177,13 +222,24 @@ export function Play() {
   return (
     <main className="page" data-floor="play">
       <p className="kicker">Side floors · jump in</p>
-      <h2 className="display" style={{ fontSize: 68 }}>Play something now.</h2>
+      <h2 className="display">Play something now.</h2>
       <p className="lede">
-        The championship is the book. These floors are the nights around it: a game, a series, a contest, a bracket. Each one starts the moment you open it. A series tonight, the Fortnight final, and the Olympics are best-of-seven. The Throne, the Open, and the other one-night brackets are a single NBA game. Humans are real primes. The basketball is NBA rules. None of these nights move the groups. Short nights and the trivia use the cards only and do not call a full game.
+        The championship is the book. These floors are the nights around it: a game, a series, a contest, a bracket. Each one starts the moment you open it. A series tonight, the Fortnight final, and the Olympics are best-of-seven. The Throne, the Open, and the other one-night brackets are a single NBA game. Humans are real primes. The basketball is NBA rules. None of these nights move the groups. The Call is one exhibition game. Horse and the other after-the-horn nights are drawn from the book. Short nights and the trivia use the cards only and do not call a full game. None of them write the groups.
       </p>
       {book.crown ? <p className="scoreline">An Unbroken Year is already cut into this browser.</p> : null}
       <div className="doors">
         {DOORS.map((door) => (
+          <Link key={door.to} to={door.to} className="panel door">
+            <span className="tag">{door.kicker}</span>
+            <h3>{door.title}</h3>
+            <p>{door.body}</p>
+          </Link>
+        ))}
+      </div>
+      <h3 className="subhead">After the horn</h3>
+      <p className="lede">The same tiny games that follow a box, opened here so you do not have to find a finished game first. You pick, then the night runs. The standings stay put.</p>
+      <div className="doors">
+        {HORN.map((door) => (
           <Link key={door.to} to={door.to} className="panel door">
             <span className="tag">{door.kicker}</span>
             <h3>{door.title}</h3>
