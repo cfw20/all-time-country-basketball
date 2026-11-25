@@ -1,4 +1,4 @@
-import type { GameResult } from "../data/types";
+import type { GameResult, SeriesResult } from "../data/types";
 
 export interface Tot {
   playerId: string;
@@ -78,4 +78,16 @@ export function teamLine(games: GameResult[], teamId: string, includeExhibition 
     else row.l += 1;
   }
   return row;
+}
+
+/** Length, scoring margin, and overtime count already stored on the series games. */
+export function seriesShape(series: SeriesResult): string {
+  if (series.games.length === 0) return "Best of seven";
+  const margins = series.games.map((game) => Math.abs(game.homeScore - game.awayScore));
+  const avg = margins.reduce((sum, margin) => sum + margin, 0) / margins.length;
+  const closest = Math.min(...margins);
+  const ot = series.games.filter((game) => game.ot > 0).length;
+  const length = series.games.length === 7 ? "Went the distance" : series.games.length === 4 ? "Sweep" : `Decided in ${series.games.length}`;
+  const otLine = ot === 0 ? "no overtime" : ot === 1 ? "1 overtime" : `${ot} overtimes`;
+  return `${length} · avg margin ${avg.toFixed(1)} · closest ${closest} · ${otLine}`;
 }

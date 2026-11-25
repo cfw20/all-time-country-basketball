@@ -22,6 +22,11 @@ export function trueShooting(pts: number, fga: number, fta: number): string {
   return `${Math.round((100 * pts) / denom)}%`;
 }
 
+/** Possessions estimated from a box: FGA + turnovers + 0.44×FTA − offensive rebounds. */
+export function estimatePossessions(fga: number, tov: number, fta: number, orb: number): number {
+  return fga + tov + 0.44 * fta - orb;
+}
+
 export function shotLine(made: number, att: number): string {
   return `${made}-${att}`;
 }
@@ -48,4 +53,11 @@ export function kindLabel(kind: string): string {
   if (kind === "construct") return "Construct";
   if (kind === "concord") return "Concord";
   return "Country";
+}
+
+/** Region, or the overflow house number, when that word is not already the kind. */
+export function placeLine(team: { kind: string; region: string; overflowRank?: number }): string | null {
+  if (team.overflowRank) return `House ${team.overflowRank}`;
+  if (team.region.toLowerCase() === kindLabel(team.kind).toLowerCase()) return null;
+  return team.region;
 }

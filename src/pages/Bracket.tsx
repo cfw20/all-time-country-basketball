@@ -32,9 +32,9 @@ export function Bracket() {
         <p className="empty">The bracket is named after the third group series. Sim the groups and the pairings appear, still unplayed until the round of 16.</p>
       ) : (
         <div className="bracket" style={{ marginTop: 18 }}>
-          <Column slots={r16.slice(0, 4)} />
-          <Column slots={qf.slice(0, 2)} />
-          <Column slots={sf.slice(0, 1)} />
+          <Column label="Round of 16" slots={r16.slice(0, 4)} />
+          <Column label="Quarters" slots={qf.slice(0, 2)} />
+          <Column label="Semis" slots={sf.slice(0, 1)} />
           <div className="final-col">
             <div>
               <div className="label">Final</div>
@@ -45,19 +45,22 @@ export function Bracket() {
               <Match slot={{ id: "third", series: third, awayId: third?.awayId ?? sf0?.loserId, homeId: third?.homeId ?? sf1?.loserId }} />
             </div>
           </div>
-          <Column slots={sf.slice(1)} />
-          <Column slots={qf.slice(2)} />
-          <Column slots={r16.slice(4)} />
+          <Column label="Semis" slots={sf.slice(1)} />
+          <Column label="Quarters" slots={qf.slice(2)} />
+          <Column label="Round of 16" slots={r16.slice(4)} />
         </div>
       )}
     </main>
   );
 }
 
-function Column({ slots }: { slots: Slot[] }) {
+function Column({ label, slots }: { label: string; slots: Slot[] }) {
   return (
-    <div className="br-col">
-      {slots.map((slot) => <Match key={slot.id} slot={slot} />)}
+    <div className="br-stack">
+      <div className="br-label">{label}</div>
+      <div className="br-col">
+        {slots.map((slot) => <Match key={slot.id} slot={slot} />)}
+      </div>
     </div>
   );
 }
@@ -68,15 +71,25 @@ function Match({ slot }: { slot: Slot }) {
   const homeId = series?.homeId ?? slot.homeId;
   const awayWins = series ? (awayId === series.awayId ? series.awayWins : series.homeWins) : undefined;
   const homeWins = series ? (homeId === series.homeId ? series.homeWins : series.awayWins) : undefined;
+  const meta = <div className="meta">{matchMeta(series)}</div>;
   const body = (
     <>
       <Row id={awayId} score={awayWins} winner={series?.winnerId} />
       <Row id={homeId} score={homeWins} winner={series?.winnerId} />
+      {meta}
     </>
   );
-  if (!awayId || !homeId) return <div className="match"><div className="wait">Waiting</div></div>;
+  if (!awayId || !homeId) return <div className="match"><div className="wait">Waiting</div>{meta}</div>;
   if (!series) return <div className="match">{body}</div>;
   return <Link to={`/series/${series.id}`} className="match">{body}</Link>;
+}
+
+function matchMeta(series?: SeriesResult): string {
+  if (!series || series.games.length === 0) return "Best of seven";
+  const score = `${series.awayWins}–${series.homeWins}`;
+  const ot = series.games.filter((game) => game.ot > 0).length;
+  const extra = ot === 0 ? "" : ot === 1 ? " · 1 OT" : ` · ${ot} OT`;
+  return `Best of seven · ${score} · ${series.games.length} games${extra}`;
 }
 
 function Row({ id, score, winner }: { id?: string; score?: number; winner?: string }) {

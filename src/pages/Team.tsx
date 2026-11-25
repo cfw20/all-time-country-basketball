@@ -2,11 +2,14 @@ import { Link, useParams } from "react-router-dom";
 import { rosterOf, sideById, TEAM_BY_ID } from "../data";
 import { dutyLabel, minuteTarget, statusLabel } from "../data/ratings";
 import { Mark } from "../components/Marks";
+import { StylePanel } from "../components/StylePanel";
 import type { SeriesResult } from "../data/types";
-import { finishName, kindLabel, one } from "../lib/format";
+import { readPlayerStyle } from "../engine/style";
+import { finishName, kindLabel, one, placeLine, trueShooting } from "../lib/format";
+import { styleOfTeam } from "../lib/styleFor";
 import { seriesRecord } from "../engine/series";
 import { siegeGames } from "../engine/siege";
-import { tally, teamLine } from "../lib/stats";
+import { seriesShape, tally, teamLine } from "../lib/stats";
 import { usePantheon } from "../state/store";
 
 export function TeamPage() {
@@ -34,7 +37,7 @@ export function TeamPage() {
     : "Waiting on the siege";
   return (
     <main className="page">
-      <p className="kicker">{built ? "Constructed · no nation · outside the draw" : `${kindLabel(team.kind)} · ${team.country} · power seed ${seed ?? "—"}`}</p>
+      <p className="kicker">{built ? "Constructed · no nation · outside the draw" : `${kindLabel(team.kind)}${placeLine(team) ? ` · ${placeLine(team)}` : ""} · ${team.country} · power seed ${seed ?? "—"}`}</p>
       <div className="champion-mark">
         <Mark team={team} size={72} />
         <div>
@@ -43,6 +46,13 @@ export function TeamPage() {
         </div>
       </div>
       <p className="lede">{team.blurb}</p>
+      <section className="section">
+        <div className="section-head">
+          <h3>Style</h3>
+          <span className="quiet">{built ? "Read off the chassis" : "Read off the opening five"}</span>
+        </div>
+        <StylePanel style={styleOfTeam(team)} kicker={built ? "Built side" : "Play style"} />
+      </section>
       <div className="stat-grid" style={{ marginTop: 18 }}>
         <div className="panel"><span className="tag">Series</span><h3>{seriesWins}-{book.length - seriesWins}</h3><p>{built ? floor : finish ? finishName(finish) : "Still in the book"} · games {record.w}-{record.l}</p></div>
         <div className="panel"><span className="tag">Points</span><h3>{record.pf}</h3><p>Allowed {record.pa}</p></div>
@@ -52,13 +62,17 @@ export function TeamPage() {
       <section className="section">
         <div className="section-head"><h3>Opening five</h3><span className="quiet">{built ? "The chassis that starts" : `Pace ${team.pace.toFixed(2)} · the card that starts the night`}</span></div>
         <div className="team-grid">
-          {roster.filter((player) => player.starts).map((player) => (
-            <Link key={player.id} to={`/players/${player.id}`} className="panel">
-              <span className="tag">{player.pos}{player.pos2 ? ` / ${player.pos2}` : ""} · {built ? "Built" : player.primeYear}</span>
-              <h3>{player.name}</h3>
-              <p>{player.ratings.ovr} overall · {minuteTarget(player)} minute band · {player.height}</p>
-            </Link>
-          ))}
+          {roster.filter((player) => player.starts).map((player) => {
+            const from = !built && player.nationality !== team.country ? player.nationality : null;
+            return (
+              <Link key={player.id} to={`/players/${player.id}`} className="panel">
+                <span className="tag">{player.pos}{player.pos2 ? ` / ${player.pos2}` : ""}{from ? ` · ${from}` : ""} · {built ? "Built" : player.primeYear}</span>
+                <h3>{player.name}</h3>
+                <p className="style-name">{readPlayerStyle(player).name}</p>
+                <p>{player.ratings.ovr} overall · {minuteTarget(player)} minute band · {player.height}</p>
+              </Link>
+            );
+          })}
         </div>
       </section>
       <section className="section">
@@ -67,15 +81,16 @@ export function TeamPage() {
           <table>
             <thead>
               <tr>
-                <th>Player</th><th>Pos</th><th className="num">Prime</th><th>Role</th><th>Status</th><th className="num">Ovr</th><th className="num">Band</th><th className="num">Min</th><th className="num">Pts</th>
+                <th>Player</th><th>Pos</th><th className="num">Prime</th><th>Role</th><th>Status</th><th className="num">Ovr</th><th className="num">Band</th><th className="num">Min</th><th className="num">Pts</th><th className="num">TS</th>
               </tr>
             </thead>
             <tbody>
               {roster.map((player) => {
                 const line = totals.get(player.id);
+                const from = !built && player.nationality !== team.country ? player.nationality : null;
                 return (
                   <tr key={player.id}>
-                    <td className="name-cell"><Link to={`/players/${player.id}`}>{player.name}</Link>{player.starts ? " · opens" : ""}</td>
+                    <td className="name-cell"><Link to={`/players/${player.id}`}>{player.name}</Link>{player.starts ? " · opens" : ""}{from ? <div className="split">{from}</div> : null}</td>
                     <td>{player.pos}{player.pos2 ? `/${player.pos2}` : ""}</td>
                     <td className="num">{built ? "Built" : player.primeYear}</td>
                     <td>{dutyLabel(player.role, built)}</td>
@@ -84,6 +99,7 @@ export function TeamPage() {
                     <td className="num">{minuteTarget(player)}</td>
                     <td className="num">{line ? one(line.sec / 60, line.g) : "—"}</td>
                     <td className="num">{line ? one(line.pts, line.g) : "—"}</td>
+                    <td className="num">{line ? trueShooting(line.pts, line.fga, line.fta) : "—"}</td>
                   </tr>
                 );
               })}
@@ -129,6 +145,7 @@ function SeriesList({ teamId, series, empty }: { teamId: string; series: SeriesR
             <span className="tag">{item.roundLabel} · {item.games.length} games</span>
             <h3>{win ? "W" : "L"} {ours}–{theirs}</h3>
             <p>{sideById(opp)?.name ?? opp}</p>
+            <p>{seriesShape(item)}</p>
           </Link>
         );
       })}

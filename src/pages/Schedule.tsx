@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { sideById } from "../data";
 import type { SeriesResult } from "../data/types";
 import { seriesRecord } from "../engine/series";
+import { seriesShape } from "../lib/stats";
 import { usePantheon } from "../state/store";
 
 export function Schedule() {
@@ -48,7 +49,7 @@ export function Schedule() {
                   <span className="tag">{item.roundLabel}{item.exhibition ? " · the siege" : ""} · {item.games.length} games</span>
                   <h3 style={{ fontSize: 26 }}>{winner} {winnerWins}–{loserWins}</h3>
                   <p>{loser}</p>
-                  <p>{item.games.length === 7 ? "Went the distance" : item.games.length === 4 ? "Sweep" : `Decided in ${item.games.length}`}</p>
+                  <p>{seriesShape(item)}</p>
                 </Link>
               );
             })}
