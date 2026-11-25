@@ -1,5 +1,7 @@
 import { Link } from "react-router-dom";
 import { playerById } from "../data";
+import { AfterNight } from "./AfterNight";
+import { castFromGame } from "../engine/after";
 import type { GameResult, Play } from "../data/types";
 
 export function ScoreTable({ game }: { game: GameResult }) {
@@ -39,6 +41,7 @@ export function ScoreTable({ game }: { game: GameResult }) {
       <div>
         {swings.map((play, index) => <Swing key={`${play.clock}-${index}`} play={play} />)}
       </div>
+      <AfterNight cast={castFromGame(game)} />
     </section>
   );
 }

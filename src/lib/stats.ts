@@ -6,6 +6,8 @@ export interface Tot {
   sec: number;
   pts: number;
   reb: number;
+  orb: number;
+  drb: number;
   ast: number;
   stl: number;
   blk: number;
@@ -35,12 +37,14 @@ export function tally(games: GameResult[], includeExhibition = false): Map<strin
         const row = map.get(line.playerId) ?? {
           playerId: line.playerId,
           teamId,
-          sec: 0, pts: 0, reb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0,
+          sec: 0, pts: 0, reb: 0, orb: 0, drb: 0, ast: 0, stl: 0, blk: 0, tov: 0, pf: 0,
           fgm: 0, fga: 0, tpm: 0, tpa: 0, ftm: 0, fta: 0, pm: 0, g: 0, gs: 0,
         };
         row.sec += line.sec;
         row.pts += line.pts;
         row.reb += line.orb + line.drb;
+        row.orb += line.orb;
+        row.drb += line.drb;
         row.ast += line.ast;
         row.stl += line.stl;
         row.blk += line.blk;

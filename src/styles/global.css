@@ -478,6 +478,17 @@ button.door { font: inherit; color: inherit; text-align: left; width: 100%; curs
   color: var(--muted);
   margin: 12px 0;
 }
+.after-grid { display: grid; margin-top: 8px; }
+.after-row {
+  display: grid;
+  grid-template-columns: minmax(0, 1.3fr) auto minmax(0, 1.4fr);
+  gap: 10px;
+  align-items: baseline;
+  padding: 8px 0;
+  border-top: 1px solid rgba(246, 234, 215, 0.08);
+}
+.after-row .quiet { text-align: right; }
+.sheet { width: 100%; }
 .empty { padding: 28px 0; color: var(--muted); max-width: 56ch; }
 .decade h3 { font-family: var(--serif); font-style: italic; font-size: 32px; margin: 0 0 8px; }
 .decade ol { margin: 0; padding-left: 18px; color: var(--muted); }
@@ -530,6 +541,8 @@ button.door { font: inherit; color: inherit; text-align: left; width: 100%; curs
   .dock { padding: 8px 10px; gap: 8px; bottom: 8px; flex-direction: row; align-items: center; }
   .dock .stage strong { font-size: 18px; }
   .dock button, .filters button { padding: 6px 10px; }
+  .after-row { grid-template-columns: minmax(0, 1fr) auto; }
+  .after-row .quiet { grid-column: 1 / -1; text-align: left; }
   .roster-slots { grid-template-columns: 1fr 1fr; }
   .pip { height: 22px; font-size: 8px; }
   .shell { padding-bottom: 148px; }

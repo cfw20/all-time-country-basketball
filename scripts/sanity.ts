@@ -2,18 +2,19 @@ import { PLAYERS, ROSTERS, TEAMS, playerById } from "../src/data";
 import { ERA_CARDS, eraCard, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
 import { playDecade, playFive, playFortnight, playGauntlet, playHill, playOpen, playSurvivor } from "../src/engine/floors";
 import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
+import { castFromGame, playAfter, type AfterKind } from "../src/engine/after";
 import { lightLamp } from "../src/engine/tournament";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
 
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
 
-if (TEAMS.length !== 41) fail(`expected 41 sides, got ${TEAMS.length}`);
+if (TEAMS.length !== 45) fail(`expected 45 sides, got ${TEAMS.length}`);
 const overflow = TEAMS.filter((t) => t.kind === "overflow");
 const homeland = TEAMS.filter((t) => t.kind === "homeland");
 const countries = TEAMS.filter((t) => t.kind === "country");
 const built = TEAMS.filter((t) => t.kind === "construct");
-if (overflow.length !== 18) fail(`expected 18 overflow houses, got ${overflow.length}`);
+if (overflow.length !== 22) fail(`expected 22 overflow houses, got ${overflow.length}`);
 if (homeland.length !== 4) fail(`expected 4 homeland houses, got ${homeland.length}`);
 if (countries.length !== 18) fail(`expected 18 countries, got ${countries.length}`);
 if (built.length !== 1) fail(`expected 1 constructed side, got ${built.length}`);
@@ -74,6 +75,14 @@ expect("Yao Ming", "bstn");
 expect("Dikembe Mutombo", "bstn");
 expect("Karl-Anthony Towns", "bstn");
 expect("Steve Nash", "nrth");
+expect("Fred VanVleet", "nrth");
+expect("Scottie Barnes", "nrth");
+expect("Thomas Heurtel", "roya");
+expect("Rodrigue Beaubois", "roya");
+expect("Mel Daniels", "fndr");
+expect("Tyreke Evans", "apex");
+expect("Ron Harper", "rely");
+expect("Marcus Camby", "sill");
 expect("Pascal Siakam", "nrth");
 expect("Drazen Petrovic", "fire");
 expect("Arvydas Sabonis", "ambr");
@@ -107,6 +116,15 @@ if (final) {
   const ast = lines.reduce((s, l) => s + l.ast, 0);
   const fga = lines.reduce((s, l) => s + l.fga, 0);
   console.log("FINAL reb", reb, "ast", ast, "fga", fga);
+  const cast = castFromGame(final);
+  const kinds: AfterKind[] = ["horse", "rack", "stripe", "poster", "circuit", "buzzer"];
+  for (const kind of kinds) {
+    const result = playAfter(cast, kind, 0);
+    if (!result.winner || result.rows.length < 2) fail(`${kind} did not play after the final`);
+    const again = playAfter(cast, kind, 0);
+    if (again.line !== result.line || again.winner !== result.winner) fail(`${kind} is not stable on the same salt`);
+  }
+  console.log("AFTER", kinds.map((kind) => `${kind} ${playAfter(cast, kind, 1).winner}`).join(" · "));
 }
 
 function minutes(teamId: string) {
@@ -164,7 +182,7 @@ if (!tournament.awards) fail("missing awards");
 if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star log too thin");
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
 const expectedSeries = tournament.groups.length * 6 + 8 + 4 + 2 + 2;
-if (tournament.groups.length !== 10) fail(`expected 10 groups, got ${tournament.groups.length}`);
+if (tournament.groups.length !== 11) fail(`expected 11 groups, got ${tournament.groups.length}`);
 if (tournament.groups.some((group) => group.teamIds.length !== 4)) fail("a group is not four sides");
 const r16ids = new Set(tournament.series.filter((item) => item.round === "r16").flatMap((item) => [item.homeId, item.awayId]));
 if (r16ids.size !== 16) fail(`round of 16 has ${r16ids.size} sides`);

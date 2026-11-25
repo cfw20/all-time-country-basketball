@@ -12,8 +12,8 @@ Luguentz Dort|SG|6-4|2022|Canada|rotation|standard|defender|79|14|36|0|-|def:88,
 Kelly Olynyk|PF|6-11|2017|Canada|rotation|standard|stretch|77|14|36|0|-|play:74,three:76
 Chris Boucher|PF|6-9|2021|Canada|rotation|standard|rim|76|14|28|0|C|ath:84,def:76|Born in Saint Lucia. Represents Canada.
 Brandon Clarke|PF|6-8|2020|Canada|deep|standard|rim|77|14|12|0|-|ath:86,def:78,reb:74
-Dwight Powell|C|6-10|2018|Canada|deep|standard|glue|74|12|16|0|-|ath:80,reb:70
-Jamaal Magloire|C|6-11|2004|Canada|deep|standard|post|73|12|0|0|-|reb:76
+Fred VanVleet|PG|6-0|2022|Canada|rotation|standard|point|86|22|40|0|-|play:84,shot:84
+Scottie Barnes|SF|6-7|2024|Canada|rotation|standard|wing|84|20|30|0|PF|ath:86,def:84
 Pascal Siakam|PF|6-9|2020|Canada|starter|standard|stretch|88|24|34|0|SF|shot:82,three:78,play:74,reb:84,def:82,ath:86,ft:78|Born in Douala. Represented Canada and took the country path.
 Bennedict Mathurin|SG|6-5|2024|Canada|deep|standard|slasher|78|18|34|0|-|ath:84,shot:78|Rated on the prime already on record.
 Cory Joseph|PG|6-3|2016|Canada|two-way|two-way|point|74|12|30|0|-|def:76

@@ -1,6 +1,6 @@
 # Pantheon
 
-Pantheon is a fictional all-time world basketball championship. Forty human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
+Pantheon is a fictional all-time world basketball championship. Forty-four human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
 
 This repository is private. It stays private until the owner decides to publish. Do not flip the repository to public, and do not deploy a public site from this project, unless the owner makes that decision.
 
@@ -56,13 +56,13 @@ No FIBA quarter length, foul limit, or roster cap is used anywhere in the event.
 
 ## The field
 
-Eighteen countries that can fill a competitive all-time book, eighteen American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
+Eighteen countries that can fill a competitive all-time book, twenty-two American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
 
 Countries that cannot fill twenty-two competitive primes are not in the draw. Their best players chose a homeland house instead of carrying a weak national side. The Teams page lists every side.
 
 ## The competition
 
-Ten groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
+Eleven groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
 
 Those sixteen are seeded by pre-draw power, 1 against 16. Every knockout round is first to four, including the final and the third-place series. Neutral floors. The better power seed is listed as home for games 1, 2, 5, and 7. Games 3, 4, and 6 flip the card. There is no home-court scoring bonus.
 
@@ -70,13 +70,15 @@ After the groups, an interval that does not count: an All-Star game (First Light
 
 The siege is three best-of-seven series off the standings. The arrival, at the start of the knockout, is the Construct against the best group winner. The gate is the country champion against the Construct. The restoration is the Concord against the Construct, and it decides whether the country champion keeps the floor. The Construct is the favorite. Humans can still take a series. The wire includes those series. Nights collects seven-game series, 4–3s, sweeps, and tight games from the country draw.
 
-Every game has quarter scores, a full box (points, rebounds, assists, steals, blocks, turnovers, fouls, minutes, field goals, threes, free throws), and a possession log. Favorites win more series. They are not locks.
+Every game has quarter scores, a night sheet (shooting, true shooting, glass, assists, turnovers, quarter winners), a full box (points, rebounds, assists, steals, blocks, turnovers, fouls, minutes, field goals, threes, free throws, plus-minus), and a possession log. A series page adds the aggregate margin, close games, overtime, points, and glass. Favorites win more series. They are not locks.
+
+After a game or a series, the players who just played can run six tiny games: Horse, the Rack, the Stripe, the Poster, the Circuit, and Buzzer. Run it again reshuffles that toy. The same games sit under side-floor boxes. They do not change the book.
 
 ## Comparing draws
 
-Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v6`.
+Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v7`.
 
-A series page lists every game and the running tally. A game page has the line score, team shooting and true shooting, a short list of the plays that swung it, and the full possession log. Player pages carry a game log for the open draw. Team pages list every series. The look is a fantasy sci-fi floor. The games are NBA basketball, played at the prime on each card.
+A series page lists every game, the running tally, and the series sheet. A game page has the line score, the night sheet, team shooting and true shooting, a short list of the plays that swung it, the full possession log, and the after-the-horn games. Player pages carry a game log, offensive and defensive boards, and clutch. Team pages list the opening five and every series. The look is a fantasy sci-fi floor. The games are NBA basketball, played at the prime on each card.
 
 The Unbroken Year is a side floor at `/season`. It does not replace the championship. It opens after two finished championships and one series taken from the Construct. The roster is built by rolling an era and a real franchise, then taking one prime from that card. Boosters can reroll, force a myth year, take two from one card, call a position, or recall a passed prime. The season is 82 NBA games. One loss can be replayed. Seventy wins leaves a relic for the next year. An 82–0, The Unbroken, is kept in the book and opens the next year on a myth card with extra boosters. The year is stored locally under `pantheon-year-v1`, apart from the championship save.
 

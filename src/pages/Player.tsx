@@ -8,7 +8,7 @@ import { tally } from "../lib/stats";
 import type { BoxLine, GameResult } from "../data/types";
 import { usePantheon } from "../state/store";
 
-const BARS: { key: "shot" | "three" | "play" | "reb" | "def" | "ath" | "ft"; label: string }[] = [
+const BARS: { key: "shot" | "three" | "play" | "reb" | "def" | "ath" | "ft" | "clutch"; label: string }[] = [
   { key: "shot", label: "Shot" },
   { key: "three", label: "Three" },
   { key: "play", label: "Play" },
@@ -16,6 +16,7 @@ const BARS: { key: "shot" | "three" | "play" | "reb" | "def" | "ath" | "ft"; lab
   { key: "def", label: "Defense" },
   { key: "ath", label: "Ath" },
   { key: "ft", label: "Free throw" },
+  { key: "clutch", label: "Clutch" },
 ];
 
 export function PlayerPage() {
@@ -47,7 +48,7 @@ export function PlayerPage() {
       <div className="stat-grid" style={{ marginTop: 16 }}>
         <div className="panel"><span className="tag">Minute band</span><h3>{minuteTarget(player)}</h3><p>{player.starts ? "Opens the game" : "Comes in with the rotation"}</p></div>
         <div className="panel"><span className="tag">{built ? "The siege" : "This draw"}</span><h3>{line ? `${one(line.pts, line.g)} pts` : "—"}</h3><p>{line ? `${line.g} games · ${one(line.sec / 60, line.g)} mpg` : "Has not played yet"}</p></div>
-        <div className="panel"><span className="tag">Line</span><h3>{line ? `${one(line.reb, line.g)} reb` : "—"}</h3><p>{line ? `${one(line.ast, line.g)} ast · ${one(line.stl, line.g)} stl · ${one(line.blk, line.g)} blk` : "Box score waits on the first tip"}</p></div>
+        <div className="panel"><span className="tag">Line</span><h3>{line ? `${one(line.reb, line.g)} reb` : "—"}</h3><p>{line ? `${one(line.orb, line.g)} off · ${one(line.drb, line.g)} def · ${one(line.ast, line.g)} ast · ${one(line.tov, line.g)} tov` : "Box score waits on the first tip"}</p></div>
         <div className="panel"><span className="tag">Shooting</span><h3>{line ? pct(line.fgm, line.fga) : "—"}</h3><p>{line ? `3P ${pct(line.tpm, line.tpa)} · FT ${pct(line.ftm, line.fta)} · TS ${trueShooting(line.pts, line.fga, line.fta)}` : "No attempts yet"}</p></div>
         {siegeLine ? <div className="panel"><span className="tag">Siege</span><h3>{one(siegeLine.pts, siegeLine.g)} pts</h3><p>{siegeLine.g} night{siegeLine.g === 1 ? "" : "s"} · {one(siegeLine.reb, siegeLine.g)} reb · {one(siegeLine.ast, siegeLine.g)} ast</p></div> : null}
       </div>

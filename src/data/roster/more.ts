@@ -38,7 +38,7 @@ Gheorghe Muresan|C|7-7|1996|Romania|deep|short|post|73|16|0|0|-|shot:70,reb:78|R
 Nickeil Alexander-Walker|SG|6-5|2024|Canada|deep|standard|wing|78|16|38|0|-|def:78,ath:82,three:76
 Andrew Nembhard|PG|6-5|2024|Canada|deep|standard|point|77|14|34|0|-|play:82,def:80,three:74
 Shaedon Sharpe|SG|6-5|2025|Canada|deep|standard|slasher|76|18|32|0|-|ath:90,shot:74|Rated on the prime already on record.
-Dalano Banton|PG|6-9|2023|Canada|deep|short|point|74|16|30|0|SF|ath:84,play:72
+Lu Dort|SG|6-3|2023|Canada|deep|short|defender|80|14|36|0|SF|def:86
 `,
   oro: `
 Serge Ibaka|PF|6-10|2016|Spain|deep|standard|rim|82|16|22|0|C|def:88,reb:80,ath:84|Born in Brazzaville. Represented Spain.

@@ -50,6 +50,18 @@ export function TeamPage() {
         <div className="panel"><span className="tag">Roster</span><h3>{roster.length}</h3><p>{built ? "Chassis, spare frames, and short cycles" : "Standard body, two-ways, and short deals"}</p></div>
       </div>
       <section className="section">
+        <div className="section-head"><h3>Opening five</h3><span className="quiet">{built ? "The chassis that starts" : `Pace ${team.pace.toFixed(2)} · the card that starts the night`}</span></div>
+        <div className="team-grid">
+          {roster.filter((player) => player.starts).map((player) => (
+            <Link key={player.id} to={`/players/${player.id}`} className="panel">
+              <span className="tag">{player.pos}{player.pos2 ? ` / ${player.pos2}` : ""} · {built ? "Built" : player.primeYear}</span>
+              <h3>{player.name}</h3>
+              <p>{player.ratings.ovr} overall · {minuteTarget(player)} minute band · {player.height}</p>
+            </Link>
+          ))}
+        </div>
+      </section>
+      <section className="section">
         <div className="section-head"><h3>Roster</h3><span className="quiet">{built ? "Unit class is the minute band" : "Minute target is the band, not a guarantee"}</span></div>
         <div style={{ overflowX: "auto" }}>
           <table>

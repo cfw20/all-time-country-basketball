@@ -3,6 +3,8 @@ import { Link, useParams } from "react-router-dom";
 import { CONCORD_ID, CONSTRUCT_ID, playerById, sideById } from "../data";
 import { Mark } from "../components/Marks";
 import type { BoxLine, GameResult, Play } from "../data/types";
+import { AfterNight } from "../components/AfterNight";
+import { castFromGame } from "../engine/after";
 import { periodName } from "../engine/names";
 import { findGame } from "../engine/tournament";
 import { clockMin, pct, shotLine, signed, trueShooting } from "../lib/format";
@@ -47,6 +49,7 @@ export function GamePage() {
         {game.seriesId ? <Link to={`/series/${game.seriesId}`}>This series</Link> : null}
       </div>
       <LineScore game={game} />
+      <NightSheet game={game} />
       {swings.length > 0 ? (
         <section className="section">
           <div className="section-head"><h3>Plays that swung it</h3><span className="quiet">Runs, lead changes, blocks, and late makes</span></div>
@@ -62,6 +65,7 @@ export function GamePage() {
         <Box title={sideName(game, game.awayId)} lines={game.box.away} />
         <Box title={sideName(game, game.homeId)} lines={game.box.home} />
       </section>
+      <AfterNight cast={castFromGame(game)} />
       <section className="section">
         <div className="section-head">
           <h3>{fullLog ? "Every possession" : "Key possessions"}</h3>
@@ -106,6 +110,55 @@ function PlayRow({ play }: { play: Play }) {
       <span>{play.text}</span>
       <span className="mono">{play.away}–{play.home}</span>
     </div>
+  );
+}
+
+function NightSheet({ game }: { game: GameResult }) {
+  const away = sumBox(game.box.away);
+  const home = sumBox(game.box.home);
+  const awayName = sideName(game, game.awayId);
+  const homeName = sideName(game, game.homeId);
+  const top = (lines: BoxLine[]) => lines.slice().sort((a, b) => b.pts - a.pts || b.sec - a.sec)[0];
+  const awayTop = top(game.box.away);
+  const homeTop = top(game.box.home);
+  const quarters = game.quarters.map((quarter, index) => {
+    if (quarter.away === quarter.home) return `${periodName(index + 1)} split ${quarter.away}-${quarter.home}`;
+    const winner = quarter.away > quarter.home ? awayName : homeName;
+    const margin = Math.abs(quarter.away - quarter.home);
+    return `${periodName(index + 1)} ${winner} by ${margin}`;
+  });
+  const rows: { label: string; away: string; home: string }[] = [
+    { label: "FG", away: `${shotLine(away.fgm, away.fga)} ${pct(away.fgm, away.fga)}`, home: `${shotLine(home.fgm, home.fga)} ${pct(home.fgm, home.fga)}` },
+    { label: "3P", away: `${shotLine(away.tpm, away.tpa)} ${pct(away.tpm, away.tpa)}`, home: `${shotLine(home.tpm, home.tpa)} ${pct(home.tpm, home.tpa)}` },
+    { label: "FT", away: `${shotLine(away.ftm, away.fta)} ${pct(away.ftm, away.fta)}`, home: `${shotLine(home.ftm, home.fta)} ${pct(home.ftm, home.fta)}` },
+    { label: "TS", away: trueShooting(away.pts, away.fga, away.fta), home: trueShooting(home.pts, home.fga, home.fta) },
+    { label: "Reb", away: String(away.reb), home: String(home.reb) },
+    { label: "Ast", away: String(away.ast), home: String(home.ast) },
+    { label: "Tov", away: String(away.tov), home: String(home.tov) },
+    { label: "Stl", away: String(away.stl), home: String(home.stl) },
+    { label: "Blk", away: String(away.blk), home: String(home.blk) },
+  ];
+  const nameOf = (line: BoxLine | undefined) => (line ? playerById(line.playerId)?.name ?? line.playerId : "—");
+  return (
+    <section className="section">
+      <div className="section-head"><h3>Night sheet</h3><span className="quiet">The game in one card</span></div>
+      <div className="panel" style={{ overflowX: "auto" }}>
+        <table className="sheet">
+          <thead>
+            <tr><th>Line</th><th className="num">{awayName}</th><th className="num">{homeName}</th></tr>
+          </thead>
+          <tbody>
+            {rows.map((row) => (
+              <tr key={row.label}><td>{row.label}</td><td className="num">{row.away}</td><td className="num">{row.home}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+      <p className="note">
+        {quarters.join(" · ")}. {nameOf(awayTop)} {awayTop?.pts ?? 0} led {awayName}. {nameOf(homeTop)} {homeTop?.pts ?? 0} led {homeName}.
+        {away.reb === home.reb ? " The glass was even." : ` ${away.reb > home.reb ? awayName : homeName} took the glass, ${Math.max(away.reb, home.reb)}-${Math.min(away.reb, home.reb)}.`}
+      </p>
+    </section>
   );
 }
 

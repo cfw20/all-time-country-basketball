@@ -20,6 +20,7 @@ export function Home() {
   const houses = TEAMS.filter((team) => team.kind === "overflow" || team.kind === "homeland");
   const nations = TEAMS.filter((team) => team.kind === "country");
   const humans = PLAYERS.filter((player) => !isConstructed(player)).length;
+  const humanSides = TEAMS.filter((team) => team.kind !== "construct").length;
   const restoration = tournament.siege?.restoration;
   const held = Boolean(restoration && !tournament.siege?.threatEnded);
 
@@ -31,7 +32,7 @@ export function Home() {
           <p className="kicker">A private all-time floor · NBA rules</p>
           <h2 className="display">Every prime<span>on one floor.</span></h2>
           <p className="lede">
-            {humans} real primes. Thirty-two human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
+            {humans} real primes. {humanSides} human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
           </p>
         </div>
         <div className="panel">

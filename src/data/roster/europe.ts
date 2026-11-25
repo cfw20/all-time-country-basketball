@@ -31,14 +31,14 @@ Evan Fournier|SG|6-7|2021|France|rotation|standard|shooter|79|20|40|0|-|three:80
 Boris Diaw|PF|6-8|2006|France|rotation|standard|glue|80|16|24|0|-|play:84,reb:70,def:76
 Mickael Pietrus|SG|6-6|2008|France|rotation|standard|defender|76|14|36|0|SF|def:82,ath:86
 Ronny Turiaf|C|6-10|2008|France|deep|standard|rim|74|12|0|0|-|def:80,reb:74
-Frank Ntilikina|PG|6-4|2019|France|deep|standard|defender|72|12|30|0|-|def:78
+Rodrigue Beaubois|PG|6-2|2011|France|deep|standard|slasher|78|18|34|0|-|ath:88,shot:76
 Guerschon Yabusele|PF|6-8|2024|France|deep|standard|stretch|74|14|32|0|-|ath:84,three:74
 Bilal Coulibaly|SF|6-7|2026|France|deep|standard|defender|76|14|30|0|-|def:80,ath:86|Rated on the prime already on record.
 Killian Hayes|PG|6-5|2023|France|deep|standard|point|73|16|32|0|-|play:74
 Tariq Abdul-Wahad|SG|6-6|1999|France|deep|standard|wing|74|16|12|0|-|def:76
 Ian Mahinmi|C|6-11|2014|France|two-way|two-way|rim|73|12|0|0|-|def:76
 Alexis Ajinca|C|7-2|2015|France|two-way|two-way|post|72|14|8|0|-|shot:74
-Theo Maledon|PG|6-4|2022|France|deep|exhibit-10|point|70|14|32|0|-|play:74
+Thomas Heurtel|PG|6-2|2015|France|rotation|standard|point|80|18|34|0|-|play:84
 `,
   eagl: `
 Nikola Jokic|C|6-11|2022|Serbia|star|standard|post|97|30|22|1|-|shot:92,three:78,play:98,reb:90,def:78,ath:70,ft:84,clutch:94
