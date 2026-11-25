@@ -39,7 +39,7 @@ export function Rules() {
 
       <section className="section">
         <h3 className="display" style={{ fontSize: 36 }}>The Construct and the Concord</h3>
-        <p className="lede">The Construct is twenty-two chassis. They have no country and no prime. They are the favorite of the event, clearly ahead of the human sides, and they can still lose a series. They stay out of the groups so the country tournament can still be played.</p>
+        <p className="lede">The Construct is twenty-two chassis. They have no country and no prime. They are the favorite of the event, a clear step ahead of the human sides. A series against them is very hard, and they can still lose one. They stay out of the groups so the country tournament can still be played.</p>
         <div className="paths">
           <article className="path">
             <strong>Arrival</strong>

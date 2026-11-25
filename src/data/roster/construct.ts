@@ -1,15 +1,15 @@
 /** Built units. Not people. Ratings are a chassis spec, played under the same NBA engine. */
 export const CONSTRUCT_ROSTER = `
-Axiom|PG|6-2|2026|Construct|star|standard|point|97|24|36|1|-|shot:94,three:93,play:98,reb:48,def:89,ath:95,ft:95,clutch:97|Primary handler. The unit chooses the possession before it starts.
-Meridian|SG|6-6|2026|Construct|star|standard|shooter|98|30|44|1|SF|shot:96,three:98,play:85,reb:50,def:85,ath:95,ft:97,clutch:97|The shot is the product. The range is the whole floor.
-Vector|SF|6-8|2026|Construct|star|standard|wing|97|26|34|1|PF|shot:94,three:91,play:87,reb:68,def:95,ath:96,ft:88,clutch:95|Wing and forward. Built to guard either spot.
-Rampart|PF|6-10|2026|Construct|star|standard|defender|96|18|26|1|C|shot:87,three:83,play:75,reb:95,def:98,ath:93,ft:82,clutch:93|The wall. Rebounds are part of the specification.
-Keystone|C|7-1|2026|Construct|star|standard|rim|97|24|6|1|-|shot:91,three:40,play:73,reb:97,def:97,ath:91,ft:78,clutch:95|The middle. The paint is its assignment.
-Cardinal|PG|6-3|2026|Construct|starter|standard|point|93|20|34|0|-|shot:89,three:89,play:94,reb:44,def:87,ath:91,ft:92,clutch:90|Second handler. The offense keeps its shape when Axiom sits.
-Caliber|SG|6-5|2026|Construct|starter|standard|shooter|93|26|42|0|SF|shot:91,three:94,play:81,reb:46,def:83,ath:91,ft:94,clutch:90|Second shooter. Same assignment, on a smaller chassis.
-Alloy|SF|6-7|2026|Construct|starter|standard|creator|92|24|34|0|PF|shot:89,three:87,play:88,reb:62,def:88,ath:90,ft:86,clutch:88|Connector. The pass is measured, then thrown.
-Helix|PF|6-9|2026|Construct|starter|standard|stretch|92|22|40|0|C|shot:87,three:91,play:77,reb:78,def:88,ath:88,ft:86,clutch:88|Spaced forward. Someone else owns the rim.
-Bastion|C|7-0|2026|Construct|starter|standard|post|93|22|8|0|-|shot:89,three:36,play:69,reb:92,def:93,ath:86,ft:76,clutch:88|Second middle. The paint stays occupied when Keystone rests.
+Axiom|PG|6-2|2026|Construct|star|standard|point|98|24|36|1|-|shot:95,three:94,play:99,reb:49,def:90,ath:96,ft:96,clutch:98|Primary handler. The unit chooses the possession before it starts.
+Meridian|SG|6-6|2026|Construct|star|standard|shooter|98|30|44|1|SF|shot:97,three:99,play:86,reb:51,def:86,ath:96,ft:98,clutch:98|The shot is the product. The range is the whole floor.
+Vector|SF|6-8|2026|Construct|star|standard|wing|98|26|34|1|PF|shot:95,three:92,play:88,reb:69,def:96,ath:97,ft:89,clutch:96|Wing and forward. Built to guard either spot.
+Rampart|PF|6-10|2026|Construct|star|standard|defender|97|18|26|1|C|shot:88,three:84,play:76,reb:96,def:99,ath:94,ft:83,clutch:94|The wall. Rebounds are part of the specification.
+Keystone|C|7-1|2026|Construct|star|standard|rim|98|24|6|1|-|shot:92,three:41,play:74,reb:98,def:98,ath:92,ft:79,clutch:96|The middle. The paint is its assignment.
+Cardinal|PG|6-3|2026|Construct|starter|standard|point|94|20|34|0|-|shot:90,three:90,play:95,reb:45,def:88,ath:92,ft:93,clutch:91|Second handler. The offense keeps its shape when Axiom sits.
+Caliber|SG|6-5|2026|Construct|starter|standard|shooter|94|26|42|0|SF|shot:92,three:95,play:82,reb:47,def:84,ath:92,ft:95,clutch:91|Second shooter. Same assignment, on a smaller chassis.
+Alloy|SF|6-7|2026|Construct|starter|standard|creator|93|24|34|0|PF|shot:90,three:88,play:89,reb:63,def:89,ath:91,ft:87,clutch:89|Connector. The pass is measured, then thrown.
+Helix|PF|6-9|2026|Construct|starter|standard|stretch|93|22|40|0|C|shot:88,three:92,play:78,reb:79,def:89,ath:89,ft:87,clutch:89|Spaced forward. Someone else owns the rim.
+Bastion|C|7-0|2026|Construct|starter|standard|post|94|22|8|0|-|shot:90,three:37,play:70,reb:93,def:94,ath:87,ft:77,clutch:89|Second middle. The paint stays occupied when Keystone rests.
 Relay|PG|6-1|2026|Construct|rotation|standard|point|90|16|32|0|-|shot:85,three:87,play:90,reb:40,def:83,ath:88,ft:90,clutch:84|Third handler. Used in bursts.
 Tangent|SG|6-4|2026|Construct|rotation|standard|shooter|90|20|44|0|-|shot:87,three:91,play:75,reb:42,def:81,ath:88,ft:92,clutch:84|Movement shooter. A spare barrel.
 Nock|SF|6-6|2026|Construct|rotation|standard|wing|89|18|32|0|SG|shot:85,three:85,play:77,reb:56,def:86,ath:88,ft:84,clutch:82|Wing reserve. The defense stays in the specification.

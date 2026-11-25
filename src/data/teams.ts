@@ -500,7 +500,7 @@ const RAW: Team[] = [
     mark: "lattice",
     motto: "Built to take the floor.",
     blurb:
-      "The one invented side, and the favorite. Twenty-two chassis, clearly ahead of the human books, and still beatable in a series. They stay out of the groups and take no human seat. They arrive at the knockout and play best-of-seven series: the best group winner, then the country champion, then the Concord of twelve real primes. A Concord series win ends the threat and leaves the country champion in place. A Construct series win means they hold the floor.",
+      "The one invented side, and the favorite. Twenty-two chassis, a clear step ahead of the human books. Taking a series from them is very hard, and it still happens. They stay out of the groups and take no human seat. They arrive at the knockout and play best-of-seven series: the best group winner, then the country champion, then the Concord of twelve real primes. A Concord series win ends the threat and leaves the country champion in place. A Construct series win means they hold the floor.",
     pace: 1.01,
   },
 ];
