@@ -408,6 +408,12 @@ function pickName(facts: FiveFacts): { name: string; line: string } {
   };
 }
 
+function shooterCount(count: number): string {
+  if (count <= 0) return "None of the five put 34% or more of their shots up from three.";
+  if (count >= 5) return "All five put at least 34% of their shots up from three.";
+  return `${count} of 5 put at least 34% of their shots up from three.`;
+}
+
 function facetsOf(facts: FiveFacts): StyleFacet[] {
   const three = Math.round(facts.threeShare);
   const defense = Math.round(facts.defense);
@@ -434,7 +440,7 @@ function facetsOf(facts: FiveFacts): StyleFacet[] {
     {
       label: "Threes",
       value: `${three}%`,
-      detail: `Usage-weighted share of the opening five. ${facts.shooters} of 5 are at 34% or more.`,
+      detail: `Usage-weighted share of the opening five. ${shooterCount(facts.shooters)}`,
     },
     {
       label: "Defense",

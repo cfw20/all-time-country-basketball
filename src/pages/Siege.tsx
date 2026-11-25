@@ -1,6 +1,9 @@
 import { Link } from "react-router-dom";
 import { CONCORD_TEAM, CONSTRUCT_ID, playerById, sideById, TEAM_BY_ID } from "../data";
 import { Mark } from "../components/Marks";
+import { StylePanel } from "../components/StylePanel";
+import { asLineup, readStyle } from "../engine/style";
+import { styleOfTeam } from "../lib/styleFor";
 import type { GameResult, SeriesResult } from "../data/types";
 import { seriesRecord } from "../engine/series";
 import { siegeGames } from "../engine/siege";
@@ -39,6 +42,11 @@ export function Siege() {
   };
   const concord = (siege?.concordIds ?? []).map((id) => playerById(id)).filter((player) => player !== undefined);
   const countries = new Set(concord.map((player) => player.nationality));
+  const concordStyle = concord.length >= 5
+    ? readStyle({ pace: CONCORD_TEAM.pace, players: asLineup(concord) })
+    : null;
+  const construct = TEAM_BY_ID[CONSTRUCT_ID];
+  const constructStyle = styleOfTeam(construct);
   const leaders = siegeScorers(siegeGames(siege));
 
   return (
@@ -81,6 +89,7 @@ export function Siege() {
         ) : (
           <>
             <p className="note">Real players, borrowed for one night. The opening five are marked. After the tip they go back to their countries. Nobody was signed.</p>
+            {concordStyle ? <StylePanel style={concordStyle} kicker="The Concord · mixed" /> : null}
             <div style={{ overflowX: "auto" }}>
               <table>
                 <thead>
@@ -133,9 +142,10 @@ export function Siege() {
           <Link to={`/teams/${CONSTRUCT_ID}`}>Open the roster</Link>
         </div>
         <Link to={`/teams/${CONSTRUCT_ID}`} className="panel siege-banner" style={{ marginTop: 0 }}>
-          <Mark team={TEAM_BY_ID[CONSTRUCT_ID]} size={48} />
-          <h3 style={{ marginTop: 8 }}>{TEAM_BY_ID[CONSTRUCT_ID].name}</h3>
-          <p>{TEAM_BY_ID[CONSTRUCT_ID].motto} Twenty-two chassis. The same NBA rules as every human game.</p>
+          <Mark team={construct} size={48} />
+          <h3 style={{ marginTop: 8 }}>{construct.name}</h3>
+          <p className="style-name">{constructStyle.name}</p>
+          <p>{construct.motto} Twenty-two chassis. The same NBA rules as every human game.</p>
         </Link>
         <p className="note">The Concord’s mark is the human ring. {CONCORD_TEAM.motto}</p>
       </section>

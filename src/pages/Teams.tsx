@@ -3,6 +3,7 @@ import { useState } from "react";
 import { TEAMS } from "../data";
 import { Mark } from "../components/Marks";
 import { kindLabel } from "../lib/format";
+import { styleOfTeam } from "../lib/styleFor";
 
 const FILTERS = ["All", "Country", "Overflow", "Homeland", "Construct"] as const;
 
@@ -25,6 +26,7 @@ export function Teams() {
             <Mark team={team} size={42} />
             <span className="tag">{kindLabel(team.kind)} · {team.country}</span>
             <h3>{team.name}</h3>
+            <p className="style-name">{styleOfTeam(team).name}</p>
             <p>{team.motto}</p>
           </Link>
         ))}

@@ -1,7 +1,10 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { StylePanel } from "../components/StylePanel";
 import { ScoreTable } from "../components/ScoreTable";
-import { TEAMS } from "../data";
+import { TEAMS, TEAM_BY_ID } from "../data";
+import { meetStyles } from "../engine/style";
+import { styleKicker, styleOfTeam } from "../lib/styleFor";
 import { freshSeed, formatSeed } from "../engine/rng";
 import { seriesRecord } from "../engine/series";
 import { playQuick } from "../engine/side";
@@ -12,6 +15,10 @@ export function QuickSeries() {
   const [seed, setSeed] = useState(() => freshSeed());
   const [watch, setWatch] = useState<number | null>(null);
   const ready = home !== away;
+  const homeTeam = TEAM_BY_ID[home];
+  const awayTeam = TEAM_BY_ID[away];
+  const homeStyle = homeTeam ? styleOfTeam(homeTeam) : null;
+  const awayStyle = awayTeam ? styleOfTeam(awayTeam) : null;
   const series = useMemo(() => (ready ? playQuick(home, away, seed, false) : null), [home, away, seed, ready]);
   const watched = useMemo(() => (ready && watch !== null ? playQuick(home, away, seed, true).games[watch] : null), [home, away, seed, watch, ready]);
   const record = series ? seriesRecord(series) : null;
@@ -32,6 +39,15 @@ export function QuickSeries() {
         <button className="solid" type="button" disabled={!ready} onClick={() => { setSeed(freshSeed()); setWatch(null); }}>Run it again</button>
         <Link className="text-btn" to="/play">All floors</Link>
       </div>
+      {ready && homeStyle && awayStyle && homeTeam && awayTeam ? (
+        <>
+          <div className="style-pair">
+            <StylePanel style={awayStyle} kicker={styleKicker(away, awayTeam.name)} />
+            <StylePanel style={homeStyle} kicker={styleKicker(home, homeTeam.name)} />
+          </div>
+          <p className="note">{meetStyles(awayTeam.name, awayStyle, homeTeam.name, homeStyle)}</p>
+        </>
+      ) : null}
       {series && record ? (
         <>
           <p className="scoreline">{series.winnerId === series.homeId ? series.homeName : series.awayName} {record.winnerWins}–{record.loserWins}</p>
