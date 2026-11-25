@@ -1,3 +1,4 @@
+import { Link } from "react-router-dom";
 import { playerById, TEAM_BY_ID } from "../data";
 import { PlayerLink } from "../components/Marks";
 import { usePantheon } from "../state/store";
@@ -21,15 +22,22 @@ export function Awards() {
     ["Sixth man", awards.sixthId],
     ["Breakout", awards.breakoutId],
   ] as const;
+  const mvp = playerById(awards.mvpId);
+  const mvpTeam = mvp ? TEAM_BY_ID[mvp.teamId] : undefined;
   return (
     <main className="page">
       <p className="kicker">Official games only</p>
-      <h2 className="display" style={{ fontSize: 68 }}>Honors</h2>
+      <h2 className="display" style={{ fontSize: "clamp(48px, 8vw, 76px)" }}>Honors</h2>
       <p className="lede">
         MVP weights the box and a deep run. Finals MVP is the best night on the champion in the final. Sixth man started half the games or fewer. Breakout is production above the rating, kept to players at 90 or under.
       </p>
-      <div className="award-grid" style={{ marginTop: 18 }}>
-        {cards.map(([label, id]) => {
+      <article className="panel ceremony" style={{ borderTop: `3px solid ${mvpTeam?.colors.primary ?? "var(--gold)"}` }}>
+        <span className="tag">Tournament MVP</span>
+        <h3 className="display"><PlayerLink id={awards.mvpId} /></h3>
+        <p>{mvpTeam?.name} · {mvp?.pos} · prime {mvp?.primeYear} · {mvp?.ratings.ovr}</p>
+      </article>
+      <div className="award-grid" style={{ marginTop: 14 }}>
+        {cards.filter(([label]) => label !== "Tournament MVP").map(([label, id]) => {
           const player = playerById(id);
           const team = player ? TEAM_BY_ID[player.teamId] : undefined;
           return (
@@ -42,7 +50,24 @@ export function Awards() {
         })}
       </div>
       <section className="section">
-        <TeamList title="All-Tournament first" ids={awards.firstTeam} />
+        <div className="section-head">
+          <h3>All-Tournament first</h3>
+          <span className="quiet">Open a prime, then the nights</span>
+        </div>
+        <div className="nameplates">
+          {awards.firstTeam.map((id) => {
+            const player = playerById(id);
+            const team = player ? TEAM_BY_ID[player.teamId] : undefined;
+            return (
+              <Link key={id} to={`/players/${id}`} className="panel nameplate" style={{ borderTop: `3px solid ${team?.colors.primary ?? "var(--gold)"}` }}>
+                <span className="tag">{team?.code} · {player?.pos}</span>
+                <h3>{player?.name}</h3>
+                <span className="plate-ovr">{player?.ratings.ovr}</span>
+                <p>{player?.primeYear} · {team?.name}</p>
+              </Link>
+            );
+          })}
+        </div>
         <TeamList title="All-Tournament second" ids={awards.secondTeam} />
       </section>
     </main>

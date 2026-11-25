@@ -7,8 +7,12 @@ import {
   olympicVerdict,
   olympicsLockLine,
   olympicsUnlock,
+  draftOlympicPrime,
+  olympicMeetReading,
   openOlympicFinal,
   playOlympics,
+  readOlympicSide,
+  releaseOlympicPrime,
   rerollOlympic,
   startOlympicBuild,
   takeOlympicPrime,
@@ -432,6 +436,37 @@ if (!openedFinal || !clincher || openedFinal.homeScore !== clincher.homeScore ||
 }
 console.log("OLYMPICS", olympicVerdict(olympics).line);
 console.log("OLY FIELD", olympics.field.map((side) => `${side.kind}:${side.name}`).join(" | "));
+const offCard = PLAYERS.find((player) => !isConstructed(player) && !plainCard.offer?.playerIds.includes(player.id));
+if (!offCard) fail("every human prime was on the first Olympic card");
+else {
+  const drafted = draftOlympicPrime(plainCard, offCard.id);
+  if (drafted === plainCard || drafted.rosterIds[0] !== offCard.id) fail("a prime off the card could not be drafted");
+  if (releaseOlympicPrime(drafted, offCard.id).rosterIds.length !== 0) fail("releasing a drafted prime left them seated");
+}
+const byNation = new Map<string, string[]>();
+for (const player of PLAYERS) {
+  if (isConstructed(player)) continue;
+  const list = byNation.get(player.nationality) ?? [];
+  list.push(player.id);
+  byNation.set(player.nationality, list);
+}
+const crowded = [...byNation.values()].find((ids) => ids.length >= 4);
+if (!crowded) fail("no nationality has four primes");
+else {
+  let pile = startOlympicBuild(4, 0);
+  for (const id of crowded.slice(0, 4)) pile = draftOlympicPrime(pile, id);
+  if (pile.rosterIds.length !== 3) fail(`draft nationality cap seated ${pile.rosterIds.length}`);
+}
+const unit = PLAYERS.find((player) => isConstructed(player));
+if (!unit || draftOlympicPrime(startOlympicBuild(4, 0), unit.id).rosterIds.length !== 0) fail("the draft took a Construct unit");
+const reading = readOlympicSide(olympicRoster.rosterIds);
+if (!reading.ready || !reading.styleName || reading.humanSides !== 56 || !reading.line.includes("Construct") || !reading.line.includes("human sides")) {
+  fail(`olympic reading did not place the side (${reading.line})`);
+}
+const meetSeat = olympicMeetReading(olympics);
+if (meetSeat.of !== 8 || meetSeat.rank < 1 || meetSeat.rank > 8 || !meetSeat.line.includes("of 8")) {
+  fail(`olympic meet reading missed the field (${meetSeat.line})`);
+}
 
 const sideSeed = 20261125;
 for (const [name, play] of Object.entries(TOY_PLAYS)) {

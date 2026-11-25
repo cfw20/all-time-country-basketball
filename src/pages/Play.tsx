@@ -72,7 +72,7 @@ const DOORS = [
     to: "/olympics",
     kicker: "One bracket, then it closes",
     title: "The Olympics",
-    body: "Roll a temporary side and see if it can live with the countries and the Construct. Every meeting is a best-of-seven. It does not join the draw.",
+    body: "Draft twelve real primes from the book, three from any nationality, and see if that side can live with the countries and the Construct. Every meeting is a best-of-seven. It does not join the draw.",
   },
   {
     to: "/season",

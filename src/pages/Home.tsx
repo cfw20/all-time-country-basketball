@@ -180,9 +180,9 @@ export function Home() {
         <h3>The Olympics</h3>
         <p>
           {olympicSave.meet
-            ? "That window is closed. The report stays until you disband or roll a new side. The side never joins the draw."
+            ? "That window is closed. The report stays until you disband or draft a new side. The side never joins the draw."
             : olympics.open
-              ? "Roll twelve real primes and run them through one eight-team bracket. The side leaves when the bracket ends. It does not join the championship."
+              ? "Draft twelve real primes from the book and see if that side can live in one eight-team bracket. It leaves when the bracket ends. It does not join the championship."
               : olympicsLockLine(olympics)}
         </p>
       </Link>

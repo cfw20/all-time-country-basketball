@@ -5,14 +5,17 @@ import { type SideInput } from "./game";
 import { mixSeed, mulberry32, shuffle } from "./rng";
 import { ERA_CARDS, eraCard, freshCharges, yearUnlock, type Charges, type ResolvedEra } from "./season";
 import { playSeries } from "./series";
+import { readStyle } from "./style";
 import type { TrialSummary } from "./tournament";
 import { teamPower } from "./tournament";
 
-/** The rolled side is not a championship team. This id is absent from TEAMS. */
+/** The drafted side is not a championship team. This id is absent from TEAMS. */
 export const OLY_ID = "oly";
-export const OLY_NAME = "The Rolled Side";
+export const OLY_NAME = "The Drafted Side";
 export const OLY_ROSTER = 12;
 export const OLY_NAT_CAP = 3;
+/** Neutral pace. The same number the Olympic simulator gives this side. */
+export const OLY_PACE = 1;
 const CARD_SIZE = 4;
 const COUNTRY_WINDOW = 10;
 const COUNTRY_PICKS = 4;
@@ -239,7 +242,7 @@ export function olympicVerdict(meet: OlympicMeet): OlympicVerdict {
       eliminatedBy: null,
       pointMargin,
       good: true,
-      line: `The Rolled Side won the Olympics. ${seriesWins} series wins. Point margin ${margin}. They were good enough to take this field.`,
+      line: `${OLY_NAME} won the Olympics. ${seriesWins} series wins. Point margin ${margin}. They were good enough to take this field.`,
     };
   }
   const score = `${Math.max(loss.homeWins, loss.awayWins)}–${Math.min(loss.homeWins, loss.awayWins)}`;
@@ -250,7 +253,7 @@ export function olympicVerdict(meet: OlympicMeet): OlympicVerdict {
       eliminatedBy,
       pointMargin,
       good,
-      line: `${eliminatedBy} beat the Rolled Side ${score} in the quarterfinal. ${seriesWins} series wins. Point margin ${margin}. ${good ? "The scores say the side was good enough to live on this floor." : "They were not good enough for this field."}`,
+      line: `${eliminatedBy} beat ${OLY_NAME} ${score} in the quarterfinal. ${seriesWins} series wins. Point margin ${margin}. ${good ? "The scores say the side was good enough to live on this floor." : "They were not good enough for this field."}`,
     };
   }
   const far = loss.round === "gold" ? "final" : "semifinal";
@@ -260,7 +263,179 @@ export function olympicVerdict(meet: OlympicMeet): OlympicVerdict {
     eliminatedBy,
     pointMargin,
     good: true,
-    line: `The Rolled Side reached the ${far} and lost to ${eliminatedBy} ${score}. ${seriesWins} series wins. Point margin ${margin}. They were good enough to get that far.`,
+    line: `${OLY_NAME} reached the ${far} and lost to ${eliminatedBy} ${score}. ${seriesWins} series wins. Point margin ${margin}. They were good enough to get that far.`,
+  };
+}
+
+export type OlympicOutlook = "empty" | "thin" | "live" | "contender" | "elite";
+
+export interface OlympicStarter {
+  id: string;
+  name: string;
+  pos: string;
+  ovr: number;
+}
+
+/** Power, style, and a seat against the permanent human field. The bracket uses this power. */
+export interface OlympicReading {
+  count: number;
+  power: number;
+  ready: boolean;
+  pace: number;
+  styleName: string | null;
+  styleLine: string | null;
+  starters: OlympicStarter[];
+  /** 1 is the strongest. Null until at least one prime is seated. */
+  humanRank: number | null;
+  humanSides: number;
+  aboveName: string | null;
+  belowName: string | null;
+  constructName: string;
+  constructPower: number;
+  /** Drafted power minus the Construct. Negative means behind. */
+  constructGap: number;
+  outlook: OlympicOutlook;
+  strength: "unfinished" | "thin" | "live" | "contender" | "elite";
+  line: string;
+}
+
+export interface OlympicMeetSeat {
+  rank: number;
+  of: number;
+  line: string;
+}
+
+/**
+ * Any legal prime in the book, not only the name on the current card.
+ * The card API stays for a mulligan. This is the draft.
+ */
+export function draftOlympicPrime(build: OlympicBuild, playerId: string): OlympicBuild {
+  if (build.rosterIds.includes(playerId) || build.rosterIds.length >= OLY_ROSTER) return build;
+  const player = playerById(playerId);
+  if (!player || isConstructed(player)) return build;
+  if (nationCount(build.rosterIds, player.nationality) >= OLY_NAT_CAP) return build;
+  const rosterIds = [...build.rosterIds, playerId];
+  if (rosterIds.length >= OLY_ROSTER) return { ...build, rosterIds, offer: null };
+  const left = build.offer?.playerIds.filter((id) => id !== playerId) ?? [];
+  const offer = build.offer && left.length > 0 ? { ...build.offer, playerIds: left } : null;
+  return { ...build, rosterIds, offer };
+}
+
+export function releaseOlympicPrime(build: OlympicBuild, playerId: string): OlympicBuild {
+  if (!build.rosterIds.includes(playerId)) return build;
+  return { ...build, rosterIds: build.rosterIds.filter((id) => id !== playerId), offer: null };
+}
+
+export function readOlympicSide(ids: string[]): OlympicReading {
+  const rosterIds = ids.filter((id) => {
+    const player = playerById(id);
+    return Boolean(player && !isConstructed(player));
+  });
+  const count = rosterIds.length;
+  const humans = TEAMS.filter((team) => team.kind !== "construct")
+    .map((team) => ({ name: team.name, power: cutPower(team.id, count) }))
+    .sort((a, b) => b.power - a.power || a.name.localeCompare(b.name));
+  const construct = teamById(CONSTRUCT_ID);
+  const constructPower = count > 0 ? cutPower(construct.id, count) : 0;
+  const power = rosterPower(rosterIds);
+  const dressed = dress(rosterIds);
+  const style = rosterIds.length >= 5 ? readStyle({ pace: OLY_PACE, players: dressed, built: false }) : null;
+  const starters = rosterIds.length >= 5
+    ? dressed.slice(0, 5).map((player) => ({ id: player.id, name: player.name, pos: player.pos, ovr: player.ratings.ovr }))
+    : [];
+  let ahead = 0;
+  let aboveName: string | null = null;
+  let belowName: string | null = null;
+  if (rosterIds.length > 0) {
+    for (const row of humans) {
+      const higher = row.power > power || (row.power === power && row.name.localeCompare(OLY_NAME) < 0);
+      if (higher) {
+        ahead += 1;
+        aboveName = row.name;
+      } else if (!belowName) {
+        belowName = row.name;
+      }
+    }
+  }
+  const humanRank = rosterIds.length > 0 ? ahead + 1 : null;
+  const outlook: OlympicOutlook = humanRank === null ? "empty" : outlookOf(humanRank);
+  const ready = olympicRosterLegal(rosterIds);
+  const rounded = Math.round(power);
+  const constructRounded = Math.round(constructPower);
+  const gap = rounded - constructRounded;
+  const cutName = count === 1 ? "best name" : `best ${count}`;
+  const gapText = gap === 0
+    ? `level with the Construct's ${cutName} (${constructRounded})`
+    : gap > 0
+      ? `${gap} ahead of the Construct's ${cutName} (${constructRounded})`
+      : `${-gap} behind the Construct's ${cutName} (${constructRounded})`;
+  const place = aboveName && belowName
+    ? `, between ${aboveName} and ${belowName}`
+    : aboveName
+      ? `, just under ${aboveName}`
+      : belowName
+        ? `, just over ${belowName}`
+        : "";
+  let line: string;
+  if (count === 0) {
+    line = "The book is open. Take real primes, at most three from one nationality. Power, style, and a seat against the field show up as the side fills.";
+  } else {
+    const band = ready
+      ? `This side reads ${outlook}.`
+      : `The side is unfinished. If these names tipped tonight they would read ${outlook}.`;
+    const seat = (humanRank ?? humans.length + 1) > humans.length
+      ? `Power ${rounded}, against the best ${count} on each human side, would sit behind all ${humans.length} human sides${place}`
+      : `Power ${rounded}, against the best ${count} on each human side, would sit ${ordinal(humanRank ?? humans.length)} of ${humans.length} human sides${place}`;
+    const door = ready
+      ? "The meet seeds the other sides on their full books and this side on these twelve, so the twelve open on the lower line. The side stays out of the championship draw."
+      : `${OLY_ROSTER - count} seats remain.`;
+    line = `${band} ${seat}, ${gapText}. ${door}`;
+  }
+  return {
+    count: rosterIds.length,
+    power,
+    ready,
+    pace: OLY_PACE,
+    styleName: style?.name ?? null,
+    styleLine: style?.line ?? null,
+    starters,
+    humanRank,
+    humanSides: humans.length,
+    aboveName,
+    belowName,
+    constructName: construct.name,
+    constructPower,
+    constructGap: gap,
+    outlook,
+    strength: ready && outlook !== "empty" ? outlook : "unfinished",
+    line,
+  };
+}
+
+/** Where the drafted side sat inside the eight that actually played. */
+export function olympicMeetReading(meet: OlympicMeet): OlympicMeetSeat {
+  const ordered = [...meet.field].sort((a, b) => b.power - a.power || a.name.localeCompare(b.name));
+  const index = ordered.findIndex((side) => side.id === OLY_ID);
+  const rank = index >= 0 ? index + 1 : ordered.length;
+  const above = rank > 1 ? ordered[rank - 2] : null;
+  const below = ordered[rank] ?? null;
+  const mine = ordered[index] ?? null;
+  const construct = ordered.find((side) => side.kind === "construct");
+  const place = above && below
+    ? `between ${above.name} and ${below.name}`
+    : above
+      ? `behind ${above.name}`
+      : below
+        ? `ahead of ${below.name}`
+        : "in the field";
+  const constructBit = construct
+    ? ` The Construct sat ${ordinal(ordered.indexOf(construct) + 1)} at power ${Math.round(construct.power)}.`
+    : "";
+  const powerBit = mine ? ` (${Math.round(mine.power)})` : "";
+  return {
+    rank,
+    of: ordered.length,
+    line: `In this meet the drafted side sat ${ordinal(rank)} of ${ordered.length} by seeding power${powerBit}, ${place}. Seeding uses full books for the other sides and these twelve for the drafted side.${constructBit}`,
   };
 }
 
@@ -373,7 +548,7 @@ function byPower(a: OlympicSide, b: OlympicSide): [OlympicSide, OlympicSide] {
 }
 
 function sideFor(id: string, rosterIds: string[]): SideInput {
-  if (id === OLY_ID) return { id: OLY_ID, name: OLY_NAME, pace: 1, players: dress(rosterIds) };
+  if (id === OLY_ID) return { id: OLY_ID, name: OLY_NAME, pace: OLY_PACE, players: dress(rosterIds) };
   const team = teamById(id);
   return { id: team.id, name: team.name, pace: team.pace, players: rosterOf(team.id) };
 }
@@ -426,6 +601,17 @@ function nationCount(ids: string[], nationality: string): number {
     if (playerById(id)?.nationality === nationality) count += 1;
   }
   return count;
+}
+
+/** The best `count` names on a side, dressed the same way as an Olympic roster. */
+function cutPower(teamId: string, count: number): number {
+  if (count <= 0) return 0;
+  const ids = rosterOf(teamId)
+    .slice()
+    .sort((a, b) => b.ratings.ovr - a.ratings.ovr || a.name.localeCompare(b.name))
+    .slice(0, count)
+    .map((player) => player.id);
+  return rosterPower(ids);
 }
 
 function rosterPower(ids: string[]): number {
@@ -497,4 +683,22 @@ function weighted<T>(items: T[], weight: (item: T) => number, rng: () => number)
 
 function num(value: number | undefined): number {
   return typeof value === "number" && Number.isFinite(value) ? Math.max(0, value) : 0;
+}
+
+function outlookOf(rank: number): Exclude<OlympicOutlook, "empty"> {
+  if (rank <= 4) return "elite";
+  if (rank <= 12) return "contender";
+  if (rank <= 28) return "live";
+  return "thin";
+}
+
+function ordinal(n: number): string {
+  const mod = n % 100;
+  if (mod >= 11 && mod <= 13) return `${n}th`;
+  switch (n % 10) {
+    case 1: return `${n}st`;
+    case 2: return `${n}nd`;
+    case 3: return `${n}rd`;
+    default: return `${n}th`;
+  }
 }

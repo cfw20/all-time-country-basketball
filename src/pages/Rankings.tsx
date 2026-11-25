@@ -86,6 +86,7 @@ export function Rankings() {
         <Link className="text-btn" to="/trials">Trials</Link>
       </div>
       <p className="quiet board-order">Order: {SORT_LABEL[sort]}. {ordered.length} sides, the full field, including the Construct.</p>
+      <FieldRail rows={ordered.slice(0, 8)} />
 
       <div className="podium">
         {podium.map((row, index) => (
@@ -163,6 +164,20 @@ export function Rankings() {
         <Link to="/leaders">Per-game leaders</Link>
       </p>
     </main>
+  );
+}
+
+function FieldRail({ rows }: { rows: { team: { id: string; name: string; code: string; colors: { primary: string } }; power: number }[] }) {
+  const peak = Math.max(...rows.map((row) => row.power), 1);
+  return (
+    <div className="field-rail" aria-label="The first eight on this board">
+      {rows.map((row) => (
+        <Link key={row.team.id} to={`/teams/${row.team.id}`} title={row.team.name}>
+          <i style={{ height: Math.max(18, Math.round((row.power / peak) * 112)), background: row.team.colors.primary }} />
+          <span>{row.team.code}</span>
+        </Link>
+      ))}
+    </div>
   );
 }
 

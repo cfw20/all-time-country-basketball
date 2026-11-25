@@ -79,6 +79,18 @@ export function SeriesPage() {
         <span>{holeFact}</span>
         <span>NBA rules. No home-court scoring bonus.</span>
       </div>
+      <div className="series-lamps">
+        {rows.map(({ game }, index) => {
+          const seriesWinnerWon = game.winnerId === series.winnerId;
+          return (
+            <Link key={game.id} to={`/games/${game.id}`} className={seriesWinnerWon ? "win" : ""}>
+              <span className="tag">Game {index + 1}{game.ot ? " · OT" : ""}</span>
+              <strong>{game.awayScore}–{game.homeScore}</strong>
+              <span>{game.winnerId === game.homeId ? game.homeName : game.awayName}</span>
+            </Link>
+          );
+        })}
+      </div>
       {awayStyle && homeStyle ? (
         <section className="section">
           <div className="section-head">

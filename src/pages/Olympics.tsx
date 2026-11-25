@@ -1,29 +1,44 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
 import { ScoreTable } from "../components/ScoreTable";
-import { playerById } from "../data";
-import type { GameResult } from "../data/types";
+import { isConstructed, PLAYERS, playerById } from "../data";
+import type { GameResult, Pos } from "../data/types";
+import { readPlayerStyle } from "../engine/style";
 import {
   OLY_ID,
+  OLY_NAT_CAP,
   OLY_ROSTER,
+  draftOlympicPrime,
   earnedOlympicBoosters,
+  olympicMeetReading,
   olympicRosterLegal,
   olympicVerdict,
   olympicsLockLine,
   olympicsUnlock,
   openOlympicFinal,
   playOlympics,
-  rerollOlympic,
+  readOlympicSide,
+  releaseOlympicPrime,
   startOlympicBuild,
-  takeOlympicPrime,
   type OlympicBuild,
   type OlympicMeet,
+  type OlympicReading,
   type OlympicSeriesLine,
 } from "../engine/olympics";
 import { formatSeed, freshSeed } from "../engine/rng";
 import { loadYear } from "../state/yearBook";
 import { EMPTY_OLYMPICS, loadOlympics, saveOlympics, type OlympicSave } from "../state/olympicsBook";
 import { usePantheon } from "../state/store";
+
+const POSITIONS: Array<Pos | "ALL"> = ["ALL", "PG", "SG", "SF", "PF", "C"];
+const PAGE = 36;
+
+const FAR_TITLE: Record<ReturnType<typeof olympicVerdict>["far"], string> = {
+  gold: "Won the Olympics",
+  final: "Reached the final",
+  semifinal: "Reached the semifinal",
+  quarterfinal: "Out in the quarterfinal",
+};
 
 export function Olympics() {
   const { trials } = usePantheon();
@@ -44,7 +59,7 @@ export function Olympics() {
         <h2 className="display">The Olympics</h2>
         <p className="lede">{olympicsLockLine(unlock)}</p>
         <p className="lede">
-          A rolled side of twelve real primes can enter one eight-team bracket. It is not a 46th team, and countries still do not recruit.
+          When the door opens, you draft twelve real primes from the book. At most three from one nationality. No Construct units. The side plays one eight-team bracket and then leaves. It is not in the championship draw, and it does not write the country standings.
         </p>
         <div className="filters">
           <Link className="text-btn" to="/trials">Trials</Link>
@@ -54,121 +69,65 @@ export function Olympics() {
     );
   }
 
-  if (saved.meet) return <Report meet={saved.meet} finalGame={finalGame} onOpen={() => setFinalGame(openOlympicFinal(saved.meet as OlympicMeet))} onNew={begin} onDisband={disband} />;
-
-  const build = saved.build;
-  if (build && olympicRosterLegal(build.rosterIds)) {
+  if (saved.meet) {
     return (
-      <main className="page" data-floor="olympics" data-state="ready">
-        <p className="kicker">Olympics · seed {formatSeed(build.seed)} · 12/{OLY_ROSTER}</p>
-        <h2 className="display">The side is rolled.</h2>
-        <p className="lede">
-          Enter them for one Olympics: this side, the Construct, four countries, and two houses. First to four. Neutral floor. When the bracket ends, that window is closed.
-        </p>
-        {note ? <p className="scoreline">{note}</p> : null}
-        <Roster ids={build.rosterIds} />
-        <div className="filters">
-          <button className="solid" type="button" disabled={running} onClick={() => enter(build)}>
-            {running ? "The bracket is being played" : "Enter the Olympics"}
-          </button>
-          <button type="button" onClick={disband}>Disband</button>
-        </div>
-      </main>
+      <Report
+        meet={saved.meet}
+        finalGame={finalGame}
+        onOpen={() => setFinalGame(openOlympicFinal(saved.meet as OlympicMeet))}
+        onNew={begin}
+        onDisband={disband}
+      />
     );
   }
 
-  if (build) {
+  if (!saved.build) {
     return (
-      <main className="page" data-floor="olympics" data-state="rolling">
-        <p className="kicker">Olympics · seed {formatSeed(build.seed)} · {build.rosterIds.length}/{OLY_ROSTER}</p>
-        <h2 className="display">Roll the side.</h2>
+      <main className="page" data-floor="olympics" data-state="open">
+        <p className="kicker">Side floor · draft night</p>
+        <h2 className="display">Draft night</h2>
         <p className="lede">
-          A roll is a small card of real primes. Take one. The shuffle is the luck. One mulligan is free. Further rolls spend a booster already earned on the Unbroken Year, and the year keeps its own copy.
+          Choose twelve real primes from the book. At most three share a nationality. The reading tells you whether the side is good before you enter: power, style, and where that card sits against the human field and the Construct. Then one eight-team bracket, first to four. The side never joins the championship.
         </p>
-        <p className="quiet">
-          Free mulligan {build.mulligan} · Earned boosters {build.boosters}
-          {nationLine(build.rosterIds) ? ` · ${nationLine(build.rosterIds)}` : ""}
-        </p>
-        {note ? <p className="scoreline">{note}</p> : null}
-        {build.offer ? (
-          <article className={`panel era-card${build.offer.tier === "myth" ? " myth" : ""}`}>
-            <span className="tag">{build.offer.tier === "book" ? "Open book" : `${build.offer.years} · ${build.offer.tier}`}</span>
-            <h3 className="display" style={{ fontSize: "clamp(32px, 5vw, 40px)" }}>{build.offer.years} {build.offer.franchise}</h3>
-            <p>{build.offer.line}</p>
-            <div className="era-list">
-              {build.offer.playerIds.map((id) => {
-                const player = playerById(id);
-                if (!player) return null;
-                const used = nationCount(build.rosterIds, player.nationality);
-                return (
-                  <div key={id} className="era-pick">
-                    <div>
-                      <Link to={`/players/${player.id}`}><strong>{player.name}</strong></Link>
-                      <span className="quiet"> {player.pos}{player.pos2 ? `/${player.pos2}` : ""} · {player.primeYear} · {player.nationality} · {player.ratings.ovr}</span>
-                      {used > 0 ? <div className="badges"><span className="badge">{player.nationality} {used}/3 on the side</span></div> : null}
-                    </div>
-                    <button type="button" onClick={() => commit(takeOlympicPrime(build, id))}>Take</button>
-                  </div>
-                );
-              })}
-            </div>
-          </article>
-        ) : (
-          <p className="empty">No legal prime is left under the cap. Disband and roll again.</p>
-        )}
-        <div className="filters">
-          <button
-            type="button"
-            disabled={!build.offer || (build.mulligan <= 0 && build.boosters <= 0)}
-            onClick={() => {
-              const next = rerollOlympic(build);
-              if (next === build) setNote("No mulligan and no earned booster. Take a prime from this card.");
-              else commit(next);
-            }}
-          >
-            {build.mulligan > 0 ? "Mulligan" : build.boosters > 0 ? `Use a booster · ${build.boosters}` : "No roll left"}
-          </button>
-          <button type="button" onClick={disband}>Disband</button>
+        <div className="stat-grid">
+          <div className="panel">
+            <span className="tag">The book</span>
+            <h3>The whole pool</h3>
+            <p>Every human prime is available. The board offers eight of the best still legal. You set the pick, then you take them.</p>
+          </div>
+          <div className="panel">
+            <span className="tag">The side</span>
+            <h3>Twelve seats</h3>
+            <p>Draft order is the order you take them. The night opens the five the simulator would start. No Construct units.</p>
+          </div>
+          <div className="panel">
+            <span className="tag">The reading</span>
+            <h3>Before the meet</h3>
+            <p>Power is the minute-weighted card the bracket uses to seed. Style is the opening five. It is a reading, not a tactic.</p>
+          </div>
+          <div className="panel">
+            <span className="tag">The meet</span>
+            <h3>First to four</h3>
+            <p>Your side, the Construct, four countries, and two houses. Neutral floor. The report says how far they went.</p>
+          </div>
         </div>
-        <Roster ids={build.rosterIds} />
+        <div className="filters">
+          <button className="solid" type="button" onClick={begin}>Open the draft</button>
+          <Link className="text-btn" to="/play">Side floors</Link>
+        </div>
       </main>
     );
   }
 
   return (
-    <main className="page" data-floor="olympics" data-state="open">
-      <p className="kicker">Side floor · one window</p>
-      <h2 className="display">The Olympics</h2>
-      <p className="lede">
-        Roll twelve real primes, then play one bracket. The side is temporary. It does not join the championship draw.
-      </p>
-      <div className="stat-grid">
-        <div className="panel">
-          <span className="tag">The side</span>
-          <h3>Twelve humans</h3>
-          <p>At most three from one nationality. No Construct units. You take one name from a shuffled card.</p>
-        </div>
-        <div className="panel">
-          <span className="tag">The field</span>
-          <h3>Eight sides</h3>
-          <p>Your side, the Construct, four countries, and two houses from the top of the book.</p>
-        </div>
-        <div className="panel">
-          <span className="tag">The rules</span>
-          <h3>First to four</h3>
-          <p>NBA rules. Neutral floor. The Construct is the same side as in the siege.</p>
-        </div>
-        <div className="panel">
-          <span className="tag">The window</span>
-          <h3>One run</h3>
-          <p>The report stays until you disband or roll a new side. It never stays in the draw.</p>
-        </div>
-      </div>
-      <div className="filters">
-        <button className="solid" type="button" onClick={begin}>Roll a side</button>
-        <Link className="text-btn" to="/play">Side floors</Link>
-      </div>
-    </main>
+    <DraftNight
+      build={saved.build}
+      running={running}
+      note={note}
+      onCommit={commit}
+      onEnter={() => enter(saved.build as OlympicBuild)}
+      onDisband={disband}
+    />
   );
 
   function begin() {
@@ -210,6 +169,245 @@ export function Olympics() {
   }
 }
 
+function DraftNight({
+  build,
+  running,
+  note,
+  onCommit,
+  onEnter,
+  onDisband,
+}: {
+  build: OlympicBuild;
+  running: boolean;
+  note: string;
+  onCommit: (next: OlympicBuild) => void;
+  onEnter: () => void;
+  onDisband: () => void;
+}) {
+  const [focus, setFocus] = useState<string | null>(null);
+  const [query, setQuery] = useState("");
+  const [pos, setPos] = useState<Pos | "ALL">("ALL");
+  const [nation, setNation] = useState("ALL");
+  const [shown, setShown] = useState(PAGE);
+  const reading = useMemo(() => readOlympicSide(build.rosterIds), [build.rosterIds]);
+  const seated = useMemo(() => new Set(build.rosterIds), [build.rosterIds]);
+  const counts = useMemo(() => nationCounts(build.rosterIds), [build.rosterIds]);
+  const humans = useMemo(() => PLAYERS.filter((player) => !isConstructed(player)), []);
+  const nations = useMemo(
+    () => [...new Set(humans.map((player) => player.nationality))].sort((a, b) => a.localeCompare(b)),
+    [humans],
+  );
+  const board = useMemo(() => {
+    return humans
+      .filter((player) => !seated.has(player.id) && (counts.get(player.nationality) ?? 0) < OLY_NAT_CAP)
+      .slice()
+      .sort((a, b) => b.ratings.ovr - a.ratings.ovr || a.name.localeCompare(b.name))
+      .slice(0, 8);
+  }, [humans, seated, counts]);
+  const pool = useMemo(() => {
+    const needle = query.trim().toLowerCase();
+    return humans
+      .filter((player) => {
+        if (seated.has(player.id)) return false;
+        if (pos !== "ALL" && player.pos !== pos && player.pos2 !== pos) return false;
+        if (nation !== "ALL" && player.nationality !== nation) return false;
+        if (!needle) return true;
+        return player.name.toLowerCase().includes(needle) || player.nationality.toLowerCase().includes(needle);
+      })
+      .slice()
+      .sort((a, b) => b.ratings.ovr - a.ratings.ovr || a.name.localeCompare(b.name));
+  }, [humans, seated, pos, nation, query]);
+  const visible = pool.slice(0, shown);
+  const focused = focus ? playerById(focus) : undefined;
+  const legalFocus = Boolean(focused && draftOlympicPrime(build, focused.id) !== build);
+  const preview = legalFocus && focused ? readOlympicSide([...build.rosterIds, focused.id]) : null;
+
+  useEffect(() => {
+    setShown(PAGE);
+  }, [query, pos, nation]);
+
+  useEffect(() => {
+    if (focus && seated.has(focus)) setFocus(board[0]?.id ?? null);
+  }, [focus, seated, board]);
+
+  return (
+    <main className="page" data-floor="olympics" data-state="draft" data-ready={reading.ready ? "yes" : "no"}>
+      <p className="kicker">Olympics · seed {formatSeed(build.seed)} · {build.rosterIds.length}/{OLY_ROSTER}</p>
+      <h2 className="display">Draft night</h2>
+      <p className="lede">
+        Set a pick from the board or the pool, then take them. The side on the left is who you already have. Release a seat if you want the name back in the book.
+      </p>
+      {note ? <p className="scoreline">{note}</p> : null}
+      <Reading reading={reading} />
+      <div className="draft-layout">
+        <section className="panel">
+          <span className="tag">On the side</span>
+          <h3>The drafted side</h3>
+          <p className="quiet nation-line">{nationLine(build.rosterIds) || "No seats yet"}</p>
+          <div className="nation-meters">
+            {[...counts.entries()]
+              .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
+              .map(([name, count]) => (
+                <span key={name}>{name} {count}/{OLY_NAT_CAP}</span>
+              ))}
+          </div>
+          <div className="roster-slots">
+            {Array.from({ length: OLY_ROSTER }, (_, index) => {
+              const player = playerById(build.rosterIds[index] ?? "");
+              const opener = player ? reading.starters.some((starter) => starter.id === player.id) : false;
+              return (
+                <div key={player?.id ?? `empty-${index}`} className={`slot panel${player ? "" : " empty"}`}>
+                  {player ? (
+                    <>
+                      <Link to={`/players/${player.id}`}><strong>{player.name}</strong></Link>
+                      <span className="quiet">
+                        {player.pos}{player.pos2 ? `/${player.pos2}` : ""} · {player.primeYear} · {player.nationality} · {player.ratings.ovr}
+                        {opener ? " · opens" : ""}
+                      </span>
+                      <button type="button" onClick={() => onCommit(releaseOlympicPrime(build, player.id))}>Release</button>
+                    </>
+                  ) : (
+                    <span className="quiet">Open seat</span>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+          {reading.starters.length === 5 ? (
+            <p className="note">Opens {reading.starters.map((starter) => `${starter.name} (${starter.pos})`).join(" · ")}. That five is who the simulator starts. Style is a reading of them, not a tactic you call.</p>
+          ) : (
+            <p className="note">Five primes open a style and an opening five. Until then the power is only the names already taken.</p>
+          )}
+        </section>
+        <section className="panel pick-sheet">
+          <span className="tag">The pick</span>
+          {focused ? (
+            <>
+              <h3><Link to={`/players/${focused.id}`}>{focused.name}</Link></h3>
+              <p className="quiet">
+                {focused.pos}{focused.pos2 ? `/${focused.pos2}` : ""} · {focused.primeYear} · {focused.nationality} · {focused.ratings.ovr}
+                {" · "}{readPlayerStyle(focused).name}
+              </p>
+              <p>{readPlayerStyle(focused).line}</p>
+              <p className="note">{focused.nationality} {counts.get(focused.nationality) ?? 0}/{OLY_NAT_CAP} already seated.</p>
+              {preview ? (
+                <>
+                  <p>{preview.line}</p>
+                  {preview.styleName ? <p className="note">With them, the style reads {preview.styleName}. {preview.styleLine}</p> : null}
+                  <div className="filters">
+                    <button className="solid" type="button" onClick={() => onCommit(draftOlympicPrime(build, focused.id))}>Take {focused.name}</button>
+                  </div>
+                </>
+              ) : (
+                <p>{takeBlock(build, focused.id, counts)}</p>
+              )}
+            </>
+          ) : (
+            <>
+              <h3>Nobody is on the clock.</h3>
+              <p>Choose a name from the board or the pool. The pick stays here, with the style and the seat they would give the side, until you take them.</p>
+            </>
+          )}
+          <div className="filters">
+            <button className="solid" type="button" disabled={running || !reading.ready} onClick={onEnter}>
+              {running ? "The bracket is being played" : reading.ready ? "Enter the Olympics" : `Need ${OLY_ROSTER - build.rosterIds.length} more`}
+            </button>
+            <button type="button" onClick={onDisband}>Disband</button>
+          </div>
+        </section>
+      </div>
+      <section className="section pool-wrap">
+        <div className="section-head">
+          <h3>The board</h3>
+          <span className="quiet">Eight of the best still legal</span>
+        </div>
+        <div className="draft-board">
+          {board.length === 0 ? (
+            <p className="empty">{reading.ready ? "The side is full. Release a seat to bring a name back." : "No legal prime is left under the cap."}</p>
+          ) : null}
+          {board.map((player) => (
+            <button
+              key={player.id}
+              type="button"
+              className={`board-name${focus === player.id ? " on" : ""}`}
+              onClick={() => setFocus(player.id)}
+            >
+              <strong>{player.name}</strong>
+              <span className="meta">{player.pos} · {player.primeYear} · {player.nationality} · {player.ratings.ovr}</span>
+            </button>
+          ))}
+        </div>
+        <div className="section-head">
+          <h3>The pool</h3>
+          <span className="quiet">{pool.length} names under this filter · {build.rosterIds.length} seated</span>
+        </div>
+        <div className="filters">
+          <input
+            value={query}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder="Search the book"
+            aria-label="Search the book"
+          />
+          {POSITIONS.map((item) => (
+            <button key={item} type="button" className={pos === item ? "on" : ""} onClick={() => setPos(item)}>
+              {item === "ALL" ? "All spots" : item}
+            </button>
+          ))}
+          <select value={nation} aria-label="Nationality" onChange={(event) => setNation(event.target.value)}>
+            <option value="ALL">All nationalities</option>
+            {nations.map((item) => <option key={item} value={item}>{item}</option>)}
+          </select>
+        </div>
+        <div className="pool-scroll">
+          {visible.map((player) => {
+            const capped = (counts.get(player.nationality) ?? 0) >= OLY_NAT_CAP;
+            return (
+              <button
+                key={player.id}
+                type="button"
+                className={`pool-row${focus === player.id ? " on" : ""}${capped ? " cap" : ""}`}
+                onClick={() => setFocus(player.id)}
+              >
+                <span>
+                  <strong>{player.name}</strong>
+                  <span className="meta">{player.pos}{player.pos2 ? `/${player.pos2}` : ""} · {player.primeYear} · {player.nationality} · {player.ratings.ovr} · {readPlayerStyle(player).name}</span>
+                </span>
+                <span className="quiet">{capped ? "Cap" : "Pick"}</span>
+              </button>
+            );
+          })}
+          {visible.length === 0 ? <p className="empty">No prime matches that filter.</p> : null}
+        </div>
+        {shown < pool.length ? (
+          <div className="filters">
+            <button type="button" onClick={() => setShown((value) => value + PAGE)}>Show more of the book</button>
+            <span className="quiet">Showing {visible.length} of {pool.length}</span>
+          </div>
+        ) : null}
+      </section>
+    </main>
+  );
+}
+
+function Reading({ reading }: { reading: OlympicReading }) {
+  const tag = reading.count === 0
+    ? "Open book"
+    : reading.ready
+      ? `${reading.strength} · ready`
+      : `${reading.outlook} so far · ${reading.count}/${OLY_ROSTER}`;
+  return (
+    <article className="panel reading">
+      <span className="tag">{tag}</span>
+      <div className="reading-power">{reading.count === 0 ? "—" : Math.round(reading.power)}</div>
+      <p className="quiet">Power · minute-weighted card · pace {reading.pace.toFixed(2)}</p>
+      <h3>{reading.styleName ?? "Style waits on five"}</h3>
+      {reading.styleLine ? <p>{reading.styleLine}</p> : null}
+      <p>{reading.line}</p>
+      <p className="note">The rank is this pile against the best same number of names on each human side. Elite is a top-four cut. Contender is inside twelve. Live is the top half. Thin is below that. The Construct is quoted on its own cut. The meet seeds the other sides on their full books.</p>
+    </article>
+  );
+}
+
 function Report({
   meet,
   finalGame,
@@ -224,15 +422,56 @@ function Report({
   onDisband: () => void;
 }) {
   const verdict = olympicVerdict(meet);
+  const reading = readOlympicSide(meet.rosterIds);
+  const seat = olympicMeetReading(meet);
   const quarters = meet.series.filter((series) => series.round === "qf");
   const semis = meet.series.filter((series) => series.round === "sf");
   const gold = meet.series.find((series) => series.round === "gold");
+  const maxPower = Math.max(...meet.field.map((side) => side.power), 1);
+  const ranked = [...meet.field].sort((a, b) => b.power - a.power || a.name.localeCompare(b.name));
+  const steps: Array<{ round: OlympicSeriesLine["round"]; label: string }> = [
+    { round: "qf", label: "Quarterfinal" },
+    { round: "sf", label: "Semifinal" },
+    { round: "gold", label: "Final" },
+  ];
   return (
     <main className="page" data-floor="olympics" data-state="filed">
       <p className="kicker">Olympics · seed {formatSeed(meet.seed)} · window closed</p>
-      <h2 className="display">That window is closed.</h2>
+      <h2 className="display">{FAR_TITLE[verdict.far]}</h2>
       <p className="lede">{verdict.line}</p>
-      <p>The side is not in the championship. Roll a new one, or disband, and this report goes with it.</p>
+      <p>The side is not in the championship, and this meet did not write the country standings. Draft a new side, or disband, and the report goes with it.</p>
+      <Reading reading={reading} />
+      <p className="note">{seat.line}</p>
+      <section className="section">
+        <div className="section-head">
+          <h3>How far</h3>
+          <span className="quiet">Your side only · first to four</span>
+        </div>
+        <ol className="oly-path">
+          {steps.map((step) => {
+            const series = meet.series.find((item) => item.round === step.round && (item.homeId === OLY_ID || item.awayId === OLY_ID));
+            if (!series) {
+              return (
+                <li key={step.round}>
+                  <span className="tag">{step.label}</span>
+                  <strong>Did not reach</strong>
+                </li>
+              );
+            }
+            const win = series.winnerId === OLY_ID;
+            const foe = series.homeId === OLY_ID ? series.awayName : series.homeName;
+            const us = series.homeId === OLY_ID ? series.homeWins : series.awayWins;
+            const them = series.homeId === OLY_ID ? series.awayWins : series.homeWins;
+            return (
+              <li key={step.round} className={win ? "win" : "loss"}>
+                <span className="tag">{step.label}</span>
+                <strong>{win ? "Won" : "Lost"} {us}–{them}</strong>
+                <span>{foe}</span>
+              </li>
+            );
+          })}
+        </ol>
+      </section>
       <section className="section">
         <div className="section-head">
           <h3>Quarterfinals</h3>
@@ -258,23 +497,25 @@ function Report({
           {finalGame ? <ScoreTable game={finalGame} /> : null}
         </section>
       ) : null}
-      <Roster ids={meet.rosterIds} />
+      <Roster ids={meet.rosterIds} starters={reading.starters.map((starter) => starter.id)} />
       <section className="section">
         <div className="section-head">
-          <h3>The field</h3>
-          <span className="quiet">Eight sides, then they leave</span>
+          <h3>This field</h3>
+          <span className="quiet">Eight sides, seeded by the same power</span>
         </div>
-        <div className="team-grid">
-          {meet.field.map((side) => (
-            <article key={side.id} className="panel">
-              <span className="tag">{kindLabel(side.kind)}</span>
-              <h3>{side.name}</h3>
+        <div className="meet-list">
+          {ranked.map((side, index) => (
+            <article key={side.id} className={`meet-row${side.id === OLY_ID ? " mine" : ""}`}>
+              <span className="tag">{index + 1} · {kindLabel(side.kind)}</span>
+              <strong>{side.name}</strong>
+              <span className="track" aria-hidden="true"><span style={{ width: `${Math.max(8, (side.power / maxPower) * 100)}%` }} /></span>
+              <b>{Math.round(side.power)}</b>
             </article>
           ))}
         </div>
       </section>
       <div className="filters">
-        <button className="solid" type="button" onClick={onNew}>Roll a new side</button>
+        <button className="solid" type="button" onClick={onNew}>Draft a new side</button>
         <button type="button" onClick={onDisband}>Disband</button>
         <Link className="text-btn" to="/play">Side floors</Link>
       </div>
@@ -301,26 +542,25 @@ function SeriesCard({ series }: { series: OlympicSeriesLine }) {
   );
 }
 
-function Roster({ ids }: { ids: string[] }) {
+function Roster({ ids, starters }: { ids: string[]; starters: string[] }) {
+  const opening = new Set(starters);
   return (
     <section className="section">
       <div className="section-head">
-        <h3>The Rolled Side</h3>
-        <span className="quiet">{ids.length}/{OLY_ROSTER} · {nationLine(ids) || "no seats yet"}</span>
+        <h3>The Drafted Side</h3>
+        <span className="quiet">{ids.length}/{OLY_ROSTER} · {nationLine(ids) || "no seats"}</span>
       </div>
       <div className="roster-slots">
-        {Array.from({ length: OLY_ROSTER }, (_, index) => {
-          const player = playerById(ids[index] ?? "");
+        {ids.map((id) => {
+          const player = playerById(id);
+          if (!player) return null;
           return (
-            <div key={player?.id ?? `empty-${index}`} className={`slot panel${player ? "" : " empty"}`}>
-              {player ? (
-                <>
-                  <Link to={`/players/${player.id}`}><strong>{player.name}</strong></Link>
-                  <span className="quiet">{player.pos}{player.pos2 ? `/${player.pos2}` : ""} · {player.primeYear} · {player.nationality} · {player.ratings.ovr}</span>
-                </>
-              ) : (
-                <span className="quiet">Open seat</span>
-              )}
+            <div key={player.id} className="slot panel">
+              <Link to={`/players/${player.id}`}><strong>{player.name}</strong></Link>
+              <span className="quiet">
+                {player.pos}{player.pos2 ? `/${player.pos2}` : ""} · {player.primeYear} · {player.nationality} · {player.ratings.ovr}
+                {opening.has(player.id) ? " · opens" : ""}
+              </span>
             </div>
           );
         })}
@@ -329,25 +569,35 @@ function Roster({ ids }: { ids: string[] }) {
   );
 }
 
-function nationCount(ids: string[], nationality: string): number {
-  return ids.filter((id) => playerById(id)?.nationality === nationality).length;
+function takeBlock(build: OlympicBuild, playerId: string, counts: Map<string, number>): string {
+  if (build.rosterIds.length >= OLY_ROSTER) return "The side is full. Release a seat to take someone else.";
+  const player = playerById(playerId);
+  if (!player) return "That prime is not in the book.";
+  if (isConstructed(player)) return "Construct units stay off this side.";
+  if ((counts.get(player.nationality) ?? 0) >= OLY_NAT_CAP) return `Three names from ${player.nationality} are already seated.`;
+  if (build.rosterIds.includes(playerId)) return "That prime is already on the side.";
+  return "That prime cannot be taken.";
 }
 
-function nationLine(ids: string[]): string {
+function nationCounts(ids: string[]): Map<string, number> {
   const counts = new Map<string, number>();
   for (const id of ids) {
     const nationality = playerById(id)?.nationality;
     if (!nationality) continue;
     counts.set(nationality, (counts.get(nationality) ?? 0) + 1);
   }
-  return [...counts.entries()]
+  return counts;
+}
+
+function nationLine(ids: string[]): string {
+  return [...nationCounts(ids).entries()]
     .sort((a, b) => b[1] - a[1] || a[0].localeCompare(b[0]))
-    .map(([nationality, count]) => `${nationality} ${count}/3`)
+    .map(([nationality, count]) => `${nationality} ${count}/${OLY_NAT_CAP}`)
     .join(" · ");
 }
 
 function kindLabel(kind: OlympicMeet["field"][number]["kind"]): string {
-  if (kind === "rolled") return "Rolled side";
+  if (kind === "rolled") return "Drafted side";
   if (kind === "construct") return "Construct";
   if (kind === "overflow") return "Overflow";
   if (kind === "homeland") return "Homeland";

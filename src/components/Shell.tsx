@@ -33,6 +33,11 @@ export function Shell() {
         <span className="orb orb-a" />
         <span className="orb orb-b" />
         <span className="orb orb-c" />
+        <span className="orb orb-d" />
+        <span className="orb orb-e" />
+        <span className="comet" />
+        <span className="shard" />
+        <span className="gate" />
         <span className="horizon" />
         <svg className="constellation" viewBox="0 0 1440 900" preserveAspectRatio="xMidYMid slice">
           <g fill="none" stroke="rgba(201,182,255,0.4)" strokeWidth="1.1">
@@ -50,6 +55,16 @@ export function Shell() {
           </g>
           <g fill="none" stroke="rgba(240,167,181,0.32)" strokeWidth="1">
             <path d="M980 460 L1110 410 L1180 540 L1050 590 Z" />
+            <path d="M980 460 L1050 590" />
+            <path d="M1110 410 L1180 540" />
+          </g>
+          <g fill="none" stroke="rgba(231,194,122,0.28)" strokeWidth="1">
+            <path d="M620 120 L700 70 L760 150 L660 190 Z" />
+            <path d="M300 160 C 420 90, 560 140, 640 80" />
+          </g>
+          <g fill="none" stroke="rgba(143,208,198,0.28)" strokeWidth="1">
+            <ellipse cx="860" cy="240" rx="70" ry="22" transform="rotate(-20 860 240)" />
+            <circle cx="860" cy="240" r="16" />
           </g>
           <g fill="#f6ead7">
             <circle cx="260" cy="412" r="2" />
@@ -67,6 +82,14 @@ export function Shell() {
             <circle cx="760" cy="250" r="1.2" />
             <circle cx="420" cy="780" r="1.5" />
             <circle cx="1320" cy="360" r="1.4" />
+            <circle cx="700" cy="70" r="1.6" />
+            <circle cx="760" cy="150" r="1.3" />
+            <circle cx="620" cy="120" r="1.2" />
+            <circle cx="860" cy="224" r="1.5" />
+            <circle cx="210" cy="96" r="1.2" />
+            <circle cx="990" cy="210" r="1.1" />
+            <circle cx="150" cy="300" r="1.3" />
+            <circle cx="1180" cy="280" r="1.2" />
           </g>
         </svg>
         <span className="vignette" />
