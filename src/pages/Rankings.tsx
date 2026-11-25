@@ -9,12 +9,20 @@ import { finishName, kindLabel, signed } from "../lib/format";
 import { teamLine } from "../lib/stats";
 import { usePantheon } from "../state/store";
 
-type SortKey = "power" | "draw" | "titles";
+type SortKey = "power" | "series" | "margin" | "finish" | "titles";
+
+const SORT_LABEL: Record<SortKey, string> = {
+  power: "Power, the card before tip",
+  series: "Series wins in this draw",
+  margin: "Point margin in this draw",
+  finish: "Finish of this draw",
+  titles: "Country titles in this browser",
+};
 
 export function Rankings() {
   const { tournament, trials } = usePantheon();
-  const played = tournament.series.some((series) => !series.exhibition);
-  const [sort, setSort] = useState<SortKey>(played ? "draw" : "power");
+  const crowned = TEAMS.some((team) => tournament.finishes[team.id] === 1);
+  const [sort, setSort] = useState<SortKey>(crowned ? "finish" : "power");
   const titles = useMemo(() => titleBook(trials), [trials]);
   const siege = siegeSeries(tournament.siege);
   const rows = TEAMS.map((team) => {
@@ -46,12 +54,16 @@ export function Rankings() {
     if (sort === "titles") {
       return b.titles - a.titles || b.finals - a.finals || b.top4 - a.top4 || b.power - a.power;
     }
-    if (sort === "draw") {
-      const aRate = a.wins + a.losses ? a.wins / (a.wins + a.losses) : -1;
-      const bRate = b.wins + b.losses ? b.wins / (b.wins + b.losses) : -1;
-      return bRate - aRate || b.diff - a.diff || b.power - a.power || a.team.name.localeCompare(b.team.name);
+    if (sort === "series") {
+      return b.wins - a.wins || b.diff - a.diff || b.power - a.power || a.team.name.localeCompare(b.team.name);
     }
-    return b.power - a.power;
+    if (sort === "margin") {
+      return b.diff - a.diff || b.wins - a.wins || b.power - a.power || a.team.name.localeCompare(b.team.name);
+    }
+    if (sort === "finish") {
+      return finishRank(a) - finishRank(b) || b.power - a.power || a.team.name.localeCompare(b.team.name);
+    }
+    return b.power - a.power || a.team.name.localeCompare(b.team.name);
   });
   const podium = ordered.filter((row) => (sort === "titles" ? !row.built : true)).slice(0, 3);
 
@@ -64,13 +76,16 @@ export function Rankings() {
       </p>
       <div className="filters">
         <button type="button" className={sort === "power" ? "on" : ""} onClick={() => setSort("power")}>Power</button>
-        <button type="button" className={sort === "draw" ? "on" : ""} onClick={() => setSort("draw")}>This draw</button>
+        <button type="button" className={sort === "series" ? "on" : ""} onClick={() => setSort("series")}>Series wins</button>
+        <button type="button" className={sort === "margin" ? "on" : ""} onClick={() => setSort("margin")}>Margin</button>
+        <button type="button" className={sort === "finish" ? "on" : ""} onClick={() => setSort("finish")}>Finish</button>
         <button type="button" className={sort === "titles" ? "on" : ""} onClick={() => setSort("titles")} disabled={trials.length === 0}>Titles</button>
         <Link className="text-btn" to="/compare">Set two beside each other</Link>
         <Link className="text-btn" to="/leaders">Leaders</Link>
         <Link className="text-btn" to="/schedule">Series</Link>
         <Link className="text-btn" to="/trials">Trials</Link>
       </div>
+      <p className="quiet board-order">Order: {SORT_LABEL[sort]}. {ordered.length} sides, the full field, including the Construct.</p>
 
       <div className="podium">
         {podium.map((row, index) => (
@@ -86,8 +101,8 @@ export function Rankings() {
         ))}
       </div>
 
-      <div className="lab-scroll" style={{ marginTop: 18 }}>
-        <table>
+      <div className="board" data-rows={ordered.length}>
+        <table className="board-table">
           <thead>
             <tr>
               <th className="num">#</th>
@@ -108,13 +123,13 @@ export function Rankings() {
                 <td className="num">{index + 1}</td>
                 <td>
                   <Link to={`/teams/${row.team.id}`}>{row.team.name}</Link>
-                  <div className="split">{kindLabel(row.team.kind)} · {row.team.code}</div>
+                  <div className="split">{sideMark(row.built, row.team.kind, row.team.code)}</div>
                 </td>
                 <td className="num">{Math.round(row.power)}</td>
                 <td className="num">{row.wins}-{row.losses}</td>
-                <td className="num">{row.games.w + row.games.l ? `${row.games.w}-${row.games.l}` : "—"}</td>
+                <td className="num">{gamesCell(row.games)}</td>
                 <td className="num">{row.games.w + row.games.l ? signed(row.diff) : "—"}</td>
-                <td>{row.built ? "Outside the draw" : row.finish ? finishName(row.finish) : "—"}</td>
+                <td>{finishCell(row.built, row.finish)}</td>
                 <td className="num">{row.siegePlayed ? `${row.siegeWins}-${row.siegePlayed - row.siegeWins}` : "—"}</td>
                 {trials.length > 0 ? <td className="num">{row.built ? "—" : `${row.titles}/${row.trialN || trials.length}`}</td> : null}
                 <td><Link to={`/compare?side=${row.team.id}`}>Beside</Link></td>
@@ -122,6 +137,24 @@ export function Rankings() {
             ))}
           </tbody>
         </table>
+        <div className="board-cards">
+          {ordered.map((row, index) => (
+            <article key={row.team.id} className={row.team.id === CONSTRUCT_ID ? "board-card me" : "board-card"} style={{ borderTop: `3px solid ${row.team.colors.primary}` }}>
+              <span className="tag">{index + 1} · {sideMark(row.built, row.team.kind, row.team.code)}</span>
+              <h3><Link to={`/teams/${row.team.id}`}>{row.team.name}</Link></h3>
+              <p>{finishCell(row.built, row.finish)}</p>
+              <p className="nums">
+                <span>{Math.round(row.power)} power</span>
+                <span>series {row.wins}-{row.losses}</span>
+                <span>games {gamesCell(row.games)}</span>
+                <span>{row.games.w + row.games.l ? signed(row.diff) : "—"}</span>
+                <span>siege {row.siegePlayed ? `${row.siegeWins}-${row.siegePlayed - row.siegeWins}` : "—"}</span>
+                {trials.length > 0 ? <span>{row.built ? "no country title" : `${row.titles} titles`}</span> : null}
+              </p>
+              <Link to={`/compare?side=${row.team.id}`}>Set beside another side</Link>
+            </article>
+          ))}
+        </div>
       </div>
       <p className="note">
         Series on a human row are the country draw, first to four. The Construct’s series line is the siege: arrival, the gate, and the restoration. Honors stay on the country games. Open a side for the series list, then a prime, then the night.
@@ -131,6 +164,23 @@ export function Rankings() {
       </p>
     </main>
   );
+}
+
+function finishRank(row: { built: boolean; finish?: number }): number {
+  if (row.built || !row.finish) return 99;
+  return row.finish;
+}
+
+function sideMark(built: boolean, kind: string, code: string): string {
+  return built ? "Construct · outside the draw" : `${kindLabel(kind)} · ${code}`;
+}
+
+function finishCell(built: boolean, finish?: number): string {
+  return built ? "Outside the draw" : finish ? finishName(finish) : "—";
+}
+
+function gamesCell(games: { w: number; l: number }): string {
+  return games.w + games.l ? `${games.w}-${games.l}` : "—";
 }
 
 function inSeries(series: SeriesResult, teamId: string): boolean {

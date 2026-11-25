@@ -3,7 +3,7 @@ import { rosterOf, sideById, TEAM_BY_ID } from "../data";
 import { dutyLabel, minuteTarget, statusLabel } from "../data/ratings";
 import { Mark } from "../components/Marks";
 import { StylePanel } from "../components/StylePanel";
-import type { SeriesResult } from "../data/types";
+import type { Player, SeriesResult } from "../data/types";
 import { readPlayerStyle } from "../engine/style";
 import { finishName, kindLabel, one, pct, placeLine, trueShooting } from "../lib/format";
 import { styleOfTeam } from "../lib/styleFor";
@@ -80,7 +80,16 @@ export function TeamPage() {
         </div>
       </section>
       <section className="section">
-        <div className="section-head"><h3>Roster</h3><span className="quiet">{built ? "Unit class is the minute band" : "Minute target is the band. FG and 3P are this draw's box."}</span></div>
+        <div className="section-head">
+          <h3>The book</h3>
+          <span className="quiet">{roster.length} seats · {built ? "chassis bands" : "contract is the minute band"}</span>
+        </div>
+        <RosterBand title="Opening five" players={roster.filter((player) => player.starts)} built={built} />
+        <RosterBand title="Rotation" players={roster.filter((player) => !player.starts && !deepSeat(player))} built={built} />
+        <RosterBand title="Deep and short seats" players={roster.filter((player) => !player.starts && deepSeat(player))} built={built} />
+      </section>
+      <section className="section">
+        <div className="section-head"><h3>This draw</h3><span className="quiet">{built ? "Unit class is the minute band" : "The same 22. FG and 3P are this draw's box."}</span></div>
         <div style={{ overflowX: "auto" }}>
           <table>
             <thead>
@@ -133,6 +142,34 @@ export function TeamPage() {
         </>
       )}
     </main>
+  );
+}
+
+function deepSeat(player: Player): boolean {
+  return player.role === "deep" || player.role === "two-way" || player.contract === "ten-day" || player.contract === "exhibit-10" || player.contract === "hardship" || player.contract === "short";
+}
+
+function RosterBand({ title, players, built }: { title: string; players: Player[]; built: boolean }) {
+  const ordered = players.slice().sort((a, b) => minuteTarget(b) - minuteTarget(a) || b.ratings.ovr - a.ratings.ovr || a.name.localeCompare(b.name));
+  return (
+    <div>
+      <h3 className="subhead">{title} <span className="quiet">{ordered.length}</span></h3>
+      <div className="roster-band">
+        {ordered.map((player) => (
+          <Link key={player.id} to={`/players/${player.id}`} className="roster-seat">
+            <strong>{player.name}</strong>
+            <b>{player.ratings.ovr}</b>
+            <span>
+              {player.pos}{player.pos2 ? `/${player.pos2}` : ""}
+              {" · "}{dutyLabel(player.role, built)}
+              {" · "}{statusLabel(player.contract, built)}
+              {" · "}{minuteTarget(player)} min
+              {" · "}{built ? "Built" : player.primeYear}
+            </span>
+          </Link>
+        ))}
+      </div>
+    </div>
   );
 }
 

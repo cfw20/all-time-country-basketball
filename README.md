@@ -56,13 +56,13 @@ No FIBA quarter length, foul limit, or roster cap is used anywhere in the event.
 
 ## The field
 
-Eighteen countries that can fill a competitive all-time book, twenty-six American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
+Eighteen countries that can fill a competitive all-time book, thirty-four American overflow houses, four homeland houses, and the Construct. The Concord is assembled per draw and is not an extra side in the groups.
 
 Countries that cannot fill twenty-two competitive primes are not in the draw. Their best players chose a homeland house instead of carrying a weak national side. The Teams page lists every side.
 
 ## The competition
 
-Thirteen groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
+Fourteen groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
 
 Those sixteen are seeded by pre-draw power, 1 against 16. Every knockout round is first to four, including the final and the third-place series. Neutral floors. The better power seed is listed as home for games 1, 2, 5, and 7. Games 3, 4, and 6 flip the card. There is no home-court scoring bonus.
 
@@ -76,7 +76,7 @@ After a game or a series, the players who just played can run six tiny games: Ho
 
 ## Comparing draws
 
-Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v9`. An older `pantheon-v8` save does not reopen, because the field changed. Rankings at `/rankings` order every side by power, this draw’s series record, and point differential, and they show the siege. Compare at `/compare` sets two primes or two sides beside each other.
+Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v10`. An older `pantheon-v9` save does not reopen, because the field changed. Rankings at `/rankings` list every human side and the Construct, and order them by power, series wins, point margin, finish, or country titles. Compare at `/compare` sets any two primes or any two sides beside each other.
 
 A series page lists every game, the running tally, and the series sheet. A game page has the line score, the night sheet, team shooting and true shooting, a short list of the plays that swung it, the full possession log, and the after-the-horn games. Player pages carry a game log, offensive and defensive boards, and clutch. Team pages list the opening five and every series. The look is a fantasy sci-fi floor. The games are NBA basketball, played at the prime on each card.
 

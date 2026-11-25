@@ -1,7 +1,7 @@
 import { useMemo } from "react";
 import { Link, useSearchParams } from "react-router-dom";
 import { isConstructed, PLAYERS, TEAM_BY_ID, TEAMS } from "../data";
-import { archLabel, dutyLabel, formatHeight, roleRank } from "../data/ratings";
+import { archLabel, dutyLabel, formatHeight, roleRank, statusLabel } from "../data/ratings";
 import { Mark } from "../components/Marks";
 import { readPlayerStyle } from "../engine/style";
 import type { Player, Pos, Role } from "../data/types";
@@ -114,7 +114,7 @@ export function Players() {
                   <strong>{player.name}</strong>
                   <b className="mono">{player.ratings.ovr}</b>
                   <span className="meta">
-                    {look.name} · {player.pos}{player.pos2 ? ` / ${player.pos2}` : ""} · {archLabel(player.arch)} · {formatHeight(player.height)} · {built ? "Built" : player.primeYear} · {dutyLabel(player.role, built)} · {player.starts ? "Opens" : "Bench"} · {player.nationality}
+                    {look.name} · {player.pos}{player.pos2 ? ` / ${player.pos2}` : ""} · {archLabel(player.arch)} · {formatHeight(player.height)} · {built ? "Built" : player.primeYear} · {dutyLabel(player.role, built)} · {statusLabel(player.contract, built)} · {player.starts ? "Opens" : "Bench"} · {player.nationality}
                   </span>
                 </Link>
               );

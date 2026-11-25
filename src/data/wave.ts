@@ -1,6 +1,6 @@
 import type { Team } from "./types";
 
-/** Four more overflow houses. Real primes the houses above them never minuted. */
+/** Overflow houses past the first cut. Real primes the houses above them never minuted. */
 function house(
   id: string,
   rank: number,
@@ -78,6 +78,54 @@ export const WAVE_TEAMS: Team[] = [
     "The edge that still catches light.",
     "Coby White, Willie Wise, Happy Hairston, Bob Kauffman, and Tom Meschery. All-Star primes and the 2025 scoring guard the mountain never found a night for. The edge of the book, and still a series.",
     1.01,
+  ),
+  house(
+    "mull",
+    31,
+    "The Mullion",
+    "MUL",
+    "#f0a7b5",
+    "#5c2a44",
+    "diamond",
+    "The bar that holds the glass.",
+    "Jimmy Jones, Otis Birdsong, Billy Knight, Marvin Barnes, and Ed Macauley. ABA All-Stars and an NBA All-Star center whose 1956 season still sits inside the window. Americans the houses above them never minuted.",
+    1.02,
+  ),
+  house(
+    "quon",
+    32,
+    "The Quoin",
+    "QUN",
+    "#e4d2b0",
+    "#5c4632",
+    "arch",
+    "The stone at the corner.",
+    "Larry Brown, Larry Jones, Doug Moe, Antonio Davis, and Joe Barry Carroll. The corner where the ABA book and a later All-Star big still hold. A house, further down the mountain, and still a series.",
+    0.98,
+  ),
+  house(
+    "apse",
+    33,
+    "The Apse",
+    "APS",
+    "#c9b6ff",
+    "#3a2a62",
+    "ring",
+    "The curve behind the altar.",
+    "Ty Lawson, Dick Garmaker, Eddie Johnson, Keith Van Horn, and Rony Seikaly. A curve of primes from the 1950s through the 2010s. The minutes above them were gone. The primes were not.",
+    1.02,
+  ),
+  house(
+    "spir",
+    34,
+    "The Spire",
+    "SPR",
+    "#9fd6ff",
+    "#1d3f5c",
+    "bars",
+    "The point that still clears the roof.",
+    "Johnny Moore, Bob Verga, John Brisker, Jayson Williams, and Elmore Smith. The last American cut: assists, ABA scoring, and a rim that still matters. Not a pile of fillers.",
+    1.0,
   ),
 ];
 
@@ -177,5 +225,101 @@ Jalen Smith|PF|6-10|2022|United States|deep|standard|stretch|78|16|32|0|C|reb:80
 Cason Wallace|PG|6-3|2025|United States|two-way|two-way|defender|79|12|34|0|-|def:86,ath:84,play:72|Defensive guard. The 2025 prime already on record.
 Talen Horton-Tucker|SG|6-4|2021|United States|two-way|two-way|slasher|77|16|28|0|-|ath:84,play:72|The 2021 creation prime.
 Reed Sheppard|PG|6-2|2025|United States|deep|ten-day|shooter|77|14|40|0|-|three:82,play:74|Rated on the 2025 prime already on record. A short seat.
+`,
+  mull: `
+Jimmy Jones|PG|6-4|1971|United States|star|standard|point|84|22|8|1|-|play:86,shot:80,ath:82|ABA All-Star point guard. The Memphis and Utah prime.
+Otis Birdsong|SG|6-3|1981|United States|star|standard|slasher|85|26|8|1|-|shot:86,ath:84,ft:82|Four-time All-Star. The 1981 Kings scoring prime.
+Billy Knight|SF|6-6|1977|United States|star|standard|wing|83|24|16|1|PF|shot:82,ath:82,reb:74|ABA and NBA All-Star forward.
+Marvin Barnes|PF|6-9|1975|United States|star|standard|post|84|24|4|1|-|shot:82,ath:84,reb:84,def:76|ABA All-Star. The Spirits prime, before the years after it.
+Ed Macauley|C|6-8|1956|United States|star|standard|post|84|20|2|1|-|shot:84,play:78,reb:78|Hall of Fame. The 1956 All-Star season is the prime inside the window.
+Ernie DiGregorio|PG|6-0|1974|United States|starter|standard|point|81|18|10|0|-|play:88,shot:76,ft:90|Rookie of the year. The 1974 assist prime, not the years after the knee.
+John Williamson|SG|6-2|1978|United States|starter|standard|slasher|81|24|8|0|-|shot:82,ath:80|Nets scoring guard. The late-1970s prime.
+Dell Curry|SG|6-5|1994|United States|starter|standard|shooter|81|18|40|0|-|three:84,shot:80|Sixth man of the year. The 1994 Hornets prime.
+Don Buse|PG|6-4|1976|United States|rotation|standard|defender|81|14|12|0|-|play:86,def:86,shot:74|ABA assist leader and an All-Defensive guard.
+Fred Brown|SG|6-3|1979|United States|rotation|standard|shooter|80|16|32|0|-|three:80,shot:78|Downtown. The 1979 champion shooter.
+Steve Mix|SF|6-7|1976|United States|rotation|standard|wing|79|16|8|0|-|shot:78,reb:76|1975 All-Star forward.
+Mickey Johnson|PF|6-10|1978|United States|rotation|standard|stretch|80|18|12|0|SF|shot:80,ath:78|Scoring forward of the late 1970s.
+Bob Netolicky|PF|6-9|1970|United States|rotation|standard|post|80|18|4|0|-|shot:78,reb:78|ABA All-Star. The Pacers prime.
+Clifford Ray|C|6-9|1976|United States|deep|standard|rim|80|12|0|0|-|reb:82,def:82|Warriors champion center. The glass and the foul.
+Tree Rollins|C|7-1|1984|United States|deep|standard|rim|80|10|0|0|-|def:84,reb:80|Hawks shot-blocker. The 1984 prime.
+Darel Carrier|SG|6-3|1970|United States|deep|standard|shooter|79|16|20|0|-|shot:80,ft:84|ABA All-Star shooter with the Colonels.
+Mike Newlin|SG|6-5|1978|United States|deep|standard|slasher|79|18|10|0|-|shot:78,ath:78|Rockets scoring guard.
+Frank Selvy|SG|6-3|1955|United States|deep|standard|shooter|79|18|8|0|-|shot:78|All-Star in 1955, the first season inside the window.
+Willie Anderson|SF|6-7|1990|United States|deep|standard|wing|80|18|16|0|SG|shot:78,ath:80,def:76|Spurs wing. Olympic prime, then the 1990 season.
+Avery Johnson|PG|5-11|1999|United States|two-way|two-way|point|79|14|8|0|-|play:84,def:78|The 1999 champion point guard.
+Scott Skiles|PG|6-1|1991|United States|two-way|two-way|point|79|16|20|0|-|play:86,shot:74|The 1991 assist prime.
+Sherman Douglas|PG|6-0|1992|United States|deep|ten-day|point|78|16|16|0|-|play:82,shot:76|Heat and Celtics point guard. A short seat.
+`,
+  quon: `
+Larry Brown|PG|5-11|1969|United States|star|standard|point|82|18|6|1|-|play:88,def:80,shot:74|ABA All-Star point guard. The playing prime, not the coaching years.
+Larry Jones|SG|6-2|1970|United States|star|standard|slasher|83|26|6|1|-|shot:84,ath:80|ABA All-Star scorer. Not the same prime as Jimmy Jones.
+Doug Moe|SF|6-5|1970|United States|star|standard|wing|81|22|8|1|-|shot:80,ath:78,play:74|ABA All-Star forward. The playing prime, before the coaching years.
+Antonio Davis|PF|6-9|2001|United States|star|standard|post|82|18|4|1|C|reb:84,def:78,shot:76|2001 All-Star. The Raptors prime.
+Joe Barry Carroll|C|7-0|1987|United States|star|standard|post|83|22|2|1|-|shot:80,reb:82,def:74|All-Star center. The 1987 Warriors prime.
+Mel Hutchins|PF|6-6|1956|United States|starter|standard|post|82|16|4|0|-|reb:84,def:80,shot:76|Four-time All-Star. The 1956 season is the prime inside the window.
+Byron Beck|C|6-9|1972|United States|starter|standard|post|80|16|2|0|-|shot:78,reb:80|ABA All-Star. The Denver prime.
+Dick Snyder|SG|6-5|1970|United States|starter|standard|shooter|80|18|12|0|-|shot:80,play:74|All-Star guard. The Seattle prime.
+Red Robbins|PF|6-8|1972|United States|rotation|standard|post|80|16|4|0|-|shot:78,reb:78|ABA All-Star forward.
+George Johnson|C|6-11|1978|United States|rotation|standard|rim|79|10|0|0|-|def:86,reb:80|The Warriors shot-blocker. Not a different George Johnson.
+Jim Chones|C|6-11|1976|United States|rotation|standard|post|79|14|2|0|-|shot:76,reb:78|Cavaliers center on the 1976 side.
+Gene Conley|C|6-8|1955|United States|rotation|standard|post|79|14|2|0|-|reb:78,shot:74|All-Star in 1955, inside the window.
+Woody Sauldsberry|PF|6-7|1958|United States|rotation|standard|post|80|16|4|0|-|shot:78,reb:78|Rookie of the year and an All-Star in 1958.
+Larry Smith|PF|6-8|1986|United States|deep|standard|rim|79|14|0|0|-|reb:86,def:78|Warriors glass. The 1986 prime.
+David Greenwood|PF|6-9|1983|United States|deep|standard|post|79|14|4|0|-|reb:80,def:76|Bulls forward of the early 1980s.
+Rodney McCray|SF|6-7|1988|United States|deep|standard|glue|78|14|12|0|-|def:78,play:74|Rockets and Kings wing.
+Jay Vincent|SF|6-7|1983|United States|deep|standard|slasher|79|18|8|0|PF|shot:78|Mavericks scoring forward.
+Steve Hawes|C|6-9|1978|United States|deep|standard|post|78|14|4|0|PF|play:74,reb:76|Hawks passing big.
+Cincy Powell|PF|6-7|1971|United States|deep|standard|wing|78|16|6|0|SF|shot:76,ath:78|ABA forward.
+Len Elmore|C|6-10|1976|United States|two-way|two-way|post|78|12|2|0|-|reb:78,def:76|Pacers and Nets center.
+Darnell Hillman|PF|6-9|1976|United States|two-way|two-way|rim|78|12|2|0|-|ath:84,reb:76|ABA athlete. The dunk was the calling card.
+John Paxson|SG|6-2|1993|United States|deep|ten-day|shooter|77|12|36|0|-|three:78,shot:76|Bulls shooter. A short seat under the stars.
+`,
+  apse: `
+Ty Lawson|PG|5-11|2013|United States|star|standard|point|81|22|28|1|-|play:86,ath:86,shot:78|The 2013 Nuggets prime, before the years after it.
+Dick Garmaker|SG|6-3|1957|United States|star|standard|shooter|82|22|8|1|-|shot:82,ft:82|Four-time All-Star. The Minneapolis prime inside the window.
+Eddie Johnson|SF|6-7|1989|United States|star|standard|shooter|82|22|28|1|SG|shot:82,three:78,ath:78|Hawks sixth man of the year in 1989. Not the Kings guard of the same name.
+Keith Van Horn|PF|6-10|2001|United States|star|standard|stretch|81|22|32|1|SF|shot:78,three:76,reb:74|The 2001 Nets scoring prime.
+Rony Seikaly|C|6-11|1992|United States|star|standard|post|81|20|2|1|-|shot:78,reb:84,def:74|Heat center. The 1992 glass season.
+Wesley Matthews|SG|6-5|2015|United States|starter|standard|defender|81|16|40|0|SF|three:82,def:80,shot:76|The 2015 two-way wing prime.
+Lionel Simmons|SF|6-7|1991|United States|starter|standard|wing|80|20|16|0|-|shot:78,reb:74,play:72|Kings forward. The early-1990s prime.
+LaPhonso Ellis|PF|6-8|1994|United States|starter|standard|post|80|18|12|0|-|shot:78,reb:76,def:74|The 1994 Nuggets prime, not the years after the injuries.
+Robert Reid|SF|6-8|1981|United States|rotation|standard|wing|80|16|12|0|-|shot:78,def:76,play:74|Rockets forward beside the stars.
+John Long|SG|6-5|1983|United States|rotation|standard|slasher|80|18|10|0|-|shot:80,ath:78|Pistons scoring guard. The early-1980s prime.
+Mike Dunleavy|SG|6-3|1983|United States|rotation|standard|shooter|80|18|20|0|PG|shot:78,play:76|The playing prime, before the coaching years.
+Bonzi Wells|SF|6-5|2003|United States|rotation|standard|slasher|80|20|16|0|SG|ath:84,shot:78|The 2003 scoring prime.
+Ryan Anderson|PF|6-10|2012|United States|rotation|standard|stretch|80|16|44|0|-|three:84,shot:74,reb:72|The 2012 stretch prime.
+Donyell Marshall|PF|6-9|2004|United States|deep|standard|stretch|79|16|32|0|C|three:76,reb:76|The 2004 stretch season.
+Drew Gooden|PF|6-10|2008|United States|deep|standard|post|79|16|8|0|C|reb:80,shot:76|The 2008 counting prime.
+Elden Campbell|C|6-11|1997|United States|deep|standard|post|80|16|2|0|-|shot:76,reb:76,def:74|Lakers and Hornets center.
+Robin Lopez|C|7-0|2016|United States|deep|standard|rim|79|12|4|0|-|reb:78,def:78|The 2016 rim season.
+Bingo Smith|SF|6-5|1975|United States|deep|standard|shooter|79|16|16|0|SG|shot:78|Cavaliers wing of the mid-1970s.
+Bob Gross|SF|6-6|1977|United States|deep|standard|wing|79|14|12|0|-|def:78,ath:78|Blazers champion wing.
+Vinny Del Negro|PG|6-4|1996|United States|two-way|two-way|point|77|14|28|0|-|play:76,three:74|Spurs and Clippers guard.
+Mario Elie|SF|6-5|1995|United States|two-way|two-way|wing|77|12|36|0|SG|def:78,three:76|Champion wing. A two-way seat.
+Joe Kleine|C|6-11|1991|United States|deep|ten-day|post|77|12|2|0|-|reb:76,def:74|Kings and Celtics center. A short seat.
+`,
+  spir: `
+Johnny Moore|PG|6-1|1982|United States|star|standard|point|82|16|8|1|-|play:88,def:76,shot:74|Spurs point guard. The 1982 assist prime.
+Bob Verga|SG|6-1|1968|United States|star|standard|slasher|82|28|8|1|-|shot:84,ath:80|ABA scoring guard. The Carolina prime.
+John Brisker|SF|6-5|1972|United States|star|standard|slasher|81|24|8|1|-|shot:82,ath:82,def:72|ABA scorer. The 1972 prime.
+Jayson Williams|PF|6-10|1998|United States|star|standard|rim|80|14|0|1|-|reb:88,def:78,shot:72|Nets glass. The 1998 prime, before the injury.
+Elmore Smith|C|7-0|1974|United States|star|standard|rim|81|14|0|1|-|def:88,reb:84,shot:70|Blocks leader. The 1974 Lakers prime.
+Ricky Sobers|PG|6-3|1978|United States|starter|standard|slasher|79|18|10|0|-|shot:78,ath:80,play:74|Suns and Pacers guard.
+Levern Tart|SG|6-2|1970|United States|starter|standard|slasher|79|22|8|0|-|shot:80,ath:80|ABA scoring guard.
+Terry Mills|PF|6-10|1996|United States|starter|standard|stretch|79|16|28|0|-|three:76,shot:74,reb:72|Pistons stretch forward. The 1996 prime.
+Anthony Peeler|SG|6-4|1996|United States|rotation|standard|shooter|79|16|32|0|-|ath:82,three:76|Lakers and Timberwolves guard.
+Albert King|SF|6-6|1984|United States|rotation|standard|wing|79|18|12|0|-|shot:78,ath:80|Nets forward. Not the same prime as Bernard King.
+P.J. Tucker|SF|6-5|2021|United States|rotation|standard|defender|79|12|40|0|PF|def:82,three:78,reb:72|The 2021 corner-and-defense prime.
+Udonis Haslem|PF|6-8|2006|United States|rotation|standard|post|78|12|8|0|-|def:80,reb:78,shot:74|Heat forward. The 2006 prime.
+Chris Morris|SF|6-8|1992|United States|rotation|standard|slasher|78|16|16|0|-|ath:82,shot:76|Nets wing of the early 1990s.
+Olden Polynice|C|7-0|1994|United States|deep|standard|rim|78|12|2|0|-|reb:80,def:76|Rebounder. The 1994 prime.
+Bryant Reeves|C|7-0|1998|United States|deep|standard|post|78|16|2|0|-|shot:76,reb:80|Big Country. The Grizzlies prime, not the years after the body gave out.
+Grant Long|PF|6-9|1992|United States|deep|standard|glue|78|14|12|0|-|reb:76,def:76|Heat and Bucks forward.
+Loy Vaught|PF|6-9|1995|United States|deep|standard|rim|78|14|4|0|-|reb:84,def:74|Clippers glass. The 1995 prime.
+George Lynch|SF|6-8|1997|United States|deep|standard|defender|78|12|16|0|PF|def:80,reb:74|The 1997 defensive wing prime.
+Bryon Russell|SF|6-7|1998|United States|deep|standard|defender|78|12|32|0|-|def:82,ath:78,three:72|Jazz wing. The 1998 prime.
+Lindsey Hunter|PG|6-2|2004|United States|two-way|two-way|defender|78|12|32|0|-|def:82,ath:78|Defensive guard. The 2004 prime.
+Billy Keller|SG|5-10|1973|United States|two-way|two-way|shooter|78|14|20|0|-|shot:78,ft:84|ABA shooter on the Pacers champions.
+Kent Benson|C|6-10|1981|United States|deep|ten-day|post|77|12|2|0|-|reb:76,def:74|Bucks center. A short seat.
 `,
 };

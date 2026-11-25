@@ -22,63 +22,63 @@ Samuel Dalembert|C|6-11|2006|Canada|deep|ten-day|rim|76|12|0|0|-|reb:80,def:76|B
 `,
   plat: `
 Manu Ginobili|SG|6-6|2008|Argentina|star|standard|creator|90|26|40|1|-|shot:84,three:82,play:84,def:78,ath:84,ft:84,clutch:96
-Luis Scola|PF|6-9|2011|Argentina|star|standard|post|84|24|8|1|-|shot:82,reb:80,def:70,ft:78,play:68
-Andres Nocioni|SF|6-7|2006|Argentina|starter|standard|wing|80|18|34|1|-|def:80,ath:78,three:72
-Fabricio Oberto|C|6-10|2007|Argentina|starter|standard|glue|78|12|4|1|-|def:78,reb:74,play:70
-Pablo Prigioni|PG|6-3|2012|Argentina|starter|standard|point|77|12|36|1|-|play:84,def:78,three:78
-Carlos Delfino|SG|6-6|2009|Argentina|rotation|standard|wing|78|16|38|0|-|def:76
-Facundo Campazzo|PG|5-11|2021|Argentina|rotation|standard|point|78|18|38|0|-|play:86,ath:80,def:76
-Gabriel Deck|SF|6-8|2021|Argentina|rotation|standard|glue|76|14|30|0|PF|
-Nicolas Laprovittola|PG|6-3|2018|Argentina|rotation|standard|point|75|16|36|0|-|
-Pepe Sanchez|PG|6-4|2002|Argentina|deep|standard|point|74|10|20|0|-|def:80,play:78
-Walter Herrmann|SF|6-9|2007|Argentina|deep|standard|stretch|75|16|38|0|-|
-Hector Campana|SG|6-5|1992|Argentina|deep|standard|slasher|82|24|16|0|-|shot:84,ath:78|The scoring guard of the Argentine generation before the NBA wave.
-Marcelo Nicola|PF|6-9|1996|Argentina|deep|standard|stretch|73|12|28|0|-|
-Juan Espil|SG|6-3|2001|Argentina|deep|standard|shooter|80|18|32|0|PG|shot:78,three:74|National-team guard. A real Argentine prime.
-Nicolas Brussino|SF|6-8|2017|Argentina|deep|standard|wing|72|12|40|0|-|
-Paolo Quinteros|SG|6-2|2010|Argentina|two-way|two-way|shooter|72|14|38|0|-|
-Leonardo Gutierrez|SF|6-8|2006|Argentina|two-way|two-way|wing|73|12|28|0|-|
-Marcos Delia|C|6-10|2015|Argentina|deep|short|rim|71|10|8|0|-|
+Luis Scola|PF|6-9|2011|Argentina|star|standard|post|85|24|8|1|-|shot:82,reb:80,def:70,ft:78,play:68
+Andres Nocioni|SF|6-7|2006|Argentina|starter|standard|wing|82|18|34|1|-|def:80,ath:78,three:72
+Fabricio Oberto|C|6-10|2007|Argentina|starter|standard|glue|80|12|4|1|-|def:78,reb:74,play:70
+Pablo Prigioni|PG|6-3|2012|Argentina|starter|standard|point|79|12|36|1|-|play:84,def:78,three:78
+Carlos Delfino|SG|6-6|2009|Argentina|rotation|standard|wing|81|16|38|0|-|def:76
+Facundo Campazzo|PG|5-11|2021|Argentina|rotation|standard|point|80|18|38|0|-|play:86,ath:80,def:76
+Gabriel Deck|SF|6-8|2021|Argentina|rotation|standard|glue|79|14|30|0|PF|shot:76,def:74
+Nicolas Laprovittola|PG|6-3|2018|Argentina|rotation|standard|point|79|16|36|0|-|play:84,three:78
+Pepe Sanchez|PG|6-4|2002|Argentina|deep|standard|point|78|10|20|0|-|def:80,play:78
+Walter Herrmann|SF|6-9|2007|Argentina|deep|standard|stretch|78|16|38|0|-|three:76
+Hector Campana|SG|6-5|1992|Argentina|starter|standard|slasher|84|24|16|0|-|shot:84,ath:78|The scoring guard of the Argentine generation before the NBA wave.
+Esteban De la Fuente|SF|6-7|1992|Argentina|deep|standard|wing|78|16|16|0|-|shot:78,ath:76|Atenas wing on the national teams of the early 1990s.
+Juan Espil|SG|6-3|2001|Argentina|rotation|standard|shooter|81|18|32|0|PG|shot:78,three:74|National-team guard. A real Argentine prime.
+Federico Kammerichs|PF|6-9|2004|Argentina|deep|standard|post|78|16|12|0|-|shot:76,reb:76|Olympic forward. The frontcourt seat the later benches had left thin.
+Bruno Labaque|PG|6-1|2004|Argentina|two-way|two-way|point|77|14|28|0|-|play:78,ath:78|Atenas point guard.
+Ruben Wolkowyski|C|6-10|2000|Argentina|two-way|two-way|rim|77|12|4|0|-|reb:78,def:76|Olympic center.
+Diego Osella|C|6-10|1990|Argentina|deep|short|post|77|12|2|0|-|reb:76,shot:74|Atenas center. A short seat under the golden generation.
 `,
   auri: `
 Oscar Schmidt|SF|6-8|1986|Brazil|star|standard|slasher|87|32|16|1|-|shot:90,ath:78,ft:84,def:60|Declined the NBA. Rated for the scoring peak he actually played.
-Leandro Barbosa|SG|6-3|2007|Brazil|star|standard|slasher|80|22|30|1|-|ath:90,shot:78,three:70,ft:84
-Nene Hilario|C|6-11|2012|Brazil|starter|standard|post|80|18|0|1|-|shot:78,reb:76,def:78,ath:74
-Anderson Varejao|PF|6-10|2010|Brazil|starter|standard|rim|77|12|0|1|C|reb:86,def:78,ath:76
-Marcelo Huertas|PG|6-3|2014|Brazil|starter|standard|point|77|16|28|1|-|play:86
-Tiago Splitter|C|6-11|2013|Brazil|starter|standard|post|78|14|0|0|-|def:80,reb:72,shot:74
-Marcelinho Machado|SG|6-4|2008|Brazil|rotation|standard|shooter|78|18|40|0|-|three:80
-Raul Neto|PG|6-2|2018|Brazil|rotation|standard|point|74|14|32|0|-|
-Alex Garcia|PG|6-3|2010|Brazil|rotation|standard|point|75|16|26|0|-|def:76
-Vitor Benite|SG|6-4|2016|Brazil|rotation|standard|shooter|74|14|42|0|-|
-Guilherme Giovannoni|PF|6-9|2010|Brazil|deep|standard|stretch|73|12|32|0|-|
-Rafael Hettsheimeir|C|6-10|2012|Brazil|deep|standard|post|72|12|8|0|-|
-Augusto Lima|PF|6-10|2016|Brazil|deep|standard|glue|72|12|28|0|-|
-Carlos Olivinha|PF|6-9|2015|Brazil|deep|standard|stretch|78|16|28|0|C|shot:76,three:72|Known as Olivinha. Flamengo and the Brazilian national team.
-Bruno Caboclo|SF|6-9|2016|Brazil|deep|standard|wing|71|12|32|0|-|ath:80
-Cristiano Felicio|C|6-10|2016|Brazil|two-way|two-way|rim|69|10|0|0|-|
-Lucas Nogueira|C|7-0|2016|Brazil|two-way|two-way|rim|70|10|4|0|-|ath:78
-Didi Louzada|SG|6-5|2021|Brazil|deep|ten-day|wing|70|12|34|0|-|
+Leandro Barbosa|SG|6-3|2007|Brazil|star|standard|slasher|81|22|30|1|-|ath:90,shot:78,three:70,ft:84
+Nene Hilario|C|6-11|2012|Brazil|starter|standard|post|81|18|0|1|-|shot:78,reb:76,def:78,ath:74
+Anderson Varejao|PF|6-10|2010|Brazil|starter|standard|rim|81|12|0|0|C|reb:86,def:78,ath:76
+Marcelo Huertas|PG|6-3|2014|Brazil|starter|standard|point|80|16|28|1|-|play:86
+Tiago Splitter|C|6-11|2013|Brazil|starter|standard|post|80|14|0|0|-|def:80,reb:72,shot:74
+Marcelinho Machado|SG|6-4|2008|Brazil|rotation|standard|shooter|80|18|40|0|-|three:80
+Raul Neto|PG|6-2|2018|Brazil|rotation|standard|point|76|14|32|0|-|
+Alex Garcia|PG|6-3|2010|Brazil|rotation|standard|point|78|16|26|0|-|def:76
+Vitor Benite|SG|6-4|2016|Brazil|rotation|standard|shooter|76|14|42|0|-|
+Wlamir Marques|SF|6-1|1965|Brazil|starter|standard|slasher|83|24|8|1|SG|shot:82,play:78,ath:80,ft:80|FIBA Hall of Fame. World champion wing. The 1960s prime, not a faded later year.
+Amaury Pasos|PF|6-3|1960|Brazil|rotation|standard|post|82|18|4|0|C|shot:80,reb:78,def:76|FIBA Hall of Fame. The 1960 prime is inside the window.
+Ubiratan Maciel|C|6-7|1970|Brazil|deep|standard|rim|80|14|0|0|-|reb:82,def:78,shot:74|Bira. The center of the 1970s national teams.
+Carlos Olivinha|PF|6-9|2015|Brazil|deep|standard|stretch|80|16|28|0|C|shot:76,three:72|Known as Olivinha. Flamengo and the Brazilian national team.
+Maury de Souza|SF|6-5|1980|Brazil|deep|standard|wing|78|16|12|0|-|shot:78,ath:76|National-team wing of the early 1980s.
+Edvar Simoes|PG|6-1|1972|Brazil|rotation|standard|point|78|16|8|0|-|play:80,shot:74,def:74|The point guard of the 1970s Brazilian sides.
+Lucas Nogueira|C|7-0|2016|Brazil|two-way|two-way|rim|74|10|4|0|-|ath:78
+Didi Louzada|SG|6-5|2021|Brazil|deep|ten-day|wing|74|12|34|0|-|
 `,
   sun: `
-Andrew Gaze|SG|6-7|1994|Australia|star|standard|shooter|85|28|32|1|-|shot:84,three:78,play:74,ft:84
+Andrew Gaze|SG|6-7|1994|Australia|star|standard|shooter|86|28|32|1|-|shot:84,three:78,play:74,ft:84
 Andrew Bogut|C|7-0|2015|Australia|star|standard|rim|84|16|0|1|-|def:90,reb:84,play:70,shot:70,ft:58
 Ben Simmons|PF|6-10|2019|Australia|star|standard|point|84|22|6|1|PG|play:90,def:84,reb:80,ath:90,shot:72,ft:60|Represented Australia. Prime is the All-NBA season, not the decline.
-Patty Mills|PG|6-0|2021|Australia|starter|standard|shooter|81|20|48|1|-|three:86,ath:84,ft:84,clutch:88
+Patty Mills|PG|6-0|2021|Australia|starter|standard|shooter|82|20|48|1|-|three:86,ath:84,ft:84,clutch:88
 Joe Ingles|SF|6-8|2018|Australia|starter|standard|glue|80|14|42|1|-|three:84,play:82,def:76
 Josh Giddey|PG|6-8|2024|Australia|rotation|standard|point|80|18|30|0|-|play:84,reb:74,ath:76
 Matisse Thybulle|SF|6-5|2021|Australia|rotation|standard|defender|80|10|36|0|-|def:94,ath:86,shot:60|American-raised. Represented Australia.
-Dyson Daniels|SG|6-7|2025|Australia|rotation|standard|defender|79|12|30|0|-|def:88,play:74,ath:82|Rated on the prime already on record.
-Matthew Dellavedova|PG|6-4|2016|Australia|rotation|standard|glue|76|12|36|0|-|def:78,three:76,clutch:84
-Aron Baynes|C|6-10|2018|Australia|rotation|standard|post|76|12|20|0|-|reb:76,def:76
-Dante Exum|SG|6-5|2018|Australia|deep|standard|slasher|75|14|28|0|-|ath:86
-Jock Landale|C|6-11|2022|Australia|deep|standard|post|75|12|16|0|-|
-David Andersen|C|6-11|2009|Australia|deep|standard|stretch|74|12|30|0|-|
+Dyson Daniels|SG|6-7|2025|Australia|rotation|standard|defender|83|12|30|0|-|def:88,play:74,ath:82|Rated on the 2025 All-Defense prime already on record.
+Matthew Dellavedova|PG|6-4|2016|Australia|rotation|standard|glue|78|12|36|0|-|def:78,three:76,clutch:84
+Aron Baynes|C|6-10|2018|Australia|rotation|standard|post|79|12|20|0|-|reb:76,def:76
+Dante Exum|SG|6-5|2018|Australia|deep|standard|slasher|78|14|28|0|-|ath:86
+Jock Landale|C|6-11|2022|Australia|deep|standard|post|78|12|16|0|-|
+David Andersen|C|6-11|2009|Australia|deep|standard|stretch|78|12|30|0|-|
 Luc Longley|C|7-2|1996|Australia|deep|standard|post|78|12|0|0|-|reb:74,def:74
-Mark Bradtke|C|6-10|1996|Australia|deep|standard|rim|75|10|0|0|-|
+Leroy Loggins|SF|6-5|1987|Australia|rotation|standard|slasher|83|22|12|0|-|shot:82,ath:84,def:76|American-born. Represented Australia. The NBL prime, not a later fade.
 Shane Heal|PG|6-0|1996|Australia|two-way|two-way|shooter|76|16|40|0|-|
-Thon Maker|C|7-1|2018|Australia|two-way|two-way|rim|72|10|24|0|-|ath:80|Born in South Sudan. Represented Australia.
-Ryan Broekhoff|SF|6-7|2016|Australia|deep|short|shooter|72|12|44|0|-|
+Duop Reath|C|6-10|2024|Australia|two-way|two-way|post|78|14|28|0|-|shot:76,reb:76|Born in South Sudan. Represented Australia. The 2024 prime already on record.
+Phil Smyth|PG|6-0|1988|Australia|deep|short|point|79|14|16|0|-|play:82,def:78|Boomers captain. A short seat under Gaze.
 `,
   grns: `
 Al-Farouq Aminu|SF|6-9|2016|Nigeria|star|standard|glue|78|18|34|1|-|def:80,reb:74,ath:82,three:70

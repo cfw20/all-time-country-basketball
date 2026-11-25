@@ -66,9 +66,9 @@ Karlo Matkovic|C|6-10|2024|Croatia|deep|short|rim|74|12|8|0|-|ath:82,reb:74|Rate
 `,
   alps: `
 Anthony Randolph|PF|6-11|2013|Slovenia|deep|standard|stretch|76|16|28|0|-|ath:84,reb:76|Born in Germany, raised in the United States. Represented Slovenia.
-Mike Tobey|C|7-0|2019|Slovenia|deep|standard|rim|74|12|12|0|-|reb:78|American-born. Represented Slovenia.
-Alen Omic|C|6-11|2016|Slovenia|deep|standard|post|73|14|4|0|-|reb:76
-Aleksej Nikolic|PG|6-3|2018|Slovenia|deep|short|point|72|12|32|0|-|play:76
+Mike Tobey|C|7-0|2019|Slovenia|deep|standard|rim|76|12|12|0|-|reb:78|American-born. Represented Slovenia.
+Peter Vilfan|SF|6-4|1984|Slovenia|deep|standard|wing|80|16|12|0|-|shot:78,play:74|Yugoslav-era wing assigned to Slovenia. The 1980s prime.
+Aleksej Nikolic|PG|6-3|2018|Slovenia|deep|short|point|74|12|32|0|-|play:76
 `,
   ambr: `
 Ignas Brazdeikis|SF|6-6|2021|Lithuania|deep|standard|wing|74|16|34|0|-|ath:82,shot:74|Born in Lithuania, raised in Canada. Represented Lithuania.
@@ -79,20 +79,20 @@ Deividas Sirvydis|SF|6-8|2022|Lithuania|deep|short|shooter|72|12|40|0|-|three:76
   ordr: `
 Nikos Zisis|PG|6-4|2006|Greece|deep|standard|point|74|14|28|0|-|play:80,def:76
 Ioannis Papapetrou|SF|6-8|2017|Greece|deep|standard|wing|75|16|34|0|-|ath:82,three:72
-Fragiskos Alvertis|SF|6-9|1997|Greece|deep|standard|wing|74|14|30|0|-|shot:78
+Fragiskos Alvertis|SF|6-9|1997|Greece|rotation|standard|wing|80|14|30|0|-|shot:78|EuroLeague captain. A real Greek prime the bench had buried.
 Efthimis Rentzias|C|6-11|1998|Greece|deep|short|post|73|14|4|0|-|reb:74
 `,
   plat: `
-Luca Vildoza|PG|6-3|2021|Argentina|deep|standard|point|75|16|36|0|-|play:82,ath:82
-Patricio Garino|SF|6-6|2017|Argentina|deep|standard|wing|73|12|34|0|-|def:76,ath:78
-Leandro Bolmaro|SG|6-6|2022|Argentina|deep|standard|wing|73|14|32|0|-|ath:82,play:74
-Tayavek Gallizzi|C|6-9|2016|Argentina|deep|short|rim|72|10|4|0|-|def:76,reb:74
+Luca Vildoza|PG|6-3|2021|Argentina|deep|standard|point|78|16|36|0|-|play:82,ath:82
+Juan Pedro Gutierrez|PF|6-9|2010|Argentina|deep|standard|post|77|14|8|0|-|reb:76,shot:74|EuroLeague forward known as Juanpi.
+Miguel Cortijo|PG|6-2|1986|Argentina|deep|standard|point|78|16|16|0|-|play:80,def:76|The point guard of the generation before the NBA wave.
+Hernan Jasen|SF|6-8|2008|Argentina|deep|standard|wing|78|14|24|0|PF|shot:76,def:74|EuroLeague forward on the national team.
 `,
   auri: `
-Yago dos Santos|PG|6-0|2024|Brazil|deep|standard|point|76|18|34|0|-|play:84,ath:86
-Scott Machado|PG|6-1|2016|Brazil|deep|standard|point|74|16|34|0|-|play:80|American-born. Represented Brazil.
-Leo Meindl|SF|6-7|2019|Brazil|deep|standard|wing|73|14|36|0|-|three:76
-Davi Rossetto|PG|6-1|2022|Brazil|deep|short|point|72|12|32|0|-|play:74
+Yago dos Santos|PG|6-0|2024|Brazil|deep|standard|point|78|18|34|0|-|play:84,ath:86
+Scott Machado|PG|6-1|2016|Brazil|deep|standard|point|76|16|34|0|-|play:80|American-born. Represented Brazil.
+Marcel de Souza|PF|6-7|1982|Brazil|deep|standard|post|77|14|8|0|SF|shot:76,reb:74|National-team forward beside Maury.
+Helio Rubens|PG|6-1|1978|Brazil|two-way|two-way|point|78|14|12|0|-|play:80,shot:74|Helio Rubens Garcia. Long national-team point guard.
 `,
   sun: `
 Josh Green|SG|6-5|2024|Australia|deep|standard|wing|76|14|36|0|-|ath:86,def:80,three:74
@@ -101,10 +101,10 @@ Matthew Nielsen|PF|6-10|2004|Australia|deep|standard|stretch|78|14|28|0|C|shot:7
 Jack White|SF|6-7|2023|Australia|deep|short|defender|73|10|34|0|-|def:80,ath:82
 `,
   iron: `
-Tristan da Silva|PF|6-8|2025|Germany|deep|standard|stretch|75|14|36|0|-|three:78,play:74|Rated on the prime already on record.
-Johannes Voigtmann|C|7-0|2018|Germany|deep|standard|stretch|74|12|32|0|-|play:76,three:74,reb:72
-Nick Weiler-Babb|SG|6-5|2023|Germany|deep|standard|wing|73|12|32|0|-|def:78,ath:80|American-born. Represented Germany.
-Oscar da Silva|PF|6-9|2022|Germany|deep|short|glue|73|12|24|0|-|play:74,reb:72
+Tristan da Silva|PF|6-8|2025|Germany|deep|standard|stretch|78|14|36|0|-|three:78,play:74|Rated on the prime already on record.
+Johannes Voigtmann|C|7-0|2018|Germany|deep|standard|stretch|78|12|32|0|-|play:76,three:74,reb:72
+Jens Kujawa|PF|6-10|1989|Germany|deep|standard|post|76|12|8|0|-|reb:76,shot:74|National-team big of the late 1980s.
+Sven Schultze|PF|6-9|2005|Germany|deep|short|glue|76|12|16|0|-|reb:74,shot:72|A short seat under Dirk.
 `,
   atlr: `
 Pietro Aradori|SG|6-5|2015|Italy|deep|standard|wing|73|14|36|0|-|three:76
@@ -119,10 +119,10 @@ Daniel Oturu|C|6-10|2022|Nigeria|deep|standard|rim|73|12|8|0|-|reb:78,ath:82
 Michael Gbinije|SG|6-7|2017|Nigeria|deep|short|wing|72|14|32|0|-|ath:82,play:72|Represented Nigeria.
 `,
   crsc: `
-Bobby Dixon|PG|6-0|2012|Turkey|deep|standard|point|74|16|34|0|-|ath:84,play:76|Also known as Ali Muhammed. American-born. Represented Turkey.
-Emir Preldzic|SF|6-9|2012|Turkey|deep|standard|wing|73|14|34|0|-|three:76|Born in Bosnia. Represented Turkey.
-Onuralp Bitim|SG|6-6|2024|Turkey|deep|standard|wing|73|16|36|0|-|ath:80,three:74|Rated on the prime already on record.
-Dogus Balbay|PG|6-0|2011|Turkey|deep|short|defender|72|10|24|0|-|def:80
+Bobby Dixon|PG|6-0|2012|Turkey|deep|standard|point|77|16|34|0|-|ath:84,play:76|Also known as Ali Muhammed. American-born. Represented Turkey.
+Emir Preldzic|SF|6-9|2012|Turkey|deep|standard|wing|77|14|34|0|-|three:76|Born in Bosnia. Represented Turkey.
+Serkan Erdogan|SG|6-5|2004|Turkey|rotation|standard|shooter|79|16|36|0|-|three:78,shot:76|EuroLeague shooter on the national team.
+Efe Aydan|C|6-9|1987|Turkey|deep|short|post|77|12|2|0|-|reb:76,shot:74|National-team center. A short seat.
 `,
   fueg: `
 Walter Hodge|PG|6-0|2011|Puerto Rico|deep|standard|point|74|16|34|0|-|play:78,three:74|Born in the U.S. Virgin Islands. Represented Puerto Rico.
@@ -143,10 +143,10 @@ Jean Jacques Boissy|PG|6-4|2016|Senegal|deep|standard|point|72|14|28|0|-|play:76
 Khalifa Diop|C|6-11|2023|Senegal|deep|short|rim|72|10|4|0|-|def:76,reb:74
 `,
   gate: `
-Kristaps Valters|PG|6-2|2004|Latvia|deep|standard|point|73|16|32|0|-|play:78,ath:80
-Uvis Helmanis|PF|6-9|1998|Latvia|deep|standard|post|73|14|8|0|-|reb:76
-Raimonds Vilde|C|6-10|1988|Latvia|deep|standard|post|72|12|4|0|-|reb:74|Soviet-era career. Assigned to Latvia.
-Ainars Bagatskis|SF|6-8|1993|Latvia|deep|short|wing|72|12|24|0|-|shot:72
+Kristaps Valters|PG|6-2|2004|Latvia|deep|standard|point|76|16|32|0|-|play:78,ath:80
+Uvis Helmanis|PF|6-9|1998|Latvia|deep|standard|post|76|14|8|0|-|reb:76
+Raimonds Vilde|C|6-10|1988|Latvia|deep|standard|post|76|12|4|0|-|reb:74|Soviet-era career. Assigned to Latvia.
+Ainars Bagatskis|SF|6-8|1993|Latvia|deep|short|wing|75|12|24|0|-|shot:72
 `,
   peak: `
 Justin Doellman|PF|6-9|2014|Montenegro|deep|standard|stretch|74|14|34|0|-|three:78,shot:74|American-born. Represented Montenegro.
@@ -194,6 +194,6 @@ Dror Hagag|PG|6-0|1999|Israel|deep|short|point|72|14|30|0|-|play:78,ath:80
 Evgeny Pashutin|SG|6-6|1999|Russia|deep|standard|wing|73|14|32|0|-|shot:76,ath:78
 Zakhar Pashutin|SG|6-4|2002|Russia|deep|standard|shooter|73|16|38|0|-|three:78
 Vasily Karasev|SF|6-7|1994|Russia|deep|standard|wing|73|16|20|0|-|shot:78,play:74
-Sergei Bykov|PG|6-2|2008|Russia|deep|short|point|72|14|32|0|-|play:76
+Sergei Bykov|PG|6-2|2008|Russia|deep|short|point|76|14|32|0|-|play:76
 `,
 };

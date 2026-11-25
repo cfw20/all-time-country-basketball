@@ -1,13 +1,13 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link, useSearchParams } from "react-router-dom";
-import { PLAYERS, TEAMS, playerById, sideById, TEAM_BY_ID } from "../data";
+import { PLAYERS, TEAMS, playerById, rosterOf, sideById, TEAM_BY_ID } from "../data";
 import { Mark } from "../components/Marks";
 import type { GameResult, Player, SeriesResult, Siege, Team } from "../data/types";
 import { seriesRecord } from "../engine/series";
 import { teamPower } from "../engine/tournament";
 import { styleOfTeam } from "../lib/styleFor";
 import { readPlayerStyle } from "../engine/style";
-import { one, pct, signed, trueShooting } from "../lib/format";
+import { kindLabel, one, pct, signed, trueShooting } from "../lib/format";
 import { tally, teamLine, type Tot } from "../lib/stats";
 import { usePantheon } from "../state/store";
 
@@ -96,7 +96,7 @@ export function Compare() {
             />
           </div>
           {left && right ? <PrimeTable left={left} right={right} games={tournament.games} siege={tournament.siege} /> : (
-            <p className="empty">Type two letters. The list stays short on purpose.</p>
+            <p className="empty">Choose a side, then any prime on it. Search still finds a name.</p>
           )}
         </>
       ) : (
@@ -107,7 +107,7 @@ export function Compare() {
             <SideFinder label="Second side" query={otherQ} onQuery={setOtherQ} picks={sidePicks(otherQ, otherId)} selected={other} onPick={(id) => set("other", id)} />
           </div>
           {side && other ? <SideTable left={side} right={other} games={tournament.games} series={tournament.series} siege={tournament.siege} meetings={meetings} /> : (
-            <p className="empty">Name two sides. The Construct is allowed.</p>
+            <p className="empty">Choose any two sides. The Construct is on the list.</p>
           )}
         </>
       )}
@@ -125,10 +125,28 @@ function Finder({
   selected?: Player;
   onPick: (id: string) => void;
 }) {
+  const [browseId, setBrowseId] = useState(selected?.teamId ?? "");
+  const shownSide = browseId || selected?.teamId || "";
+  const book = shownSide ? rosterOf(shownSide) : [];
   return (
     <div className="seek panel">
       <span className="kicker">{label}</span>
-      <input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Type a name" aria-label={label} />
+      <label className="quiet">
+        Side
+        <select aria-label={`${label} side`} value={shownSide} onChange={(event) => setBrowseId(event.target.value)}>
+          <SideOptions />
+        </select>
+      </label>
+      <label className="quiet">
+        Prime
+        <select aria-label={`${label} prime`} value={selected && selected.teamId === shownSide ? selected.id : ""} onChange={(event) => onPick(event.target.value)} disabled={!shownSide}>
+          <option value="">{shownSide ? "Choose a prime" : "Choose a side first"}</option>
+          {book.map((player) => (
+            <option key={player.id} value={player.id}>{player.name} · {player.pos} · {player.ratings.ovr}</option>
+          ))}
+        </select>
+      </label>
+      <input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Or type a name" aria-label={label} />
       {selected ? (
         <p className="chosen">
           <Link to={`/players/${selected.id}`}>{selected.name}</Link>
@@ -160,7 +178,13 @@ function SideFinder({
   return (
     <div className="seek panel">
       <span className="kicker">{label}</span>
-      <input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Type a side" aria-label={label} />
+      <label className="quiet">
+        Side
+        <select aria-label={label} value={selected?.id ?? ""} onChange={(event) => onPick(event.target.value)}>
+          <SideOptions />
+        </select>
+      </label>
+      <input value={query} onChange={(event) => onQuery(event.target.value)} placeholder="Or type a side" aria-label={`${label} search`} />
       {selected ? (
         <p className="chosen">
           <Mark team={selected} size={28} />
@@ -410,14 +434,35 @@ function played(siege: Siege | null): SeriesResult[] {
   return [siege.arrival, siege.gate, siege.restoration].filter((series): series is SeriesResult => Boolean(series));
 }
 
+const SIDE_KINDS = ["country", "overflow", "homeland", "construct"] as const;
+
+function SideOptions() {
+  return (
+    <>
+      <option value="">Choose a side</option>
+      {SIDE_KINDS.map((kind) => (
+        <optgroup key={kind} label={kindLabel(kind)}>
+          {TEAMS.filter((team) => team.kind === kind).map((team) => (
+            <option key={team.id} value={team.id}>{team.name}</option>
+          ))}
+        </optgroup>
+      ))}
+    </>
+  );
+}
+
 function primePicks(query: string, selected: string): Player[] {
   const q = query.trim().toLowerCase();
   if (q.length < 2) return [];
-  return PLAYERS.filter((player) => player.id !== selected && player.name.toLowerCase().includes(q)).slice(0, 6);
+  return PLAYERS.filter((player) => {
+    if (player.id === selected) return false;
+    const team = TEAM_BY_ID[player.teamId];
+    return `${player.name} ${team?.name ?? ""} ${team?.code ?? ""}`.toLowerCase().includes(q);
+  }).slice(0, 12);
 }
 
 function sidePicks(query: string, selected: string): Team[] {
   const q = query.trim().toLowerCase();
   if (q.length < 2) return [];
-  return TEAMS.filter((team) => team.id !== selected && (team.name.toLowerCase().includes(q) || team.code.toLowerCase().includes(q))).slice(0, 6);
+  return TEAMS.filter((team) => team.id !== selected && (team.name.toLowerCase().includes(q) || team.code.toLowerCase().includes(q) || team.country.toLowerCase().includes(q))).slice(0, 12);
 }
