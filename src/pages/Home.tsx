@@ -7,6 +7,7 @@ import { yearUnlock } from "../engine/season";
 import { loadOlympics } from "../state/olympicsBook";
 import { loadYear } from "../state/yearBook";
 import { seriesRecord } from "../engine/series";
+import { teamPower } from "../engine/tournament";
 import { placeLine } from "../lib/format";
 import { usePantheon } from "../state/store";
 
@@ -94,6 +95,24 @@ export function Home() {
           <span>Great players whose country cannot fill a competitive all-time side. They choose the Lantern, the Bastion, the Harbor, or the Reed. The house is shared. Nobody signed them.</span>
         </article>
       </div>
+
+      <section className="section">
+        <div className="section-head">
+          <h3>Who is best</h3>
+          <Link to="/rankings">The board</Link>
+        </div>
+        <p className="lede">Power is the card before tip. The board keeps this draw’s series record, the point margin, and the siege. Two primes, or two sides, can be set beside each other.</p>
+        <div className="team-grid">
+          {TEAMS.slice().sort((a, b) => teamPower(b.id) - teamPower(a.id)).slice(0, 4).map((team, index) => (
+            <Link key={team.id} to={`/teams/${team.id}`} className="panel" style={{ borderTop: `3px solid ${team.colors.primary}` }}>
+              <span className="tag">{index === 0 ? "Highest card" : `Power ${Math.round(teamPower(team.id))}`}</span>
+              <h3>{team.name}</h3>
+              <p>{Math.round(teamPower(team.id))} · {team.motto}</p>
+            </Link>
+          ))}
+        </div>
+        <p className="note"><Link to="/compare">Set two beside each other</Link> · <Link to="/leaders">Leaders</Link> · <Link to="/trials">Titles</Link> · <Link to="/schedule">Series</Link></p>
+      </section>
 
       <Link to="/siege" className="panel siege-banner">
         <span className="tag">{tournament.siege?.threatEnded ? "Threat ended" : restoration ? "Construct holds" : "The Construct"}</span>

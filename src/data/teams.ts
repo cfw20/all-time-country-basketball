@@ -1,6 +1,7 @@
 import { CONCORD_ID, CONCORD_TEAM } from "./concord";
 import { HOUSE_TEAMS } from "./houses";
 import type { Team } from "./types";
+import { WAVE_TEAMS } from "./wave";
 
 const RETIRED = new Set(["grns", "fueg", "quis", "tera", "peak", "cauc", "brdg", "drgn", "arch", "flve"]);
 
@@ -80,7 +81,7 @@ const RAW: Team[] = [
     mark: "arch",
     motto: "No homeland could carry them alone.",
     blurb:
-      "A homeland house for players whose own country cannot fill a competitive all-time roster. Finland, Austria, the Bahamas, Venezuela, Romania, New Zealand, Switzerland, Poland, Czechia, the Netherlands, Great Britain, South Sudan, Angola, and the rest of this roster did not enter a signing market. Each player chose the lantern. The Bastion, the Harbor, and the Reed are the other houses on this path.",
+      "A homeland house for players whose own country cannot fill a competitive all-time roster. Finland, Austria, the Bahamas, Venezuela, Romania, New Zealand, Switzerland, Poland, Czechia, the Netherlands, Great Britain, Belgium, South Sudan, Angola, and the rest of this roster did not enter a signing market. Each player chose the lantern. The Bastion, the Harbor, and the Reed are the other houses on this path.",
     pace: 1.02,
   },
   {
@@ -507,7 +508,7 @@ const RAW: Team[] = [
 
 const human = RAW.filter((team) => !RETIRED.has(team.id) && team.kind !== "construct");
 const construct = RAW.filter((team) => team.kind === "construct");
-export const TEAMS: Team[] = [...human, ...HOUSE_TEAMS, ...construct];
+export const TEAMS: Team[] = [...human, ...HOUSE_TEAMS, ...WAVE_TEAMS, ...construct];
 
 export const TEAM_BY_ID: Record<string, Team> = Object.fromEntries(TEAMS.map((t) => [t.id, t]));
 

@@ -14,7 +14,9 @@ import { Olympics } from "./pages/Olympics";
 import { Play } from "./pages/Play";
 import { Edge, Flag, Opens, PrimeYear, Tape } from "./pages/Trivia";
 import { Arc, Closer, Cut, Glass, Halfcourt, Ladder, Shootaround, Streak } from "./pages/Toys";
+import { Compare } from "./pages/Compare";
 import { PlayerPage } from "./pages/Player";
+import { Rankings } from "./pages/Rankings";
 import { QuickSeries } from "./pages/QuickSeries";
 import { Throne } from "./pages/Throne";
 import { Players } from "./pages/Players";
@@ -47,6 +49,8 @@ export function App() {
         <Route path="players/:id" element={<PlayerPage />} />
         <Route path="awards" element={<Awards />} />
         <Route path="leaders" element={<Leaders />} />
+        <Route path="rankings" element={<Rankings />} />
+        <Route path="compare" element={<Compare />} />
         <Route path="events" element={<Events />} />
         <Route path="atlas" element={<Atlas />} />
         <Route path="rivalries" element={<Rivalries />} />

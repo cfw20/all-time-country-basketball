@@ -35,9 +35,9 @@ Rodrigue Beaubois|PG|6-2|2011|France|deep|standard|slasher|78|18|34|0|-|ath:88,s
 Antoine Rigaudeau|SG|6-6|1998|France|deep|standard|shooter|82|22|30|0|-|three:78,play:80,shot:80|EuroLeague peak. He did not have an NBA star season.
 Bilal Coulibaly|SF|6-7|2026|France|deep|standard|defender|76|14|30|0|-|def:80,ath:86|Rated on the prime already on record.
 Jim Bilba|PF|6-8|1998|France|deep|standard|glue|78|16|20|0|SF|def:78,reb:72|EuroLeague forward on the French teams of the 1990s.
-Tariq Abdul-Wahad|SG|6-6|1999|France|deep|standard|wing|74|16|12|0|-|def:76
+Zaccharie Risacher|SF|6-8|2025|France|deep|standard|wing|77|16|34|0|SG|three:76,ath:80,def:74|Rated on the rookie prime already on record.
 Ian Mahinmi|C|6-11|2014|France|two-way|two-way|rim|73|12|0|0|-|def:76
-Alexis Ajinca|C|7-2|2015|France|two-way|two-way|post|72|14|8|0|-|shot:74
+Alex Sarr|C|7-1|2025|France|two-way|two-way|rim|78|14|8|0|PF|def:82,reb:78,ath:80|Rated on the rookie prime already on record.
 Thomas Heurtel|PG|6-2|2015|France|rotation|standard|point|80|18|34|0|-|play:84
 `,
   eagl: `
@@ -58,7 +58,7 @@ Marko Jaric|PG|6-7|2005|Serbia|deep|standard|glue|74|12|24|0|-|play:78,def:76
 Dragan Kicanovic|SG|6-4|1980|Serbia|deep|standard|shooter|84|26|8|0|-|shot:86,play:78,ath:82|Olympic champion. Assigned to Serbia.
 Vasilije Micic|PG|6-4|2021|Serbia|two-way|two-way|point|80|20|34|0|-|play:86,three:76
 Aleksej Pokusevski|PF|7-0|2022|Serbia|two-way|two-way|stretch|73|14|40|0|-|three:74,ath:78
-Miroslav Raduljica|C|7-0|2014|Serbia|deep|hardship|post|73|14|0|0|-|shot:74,reb:72
+Boban Marjanovic|C|7-4|2016|Serbia|deep|hardship|post|77|14|0|0|-|shot:78,reb:80,ft:78|The minutes behind Jokic and Divac. A real prime, not a faded one.
 `,
   fire: `
 Drazen Petrovic|SG|6-5|1992|Croatia|star|standard|shooter|93|32|28|1|-|shot:92,three:80,play:70,def:68,ath:82,ft:86,clutch:94|Yugoslav-era star assigned to Croatia, the modern country of his birth and identity.

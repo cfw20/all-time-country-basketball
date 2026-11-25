@@ -22,7 +22,7 @@ export function Leaders() {
     <main className="page">
       <p className="kicker">This draw</p>
       <h2 className="display" style={{ fontSize: 68 }}>Leaders and records</h2>
-      <p className="lede">Averages are per game in official Pantheon games. Rebounds split into the offensive and defensive boards already on the box. True shooting needs 25 field-goal attempts. The counting book is the total from those same boxes, so a longer run sits higher. The single-game book is the high mark from one night.</p>
+      <p className="lede">Averages are per game in official Pantheon games. Rebounds split into the offensive and defensive boards already on the box. True shooting needs 25 field-goal attempts. The counting book is the total from those same boxes, so a longer run sits higher. The single-game book is the high mark from one night. <Link to="/rankings">Rankings</Link> puts the sides on one board. <Link to="/compare">Compare</Link> sets two primes, or two sides, beside each other.</p>
       <div className="groups" style={{ marginTop: 18 }}>
         <Board title="Points" rows={top(rows, (row) => row.pts / row.g)} value={(row) => one(row.pts, row.g)} />
         <Board title="Rebounds" rows={top(rows, (row) => row.reb / row.g)} value={(row) => one(row.reb, row.g)} detail={(row) => `${one(row.orb, row.g)} off · ${one(row.drb, row.g)} def`} />

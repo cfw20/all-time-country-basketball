@@ -121,7 +121,7 @@ export function TeamPage() {
       ) : (
         <>
           <section className="section">
-            <div className="section-head"><h3>Results</h3><span className="quiet">Official series in this draw</span></div>
+            <div className="section-head"><h3>Results</h3><span className="quiet">Official series in this draw · <Link to="/rankings">Rankings</Link> · <Link to={`/compare?side=${team.id}`}>Set beside</Link></span></div>
             <SeriesList teamId={team.id} series={book} empty="No official series yet." />
           </section>
           {siegeSeries.length > 0 ? (

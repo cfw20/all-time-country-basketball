@@ -1,6 +1,6 @@
 # Pantheon
 
-Pantheon is a fictional all-time world basketball championship. Forty-eight human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
+Pantheon is a fictional all-time world basketball championship. Fifty-two human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
 
 This repository is private. It stays private until the owner decides to publish. Do not flip the repository to public, and do not deploy a public site from this project, unless the owner makes that decision.
 
@@ -33,7 +33,7 @@ This is not a signing league and not a free-agent market. Countries and mixed si
 
 Player pages state which path they took, and they state the prime. Every human player is shown and simulated only in that prime. There is no faded version and no current-age card.
 
-The Construct is the one invented side: twenty-two built units, outside the groups. They are a real threat under the same NBA engine. After the country final, the champion plays them at the gate. The Concord — twelve real primes already in the field, at most five from any one country — then plays them once. A Concord win ends the threat and leaves the country champion in place. A Construct win means they hold the floor.
+The Construct is the one invented side: twenty-two built units, outside the groups. They are a real threat under the same NBA engine. The arrival, the gate, and the Concord are each a best-of-seven. The Concord is twelve real primes already in the field, at most five from any one country. A Concord win ends the threat and leaves the country champion in place. A Construct win means they hold the floor.
 
 ## Rosters and status
 
@@ -62,7 +62,7 @@ Countries that cannot fill twenty-two competitive primes are not in the draw. Th
 
 ## The competition
 
-Twelve groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
+Thirteen groups of four, drawn in pots from a fixed power ranking so each group gets one side from each band. Every group matchup is a best-of-seven. A side advances by winning four games. Tiebreakers are series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best second-place sides fill the round of 16.
 
 Those sixteen are seeded by pre-draw power, 1 against 16. Every knockout round is first to four, including the final and the third-place series. Neutral floors. The better power seed is listed as home for games 1, 2, 5, and 7. Games 3, 4, and 6 flip the card. There is no home-court scoring bonus.
 
@@ -76,7 +76,7 @@ After a game or a series, the players who just played can run six tiny games: Ho
 
 ## Comparing draws
 
-Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v8`. An older `pantheon-v7` save does not reopen, because the field changed.
+Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, series win rate, honors, final-series point margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v9`. An older `pantheon-v8` save does not reopen, because the field changed. Rankings at `/rankings` order every side by power, this draw’s series record, and point differential, and they show the siege. Compare at `/compare` sets two primes or two sides beside each other.
 
 A series page lists every game, the running tally, and the series sheet. A game page has the line score, the night sheet, team shooting and true shooting, a short list of the plays that swung it, the full possession log, and the after-the-horn games. Player pages carry a game log, offensive and defensive boards, and clutch. Team pages list the opening five and every series. The look is a fantasy sci-fi floor. The games are NBA basketball, played at the prime on each card.
 

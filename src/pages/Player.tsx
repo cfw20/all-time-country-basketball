@@ -114,6 +114,7 @@ export function PlayerPage() {
             </div>
           </div>
           <p className="seal">{built ? "Constructed unit" : "Prime only"} <b>{built ? "Built" : player.primeYear}</b></p>
+          <p className="quiet"><Link to={`/compare?left=${player.id}`}>Set beside another prime</Link> · <Link to="/rankings">Rankings</Link> · <Link to="/leaders">Leaders</Link></p>
           {honors.length > 0 ? (
             <div className="badges">
               {honors.map((honor) => <span key={honor} className="badge">{honor}</span>)}

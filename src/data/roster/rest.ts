@@ -16,8 +16,8 @@ Fred VanVleet|PG|6-0|2022|Canada|rotation|standard|point|86|22|40|0|-|play:84,sh
 Scottie Barnes|SF|6-7|2024|Canada|rotation|standard|wing|84|20|30|0|PF|ath:86,def:84
 Pascal Siakam|PF|6-9|2020|Canada|starter|standard|stretch|88|24|34|0|SF|shot:82,three:78,play:74,reb:84,def:82,ath:86,ft:78|Born in Douala. Represented Canada and took the country path.
 Bennedict Mathurin|SG|6-5|2024|Canada|deep|standard|slasher|78|18|34|0|-|ath:84,shot:78|Rated on the prime already on record.
-Cory Joseph|PG|6-3|2016|Canada|two-way|two-way|point|74|12|30|0|-|def:76
-Trey Lyles|PF|6-9|2018|Canada|two-way|two-way|stretch|73|12|34|0|-|
+Shaedon Sharpe|SG|6-5|2025|Canada|two-way|two-way|slasher|81|20|32|0|-|ath:86,shot:80,three:72|Rated on the prime already on record.
+Zach Edey|C|7-4|2025|Canada|two-way|two-way|rim|80|16|0|0|-|reb:86,shot:78,def:74|Rated on the rookie prime already on record, not a projection.
 Samuel Dalembert|C|6-11|2006|Canada|deep|ten-day|rim|76|12|0|0|-|reb:80,def:76|Born in Haiti. Represented Canada.
 `,
   plat: `
@@ -235,7 +235,7 @@ Thabo Sefolosha|SG|6-7|2015|Switzerland|rotation|standard|defender|78|12|36|0|SF
 Jeremy Sochan|PF|6-9|2025|Poland|rotation|standard|defender|78|16|28|0|-|def:80,ath:82,reb:74,play:68|Born in the United Kingdom. Represents Poland. Rated on the prime already on record.
 Jan Vesely|PF|6-11|2018|Czechia|rotation|standard|rim|77|14|8|0|-|ath:84,reb:74,def:74
 Manute Bol|C|7-7|1989|South Sudan|deep|standard|rim|76|8|0|0|-|def:90,reb:70,shot:48,ath:70,ft:56|Born in Turalei, in what is now South Sudan. Placed with that modern homeland.
-Kirk Penney|SG|6-5|2006|New Zealand|deep|standard|shooter|75|16|42|0|-|three:78
+Toumani Camara|SF|6-8|2025|Belgium|deep|standard|defender|81|14|34|0|PF|def:84,ath:82,reb:70,three:74|Belgium cannot fill a competitive side. Rated on the prime already on record.
 Bruno Fernando|C|6-10|2021|Angola|two-way|two-way|rim|74|12|8|0|-|ath:80,reb:72|Angola cannot fill a Pantheon roster.
 Carlik Jones|PG|6-0|2023|South Sudan|two-way|two-way|point|75|18|30|0|-|play:78,ath:84|American-born. Represents South Sudan.
 Wenyen Gabriel|PF|6-9|2022|South Sudan|deep|ten-day|glue|73|12|30|0|-|ath:82,def:74

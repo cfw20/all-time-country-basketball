@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { CONSTRUCT_ID, playerById, TEAM_BY_ID } from "../data";
+import { CONSTRUCT_ID, playerById, TEAM_BY_ID, TEAMS } from "../data";
 import { formatSeed, parseSeed } from "../engine/rng";
 import type { TrialSummary } from "../engine/tournament";
 import { finishName, one } from "../lib/format";
@@ -51,6 +51,25 @@ export function Trials() {
           <div className="panel"><span className="tag">Restored</span><h3>{share(trials.filter((trial) => trial.threatEnded).length, trials.length)}</h3><p>Draws where the Concord beat the Construct and the country champion kept the floor.</p></div>
           <div className="panel"><span className="tag">Construct holds</span><h3>{share(trials.filter((trial) => !trial.threatEnded).length, trials.length)}</h3><p>Draws where the built side still has the floor after the restoration.</p></div>
         </div>
+      ) : null}
+
+      {rows.length > 0 ? (
+        <section className="section">
+          <div className="section-head">
+            <h3>The best sides</h3>
+            <Link to="/rankings">Rankings</Link>
+          </div>
+          <div className="podium">
+            {rows.slice(0, 3).map((row, index) => (
+              <Link key={row.id} to={`/teams/${row.id}`} className="panel podium-card">
+                <span className="tag">{["Most titles", "Next", "Still in the light"][index]}</span>
+                <h3>{TEAM_BY_ID[row.id]?.name}</h3>
+                <p>{row.titles} titles · {row.finals} finals · {row.top4} final fours</p>
+                <p className="quiet">Average finish {one(row.finishSum, row.n)} · series {row.wins}-{row.losses}</p>
+              </Link>
+            ))}
+          </div>
+        </section>
       ) : null}
 
       {rows.slice(0, 12).map((row, index) => (
@@ -160,7 +179,7 @@ export function Trials() {
           </div>
         </section>
       ) : null}
-      <p className="note">The book keeps the latest 400 championships in this browser. Power seeds do not change between draws. The results do. Thirty-two human sides play the country tournament in every one of them. The Construct is outside that draw, and the Concord is named fresh each time.</p>
+      <p className="note">The book keeps the latest 400 championships in this browser. Power seeds do not change between draws. The results do. {TEAMS.filter((team) => team.kind !== "construct").length} human sides play the country tournament in every one of them. The Construct is outside that draw, and the Concord is named fresh each time. Titles, finals, and final fours above are the country book. The siege panels are the Construct.</p>
     </main>
   );
 }

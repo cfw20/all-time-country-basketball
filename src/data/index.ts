@@ -4,6 +4,7 @@ import { CONSTRUCT_ROSTER } from "./roster/construct";
 import { MORE_ROSTERS } from "./roster/more";
 import { parseRoster } from "./roster/parse";
 import { HOUSE_ROSTERS } from "./houses";
+import { WAVE_ROSTERS } from "./wave";
 import { REST_ROSTERS } from "./roster/rest";
 import { USA_ROSTERS } from "./roster/usa";
 import { TEAMS } from "./teams";
@@ -14,6 +15,7 @@ const BLOCKS: Record<string, string> = {
   ...EUROPE_ROSTERS,
   ...REST_ROSTERS,
   ...HOUSE_ROSTERS,
+  ...WAVE_ROSTERS,
   [CONSTRUCT_ID]: CONSTRUCT_ROSTER,
 };
 

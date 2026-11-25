@@ -13,6 +13,7 @@ const LINKS = [
   ["/players", "Players"],
   ["/awards", "Honors"],
   ["/leaders", "Leaders"],
+  ["/rankings", "Ranks"],
   ["/events", "Interval"],
   ["/atlas", "Atlas"],
   ["/rivalries", "Nights"],

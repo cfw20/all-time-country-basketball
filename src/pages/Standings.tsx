@@ -14,7 +14,7 @@ export function Standings() {
       <p className="kicker">Group stage · {tournament.groups.length} groups of four</p>
       <h2 className="display" style={{ fontSize: 68 }}>The tables</h2>
       <p className="lede">
-        Each cell is a best-of-seven. Series is the series record. Games is the record inside those series. Diff is game differential, and the number under it is point differential. Tiebreakers, in order: series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best seconds fill the round of 16. A dot marks a side that is through.
+        Each cell is a best-of-seven. Series is the series record. Games is the record inside those series. Diff is game differential, and the number under it is point differential. Tiebreakers, in order: series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best seconds fill the round of 16. A dot marks a side that is through. The full board, power and the siege included, is on <Link to="/rankings">rankings</Link>.
       </p>
       <div className="groups" style={{ marginTop: 22 }}>
         {tournament.groups.map((group) => {

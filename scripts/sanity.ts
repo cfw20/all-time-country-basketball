@@ -21,18 +21,19 @@ import { TOY_PLAYS } from "../src/engine/toys";
 import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
 import { castFromGame, playAfter, type AfterKind } from "../src/engine/after";
 import { lightLamp } from "../src/engine/tournament";
+import { SERIES_MAX_GAMES, SERIES_WINS, seriesIsBestOfSeven } from "../src/engine/series";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
 import { readPlayerStyle, readStyle } from "../src/engine/style";
 
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
 
-if (TEAMS.length !== 49) fail(`expected 49 sides, got ${TEAMS.length}`);
+if (TEAMS.length !== 53) fail(`expected 53 sides, got ${TEAMS.length}`);
 const overflow = TEAMS.filter((t) => t.kind === "overflow");
 const homeland = TEAMS.filter((t) => t.kind === "homeland");
 const countries = TEAMS.filter((t) => t.kind === "country");
 const built = TEAMS.filter((t) => t.kind === "construct");
-if (overflow.length !== 26) fail(`expected 26 overflow houses, got ${overflow.length}`);
+if (overflow.length !== 30) fail(`expected 30 overflow houses, got ${overflow.length}`);
 if (homeland.length !== 4) fail(`expected 4 homeland houses, got ${homeland.length}`);
 if (countries.length !== 18) fail(`expected 18 countries, got ${countries.length}`);
 if (built.length !== 1) fail(`expected 1 constructed side, got ${built.length}`);
@@ -118,6 +119,16 @@ expect("Drazen Petrovic", "fire");
 expect("Arvydas Sabonis", "ambr");
 expect("Stephen Curry", "cont");
 expect("Michael Jordan", "cont");
+expect("Rudy LaRusso", "lntl");
+expect("Herb Jones", "orry");
+expect("Dick McGuire", "nave");
+expect("Coby White", "crnc");
+expect("Boban Marjanovic", "eagl");
+expect("Alex Sarr", "roya");
+expect("Zaccharie Risacher", "roya");
+expect("Toumani Camara", "lant");
+expect("Zach Edey", "nrth");
+expect("Shaedon Sharpe", "nrth");
 
 const nigeria = ROSTERS.grns ?? [];
 if (nigeria.some((p) => p.name === "Hakeem Olajuwon")) fail("Hakeem must not be on Nigeria");
@@ -212,24 +223,25 @@ if (!tournament.awards) fail("missing awards");
 if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star log too thin");
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
 const expectedSeries = tournament.groups.length * 6 + 8 + 4 + 2 + 2;
-if (tournament.groups.length !== 12) fail(`expected 12 groups, got ${tournament.groups.length}`);
+if (SERIES_WINS !== 4 || SERIES_MAX_GAMES !== 7) fail("the series scheduler is not best of seven");
+if (tournament.groups.length !== 13) fail(`expected 13 groups, got ${tournament.groups.length}`);
 if (tournament.groups.some((group) => group.teamIds.length !== 4)) fail("a group is not four sides");
 const r16ids = new Set(tournament.series.filter((item) => item.round === "r16").flatMap((item) => [item.homeId, item.awayId]));
 if (r16ids.size !== 16) fail(`round of 16 has ${r16ids.size} sides`);
 if (officialSeries.length !== expectedSeries) fail(`unexpected series count ${officialSeries.length}`);
+const mainRounds = ["group-1", "group-2", "group-3", "r16", "qf", "sf", "final", "third"];
+for (const round of mainRounds) {
+  if (!officialSeries.some((item) => item.round === round)) fail(`missing official round ${round}`);
+}
 for (const item of officialSeries) {
-  const wins = Math.max(item.homeWins, item.awayWins);
-  const losses = Math.min(item.homeWins, item.awayWins);
-  if (wins !== 4 || item.games.length !== 4 + losses) fail(`${item.id} did not end at four wins (${item.homeWins}-${item.awayWins}, ${item.games.length} games)`);
+  if (!seriesIsBestOfSeven(item)) fail(`${item.id} is not a best-of-seven (${item.homeWins}-${item.awayWins}, ${item.games.length} games)`);
 }
 if (official.length < officialSeries.length * 4 || official.length > officialSeries.length * 7) fail(`unexpected game count ${official.length}`);
 if ((final?.plays.length ?? 0) < 40) fail("final play log too thin");
 const siege = tournament.siege;
 if (!siege?.arrival || !siege.gate || !siege.restoration) fail("siege is missing a series");
 for (const item of [siege?.arrival, siege?.gate, siege?.restoration]) {
-  if (!item) continue;
-  const wins = Math.max(item.homeWins, item.awayWins);
-  if (wins !== 4 || item.games.length < 4 || item.games.length > 7) fail(`${item.id} is not a best-of-seven`);
+  if (!item || !seriesIsBestOfSeven(item)) fail(`${item?.id ?? "siege"} is not a best-of-seven`);
 }
 if (tournament.groups.some((group) => group.teamIds.includes("cstr"))) fail("Construct was drawn into a group");
 if (tournament.ranking.some((row) => row.teamId === "cstr")) fail("Construct was given a country seed");
@@ -278,11 +290,10 @@ if (!leader || leader[0] !== "cont") fail(`Continental is not the most common ch
 if (contTitles > 34) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
 if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-if (arrivalConstruct < 24) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, too mild a threat`);
-if (arrivalConstruct > 38) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, the arrival is a lock`);
-if (gateConstruct < 24) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
-if (gateConstruct > 38) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
-if (restored < 2 || restored > 22) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
+// Seeds 1100 + i*97 with fifty-two human sides: arrival 33, gate 34, restored 4.
+if (arrivalConstruct !== 33) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 33`);
+if (gateConstruct !== 34) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 34`);
+if (restored !== 4) fail(`Concord restored the floor ${restored}/${TRIALS}, expected 4`);
 
 for (const card of ERA_CARDS) {
   if (card.playerIds.length < 2) fail(`${card.franchise} ${card.years} lists ${card.playerIds.length} primes`);
@@ -315,8 +326,7 @@ if (plainYear.charges.gilded !== 2 || plainYear.charges.banner !== 1) fail("a pl
 const clash = playClash(ERA_CARDS[0].id, ERA_CARDS[1].id, 20261125, false);
 if (clash.homeScore < 70 || clash.awayScore < 70 || !clash.winnerId) fail("era clash did not play an NBA game");
 const quick = playQuick("cont", "cstr", 20261125, false);
-const quickWins = Math.max(quick.homeWins, quick.awayWins);
-if (quickWins !== 4 || quick.games.length < 4 || quick.games.length > 7) fail("a side series did not end at four wins");
+if (!seriesIsBestOfSeven(quick)) fail("a side series did not end at four wins");
 const lamp = lightLamp(20261125);
 if (!lamp.three.winnerId || !lamp.dunk.winnerId || !lamp.skills.winnerId) fail("the lamp did not name winners");
 const throne = playThrone(20261125);
@@ -333,13 +343,12 @@ if (hill.games.length !== 8 || !hill.king) fail("the hill did not play eight nig
 if (gauntlet.games.length !== 7 || gauntlet.games.at(-1)?.note !== "The Construct") fail("the gauntlet did not end at the Construct");
 if (decade.rows.length !== 8 || decade.games.length !== 29) fail(`decade cup played ${decade.games.length} games`);
 if (open.rounds.length !== 4 || open.rounds.reduce((sum, round) => sum + round.games.length, 0) !== 15) fail("the open is not a sixteen-side bracket");
-const fortWins = Math.max(fortnight.series.homeWins, fortnight.series.awayWins);
-if (fortnight.games.length !== 15 || fortWins !== 4) fail("fortnight did not finish a round robin and a series");
+if (fortnight.games.length !== 15 || !seriesIsBestOfSeven(fortnight.series)) fail("fortnight did not finish a round robin and a series");
 if (survivor.rounds.length < 3 || !survivor.champion) fail("survivor did not play down to a champion");
 if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70) fail("the five did not tip");
 console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
 
-if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
+if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-v9" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
 if (olympicsUnlock([]).open) fail("olympics opened with no trials");
 const lockedLine = olympicsLockLine(olympicsUnlock([]));
 const lockedSentences = lockedLine.split(/[.!?]/).map((part) => part.trim()).filter(Boolean);
@@ -396,7 +405,7 @@ for (const seed of [1, 8, 21, 99, 20261125]) {
 const olympicRoster = fillOlympic(20261125);
 const beforeTeams = TEAMS.length;
 const olympics = playOlympics(olympicRoster.rosterIds, 20261125);
-if (TEAMS.length !== beforeTeams || TEAMS.length !== 49) fail("olympics changed the championship team count");
+if (TEAMS.length !== beforeTeams || TEAMS.length !== 53) fail("olympics changed the championship team count");
 if (TEAMS.some((team) => team.id === OLY_ID)) fail("the rolled side was added to the championship");
 if (olympics.field.length !== 8 || !olympics.field.some((side) => side.id === OLY_ID) || !olympics.field.some((side) => side.id === CONSTRUCT_ID)) {
   fail("the Olympic field is not the rolled side, the Construct, and six others");
@@ -405,9 +414,7 @@ if (!olympics.field.some((side) => side.kind === "country")) fail("the Olympic f
 if (!olympics.field.some((side) => side.kind === "overflow" || side.kind === "homeland")) fail("the Olympic field has no overflow or homeland house");
 if (olympics.series.length !== 7) fail(`olympics played ${olympics.series.length} series`);
 for (const series of olympics.series) {
-  const wins = Math.max(series.homeWins, series.awayWins);
-  const losses = Math.min(series.homeWins, series.awayWins);
-  if (wins !== 4 || series.games.length !== 4 + losses) fail(`${series.id} did not end at four wins (${series.homeWins}-${series.awayWins}, ${series.games.length} games)`);
+  if (!seriesIsBestOfSeven(series)) fail(`${series.id} is not a best-of-seven (${series.homeWins}-${series.awayWins}, ${series.games.length} games)`);
 }
 const openedFinal = openOlympicFinal(olympics);
 const gold = olympics.series.find((series) => series.round === "gold");

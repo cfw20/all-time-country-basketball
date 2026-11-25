@@ -2,8 +2,23 @@ import type { GameResult, SeriesResult } from "../data/types";
 import { simulateGame, type SideInput } from "./game";
 import { mixSeed } from "./rng";
 
+/** Official series, including the siege, are best of seven and first to four. */
+export const SERIES_WINS = 4;
+export const SERIES_MAX_GAMES = 7;
+
 /** Games 1, 2, 5, and 7 list the series home on the home side. 3, 4, and 6 flip the card. No scoring bonus. */
 const SERIES_HOME_HOSTS = new Set([1, 2, 5, 7]);
+
+/** A finished series reached four wins and stopped, inside a seven-game schedule. */
+export function seriesIsBestOfSeven(series: { homeWins: number; awayWins: number; games: readonly unknown[] }): boolean {
+  const wins = Math.max(series.homeWins, series.awayWins);
+  const losses = Math.min(series.homeWins, series.awayWins);
+  return wins === SERIES_WINS
+    && losses < SERIES_WINS
+    && series.games.length === wins + losses
+    && series.games.length >= SERIES_WINS
+    && series.games.length <= SERIES_MAX_GAMES;
+}
 
 export function playSeries(input: {
   id: string;
@@ -20,7 +35,7 @@ export function playSeries(input: {
   const games: GameResult[] = [];
   let homeWins = 0;
   let awayWins = 0;
-  for (let n = 1; n <= 7 && homeWins < 4 && awayWins < 4; n++) {
+  for (let n = 1; n <= SERIES_MAX_GAMES && homeWins < SERIES_WINS && awayWins < SERIES_WINS; n++) {
     const hostHome = SERIES_HOME_HOSTS.has(n);
     const gameHome = hostHome ? input.home : input.away;
     const gameAway = hostHome ? input.away : input.home;
@@ -42,7 +57,7 @@ export function playSeries(input: {
     if (played.winnerId === input.home.id) homeWins += 1;
     else awayWins += 1;
   }
-  const winnerId = homeWins >= 4 ? input.home.id : input.away.id;
+  const winnerId = homeWins >= SERIES_WINS ? input.home.id : input.away.id;
   const loserId = winnerId === input.home.id ? input.away.id : input.home.id;
   return {
     id: input.id,
