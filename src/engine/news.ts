@@ -1,5 +1,5 @@
-import { playerById, teamById } from "../data";
-import type { Contest, GameResult, NewsItem, Player } from "../data/types";
+import { CONCORD_ID, CONSTRUCT_ID, playerById, teamById } from "../data";
+import type { Contest, GameResult, NewsItem, Player, Siege } from "../data/types";
 
 export function buildNews(input: {
   games: GameResult[];
@@ -9,6 +9,7 @@ export function buildNews(input: {
   dunk: Contest | null;
   skills: Contest | null;
   finishes: Record<string, number>;
+  siege: Siege | null;
 }): NewsItem[] {
   const items: NewsItem[] = [];
   let order = 0;
@@ -185,6 +186,24 @@ export function buildNews(input: {
     });
   }
 
+  if (input.siege?.arrival) pushSiege(input.siege.arrival, "Arrival", 93, push);
+  if (input.siege?.gate) pushSiege(input.siege.gate, "The gate", 99, push);
+  if (input.siege?.restoration) {
+    const game = input.siege.restoration;
+    const score = `${Math.max(game.homeScore, game.awayScore)}–${Math.min(game.homeScore, game.awayScore)}`;
+    const held = game.winnerId === CONCORD_ID;
+    push({
+      kicker: "Restoration",
+      title: held ? "The Concord ends the threat" : "The Construct holds the floor",
+      body: held
+        ? `The Concord beat The Construct ${score}${game.ot ? " in overtime" : ""}. The country champion keeps the Pantheon, and the floor goes back to country against country.`
+        : `The Construct beat The Concord ${score}${game.ot ? " in overtime" : ""}. The country final stays in the book. The built side still holds the floor.`,
+      gameId: game.id,
+      importance: 104,
+    });
+    pushSiegeLines(game, push);
+  }
+
   items.sort((a, b) => b.importance - a.importance || a.order - b.order);
   const seen = new Set<string>();
   const capped: NewsItem[] = [];
@@ -196,6 +215,57 @@ export function buildNews(input: {
     if (capped.length >= 48) break;
   }
   return capped;
+}
+
+function pushSiege(
+  game: GameResult,
+  kicker: string,
+  importance: number,
+  push: (item: Omit<NewsItem, "id" | "order"> & { id?: string }) => void,
+) {
+  const winner = named(game, game.winnerId);
+  const loser = named(game, game.loserId);
+  const score = `${Math.max(game.homeScore, game.awayScore)}–${Math.min(game.homeScore, game.awayScore)}`;
+  const extra = game.ot ? " in overtime" : "";
+  const constructWon = game.winnerId === CONSTRUCT_ID;
+  const title = game.round === "gate"
+    ? (constructWon ? "The gate falls" : `${winner} hold the gate`)
+    : (constructWon ? "The Construct takes the arrival" : `${winner} turn the Construct away`);
+  const body = game.round === "gate"
+    ? (constructWon
+      ? `The Construct beat ${loser} ${score}${extra}. The country champion is down. The Concord is named for the restoration.`
+      : `${winner} beat the Construct ${score}${extra}. One country held for a night. The Concord still plays, and that game decides the floor.`)
+    : (constructWon
+      ? `The Construct beat ${loser} ${score}${extra}. The country bracket keeps going. The siege is still ahead.`
+      : `${winner} beat the Construct ${score}${extra}. A country rose on arrival night. The siege is still ahead.`);
+  push({ kicker, title, body, gameId: game.id, importance });
+  pushSiegeLines(game, push);
+}
+
+function pushSiegeLines(
+  game: GameResult,
+  push: (item: Omit<NewsItem, "id" | "order"> & { id?: string }) => void,
+) {
+  const score = `${game.awayScore}–${game.homeScore}`;
+  for (const [side, lines] of [[game.box.away, game.awayName], [game.box.home, game.homeName]] as const) {
+    for (const line of side) {
+      const player = playerById(line.playerId);
+      if (!player || line.pts < 40) continue;
+      push({
+        kicker: line.pts >= 50 ? "Fifty" : "Forty",
+        title: `${player.name}, ${line.pts} in the siege`,
+        body: `${player.name} scored ${line.pts} for ${lines} in a ${score} night. The log has the possessions.`,
+        gameId: game.id,
+        importance: line.pts >= 50 ? 90 : 84,
+      });
+    }
+  }
+}
+
+function named(game: GameResult, id: string): string {
+  if (id === game.homeId) return game.homeName ?? id;
+  if (id === game.awayId) return game.awayName ?? id;
+  return id;
 }
 
 function sideName(game: GameResult, id: string): string {

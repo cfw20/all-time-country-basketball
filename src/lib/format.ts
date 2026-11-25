@@ -45,5 +45,7 @@ export function finishName(place: number | undefined): string {
 export function kindLabel(kind: string): string {
   if (kind === "overflow") return "Overflow";
   if (kind === "homeland") return "Homeland";
+  if (kind === "construct") return "Construct";
+  if (kind === "concord") return "Concord";
   return "Country";
 }

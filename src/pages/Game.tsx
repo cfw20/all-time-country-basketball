@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Link, useParams } from "react-router-dom";
-import { playerById, TEAM_BY_ID } from "../data";
+import { CONCORD_ID, CONSTRUCT_ID, playerById, sideById } from "../data";
 import { Mark } from "../components/Marks";
 import type { BoxLine, GameResult, Play } from "../data/types";
 import { periodName } from "../engine/names";
+import { findGame } from "../engine/tournament";
 import { clockMin, pct, shotLine, signed, trueShooting } from "../lib/format";
 import { usePantheon } from "../state/store";
 
@@ -11,7 +12,7 @@ export function GamePage() {
   const { id } = useParams();
   const { tournament } = usePantheon();
   const [fullLog, setFullLog] = useState(false);
-  const game = tournament.games.find((item) => item.id === id) ?? (tournament.allStar?.id === id ? tournament.allStar : undefined);
+  const game = findGame(tournament, id);
   if (!game) {
     return (
       <main className="page">
@@ -22,11 +23,12 @@ export function GamePage() {
     );
   }
   const quarters = game.quarters.map((q, index) => `${periodName(index + 1)} ${q.away}-${q.home}`).join("  ·  ");
+  const siegeNight = game.homeId === CONSTRUCT_ID || game.awayId === CONSTRUCT_ID;
   const swings = game.plays.filter((play) => play.key && (play.kind === "make" || play.kind === "note" || play.text.includes("blocks") || play.text.includes("Overtime"))).slice(-10);
   const shown = fullLog ? game.plays : game.plays.filter((play) => play.key);
   return (
     <main className="page">
-      <p className="kicker">{game.dayLabel} · {game.venue}{game.exhibition ? " · exhibition" : ""}</p>
+      <p className="kicker">{game.dayLabel} · {game.venue}{siegeNight && game.dayLabel !== "The siege" ? " · the siege" : game.exhibition && !siegeNight ? " · exhibition" : ""}</p>
       <div className="game-top">
         <Club id={game.awayId} name={game.awayName} />
         <div style={{ textAlign: "center" }}>
@@ -41,7 +43,7 @@ export function GamePage() {
         <span>Biggest run {runName(game)} {game.biggestRun.points}</span>
         {game.buzzerBeater ? <span style={{ color: "var(--ember)" }}>Buzzer</span> : null}
         {game.ot ? <span>{game.ot === 1 ? "Overtime" : `${game.ot} overtimes`}</span> : null}
-        <span>Both sides play the prime on the card. NBA rules.</span>
+        <span>{siegeNight ? "NBA rules. Every human on the floor is a real prime. The Construct is the built side." : "Both sides play the prime on the card. NBA rules."}</span>
       </div>
       <LineScore game={game} />
       {swings.length > 0 ? (
@@ -84,12 +86,13 @@ export function GamePage() {
 }
 
 function Club({ id, name, right }: { id: string; name?: string; right?: boolean }) {
-  const team = TEAM_BY_ID[id];
+  const team = sideById(id);
   const title = name ?? team?.name ?? id;
+  const to = id === CONCORD_ID ? "/siege" : team ? `/teams/${team.id}` : undefined;
   return (
     <div className={`club${right ? " right" : ""}`}>
       {team ? <Mark team={team} size={48} /> : null}
-      {team ? <Link to={`/teams/${team.id}`} className="display" style={{ fontSize: 36 }}>{title}</Link> : <span className="display" style={{ fontSize: 36 }}>{title}</span>}
+      {to ? <Link to={to} className="display" style={{ fontSize: 36 }}>{title}</Link> : <span className="display" style={{ fontSize: 36 }}>{title}</span>}
       <span className="quiet">{team?.country ?? "Exhibition"}</span>
     </div>
   );
@@ -214,8 +217,8 @@ function TeamLine({ lines }: { lines: BoxLine[] }) {
 }
 
 function sideName(game: GameResult, id: string): string {
-  if (id === game.homeId) return game.homeName ?? TEAM_BY_ID[id]?.name ?? id;
-  return game.awayName ?? TEAM_BY_ID[id]?.name ?? id;
+  if (id === game.homeId) return game.homeName ?? sideById(id)?.name ?? id;
+  return game.awayName ?? sideById(id)?.name ?? id;
 }
 
 function marginName(game: GameResult): string {

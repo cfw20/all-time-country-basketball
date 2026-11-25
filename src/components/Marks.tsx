@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { playerById, TEAM_BY_ID } from "../data";
+import { CONCORD_ID, playerById, sideById } from "../data";
 import type { Team } from "../data/types";
 
 export function Mark({ team, size = 36 }: { team: Team; size?: number }) {
@@ -39,6 +39,15 @@ export function Mark({ team, size = 36 }: { team: Team; size?: number }) {
       </svg>
     );
   }
+  if (team.mark === "lattice") {
+    return (
+      <svg {...common}>
+        <rect x="7" y="7" width="34" height="34" fill="none" stroke={c} strokeWidth="1.6" />
+        <path d="M7 24h34M24 7v34M7 7l34 34M41 7 7 41" stroke={s} strokeWidth="1.15" />
+        <circle cx="24" cy="24" r="3.2" fill={c} />
+      </svg>
+    );
+  }
   return (
     <svg {...common}>
       <circle cx="24" cy="24" r="16" fill="none" stroke={c} strokeWidth="2" />
@@ -49,10 +58,11 @@ export function Mark({ team, size = 36 }: { team: Team; size?: number }) {
 }
 
 export function SideLink({ id, score, dim }: { id: string; score?: number; dim?: boolean }) {
-  const team = TEAM_BY_ID[id];
+  const team = sideById(id);
   if (!team) return <span>{id}</span>;
+  const to = team.id === CONCORD_ID ? "/siege" : `/teams/${team.id}`;
   return (
-    <Link to={`/teams/${team.id}`} className={`side${dim ? " dim" : ""}`}>
+    <Link to={to} className={`side${dim ? " dim" : ""}`}>
       <i style={{ background: team.colors.primary }} />
       <Mark team={team} size={28} />
       <span>

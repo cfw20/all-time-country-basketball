@@ -1,4 +1,4 @@
-import { PLAYERS, rosterOf, teamById } from "../data";
+import { CONSTRUCT_ID, PLAYERS, rosterOf, teamById } from "../data";
 import { minuteTarget } from "../data/ratings";
 import type {
   Awards,
@@ -13,6 +13,7 @@ import type {
 import { simulateGame, type SideInput } from "./game";
 import { buildNews } from "./news";
 import { mixSeed, mulberry32, shuffle } from "./rng";
+import { playSiege } from "./siege";
 
 export const STAGE_LABELS = [
   "Draw",
@@ -24,6 +25,7 @@ export const STAGE_LABELS = [
   "Quarterfinals",
   "Semifinals",
   "Final night",
+  "The siege",
 ];
 
 const VENUES = [
@@ -68,7 +70,7 @@ export function teamPower(teamId: string): number {
 }
 
 export function simulateTournament(seed: number, options: SimOptions = {}): Tournament {
-  const through = options.through ?? 8;
+  const through = options.through ?? 9;
   const log = options.log !== false;
   const exhibitions = options.exhibitions !== false;
   const ranking = rankTeams();
@@ -154,8 +156,48 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
 
   const finishes = through >= 8 ? assignFinishes(games, groups) : {};
   const awards = through >= 8 ? computeAwards(games, finishes) : null;
-  const news = buildNews({ games, seedOf, allStar, three, dunk, skills, finishes });
-  return { seed, through, ranking, groups, games, allStar, allStarRosters, three, dunk, skills, awards, news, finishes };
+  const siege = through >= 5 && days === 3
+    ? playSiege({
+      seed,
+      through,
+      log,
+      games,
+      opponentId: bestGroupWinner(groups, games, seedOf),
+    })
+    : null;
+  const news = buildNews({ games, seedOf, allStar, three, dunk, skills, finishes, siege });
+  return { seed, through, ranking, groups, games, allStar, allStarRosters, three, dunk, skills, awards, news, finishes, siege };
+}
+
+function bestGroupWinner(
+  groups: Tournament["groups"],
+  games: GameResult[],
+  seedOf: Map<string, number>,
+): string {
+  let bestId = groups[0]?.teamIds[0] ?? "";
+  let bestSeed = 999;
+  for (const group of groups) {
+    const winner = standingsFor(group.teamIds, games)[0]?.teamId;
+    if (!winner) continue;
+    const powerSeed = seedOf.get(winner) ?? 999;
+    if (powerSeed < bestSeed) {
+      bestSeed = powerSeed;
+      bestId = winner;
+    }
+  }
+  return bestId;
+}
+
+export function findGame(tournament: Tournament, id: string | undefined): GameResult | undefined {
+  if (!id) return undefined;
+  const official = tournament.games.find((game) => game.id === id);
+  if (official) return official;
+  if (tournament.allStar?.id === id) return tournament.allStar;
+  const siege = tournament.siege;
+  if (siege?.arrival?.id === id) return siege.arrival;
+  if (siege?.gate?.id === id) return siege.gate;
+  if (siege?.restoration?.id === id) return siege.restoration;
+  return undefined;
 }
 
 export function standingsFor(teamIds: string[], games: GameResult[]): GroupStanding[] {
@@ -436,7 +478,7 @@ function buildExhibitions(seed: number, games: GameResult[]) {
     side = 1 - side;
   }
   const snubs = PLAYERS
-    .filter((player) => player.ratings.ovr >= 97 && !taken.has(player.id))
+    .filter((player) => player.teamId !== CONSTRUCT_ID && player.ratings.ovr >= 97 && !taken.has(player.id))
     .sort((a, b) => b.ratings.ovr - a.ratings.ovr)
     .slice(0, 4);
   for (const god of snubs) {
@@ -482,7 +524,7 @@ function countBands(list: Player[]): Record<"G" | "W" | "B", number> {
 
 function simThree(seed: number, ranked: Player[]): Contest {
   const usa = new Set(["cont", "vngd", "aftr", "pall"]);
-  const pool = PLAYERS.filter((p) => p.ratings.three >= 78 && p.ratings.threeRate >= 28)
+  const pool = PLAYERS.filter((p) => p.teamId !== CONSTRUCT_ID && p.ratings.three >= 78 && p.ratings.threeRate >= 28)
     .sort((a, b) => b.ratings.three - a.ratings.three);
   const field: Player[] = [];
   for (const p of pool) {
@@ -524,7 +566,7 @@ function simThree(seed: number, ranked: Player[]): Contest {
 function simSkills(seed: number): Contest {
   const usa = new Set(["cont", "vngd", "aftr", "pall"]);
   const scoreOf = (p: Player) => p.ratings.play * 0.55 + p.ratings.ath * 0.25 + p.ratings.shot * 0.2;
-  const pool = PLAYERS.slice().sort((a, b) => scoreOf(b) - scoreOf(a));
+  const pool = PLAYERS.filter((p) => p.teamId !== CONSTRUCT_ID).sort((a, b) => scoreOf(b) - scoreOf(a));
   const fieldPlayers: Player[] = [];
   for (const p of pool) {
     if (fieldPlayers.length >= 5) break;
@@ -565,7 +607,7 @@ function clampSkill(n: number): number {
 
 function simDunk(seed: number): Contest {
   const usa = new Set(["cont", "vngd", "aftr", "pall"]);
-  const pool = PLAYERS.filter((p) => p.ratings.ath >= 84).sort((a, b) => b.ratings.ath - a.ratings.ath);
+  const pool = PLAYERS.filter((p) => p.teamId !== CONSTRUCT_ID && p.ratings.ath >= 84).sort((a, b) => b.ratings.ath - a.ratings.ath);
   const fieldPlayers: Player[] = [];
   for (const p of pool) {
     if (fieldPlayers.length >= 5) break;
@@ -613,6 +655,10 @@ export interface TrialSummary {
   sixthId: string;
   breakoutId: string;
   teams: { id: string; finish: number; seed: number; wins: number; losses: number }[];
+  arrivalWinnerId: string;
+  gateWinnerId: string;
+  restorationWinnerId: string;
+  threatEnded: boolean;
 }
 
 export function summarizeTournament(tournament: Tournament): TrialSummary {
@@ -636,6 +682,10 @@ export function summarizeTournament(tournament: Tournament): TrialSummary {
       else row.l += 1;
       record.set(id, row);
     }
+  }
+  const siege = tournament.siege;
+  if (!siege?.arrival || !siege.gate || !siege.restoration) {
+    throw new Error(`Seed ${tournament.seed} finished without the siege`);
   }
   return {
     seed: tournament.seed,
@@ -661,9 +711,13 @@ export function summarizeTournament(tournament: Tournament): TrialSummary {
       wins: record.get(row.teamId)?.w ?? 0,
       losses: record.get(row.teamId)?.l ?? 0,
     })),
+    arrivalWinnerId: siege.arrival.winnerId,
+    gateWinnerId: siege.gate.winnerId,
+    restorationWinnerId: siege.restoration.winnerId,
+    threatEnded: siege.threatEnded,
   };
 }
 
 export function simulateTrial(seed: number): TrialSummary {
-  return summarizeTournament(simulateTournament(seed, { through: 8, log: false, exhibitions: false }));
+  return summarizeTournament(simulateTournament(seed, { through: 9, log: false, exhibitions: false }));
 }

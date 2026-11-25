@@ -1,4 +1,6 @@
+import { CONSTRUCT_ID } from "./concord";
 import { EUROPE_ROSTERS } from "./roster/europe";
+import { CONSTRUCT_ROSTER } from "./roster/construct";
 import { MORE_ROSTERS } from "./roster/more";
 import { parseRoster } from "./roster/parse";
 import { REST_ROSTERS } from "./roster/rest";
@@ -6,7 +8,12 @@ import { USA_ROSTERS } from "./roster/usa";
 import { TEAMS } from "./teams";
 import type { Player } from "./types";
 
-const BLOCKS: Record<string, string> = { ...USA_ROSTERS, ...EUROPE_ROSTERS, ...REST_ROSTERS };
+const BLOCKS: Record<string, string> = {
+  ...USA_ROSTERS,
+  ...EUROPE_ROSTERS,
+  ...REST_ROSTERS,
+  [CONSTRUCT_ID]: CONSTRUCT_ROSTER,
+};
 
 export const ROSTERS: Record<string, Player[]> = {};
 export const PLAYERS: Player[] = [];
@@ -35,6 +42,11 @@ export function playerById(id: string): Player | undefined {
   return PLAYERS.find((p) => p.id === id);
 }
 
-export { TEAMS, teamById, TEAM_BY_ID } from "./teams";
+export function isConstructed(player: Player): boolean {
+  return player.teamId === CONSTRUCT_ID;
+}
+
+export { TEAMS, teamById, TEAM_BY_ID, sideById } from "./teams";
+export { CONCORD_ID, CONCORD_TEAM, CONSTRUCT_ID } from "./concord";
 export { choiceStory } from "./choice";
 export { contractLabel, formatHeight, minuteTarget, roleLabel } from "./ratings";

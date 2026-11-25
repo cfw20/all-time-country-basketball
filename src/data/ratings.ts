@@ -185,6 +185,41 @@ export function roleLabel(role: Role): string {
   }
 }
 
+/** Minute-band label. Constructed units use chassis classes for the same bands. */
+export function dutyLabel(role: Role, constructed: boolean): string {
+  if (!constructed) return roleLabel(role);
+  switch (role) {
+    case "star":
+      return "Primary";
+    case "starter":
+      return "Line";
+    case "rotation":
+      return "Rotation";
+    case "deep":
+      return "Reserve";
+    case "two-way":
+      return "Spare";
+  }
+}
+
+export function statusLabel(contract: Contract, constructed: boolean): string {
+  if (!constructed) return contractLabel(contract);
+  switch (contract) {
+    case "standard":
+      return "Chassis";
+    case "two-way":
+      return "Spare frame";
+    case "ten-day":
+      return "Trial frame";
+    case "exhibit-10":
+      return "Trial frame";
+    case "hardship":
+      return "Emergency frame";
+    case "short":
+      return "Short cycle";
+  }
+}
+
 export function formatHeight(ht: string): string {
   const [f, i] = ht.split("-");
   if (!i) return ht;

@@ -184,6 +184,14 @@ h2.display, .display {
 }
 .path strong { display: block; font-family: var(--serif); font-size: 28px; font-weight: 560; font-style: italic; }
 .path span { color: var(--muted); display: block; margin-top: 6px; line-height: 1.45; }
+.siege-banner {
+  display: block;
+  margin-top: 22px;
+  border-color: rgba(197, 215, 255, 0.55);
+  background:
+    linear-gradient(145deg, rgba(125, 140, 255, 0.18), rgba(22, 16, 34, 0.04) 46%, rgba(231, 194, 122, 0.1));
+}
+.steps { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
 
 .section { margin-top: 36px; }
 .section-head { display: flex; justify-content: space-between; align-items: baseline; gap: 12px; margin-bottom: 12px; }
@@ -401,14 +409,14 @@ tr.me td { background: rgba(201, 182, 255, 0.1); }
   .mast { flex-direction: column; align-items: stretch; }
   .nav { justify-content: flex-start; flex-wrap: nowrap; overflow-x: auto; padding-bottom: 10px; }
   .nav a { white-space: nowrap; }
-  .entrance, .hero, .paths, .team-grid, .news-grid, .award-grid, .stat-grid, .groups, .atlas-grid, .rival-grid { grid-template-columns: 1fr 1fr; }
+  .entrance, .hero, .paths, .team-grid, .news-grid, .award-grid, .stat-grid, .groups, .atlas-grid, .rival-grid, .steps { grid-template-columns: 1fr 1fr; }
   .dock { left: 8px; right: 8px; align-items: flex-start; flex-direction: column; }
   .shell { padding-bottom: 188px; }
   .game-top { grid-template-columns: 1fr; }
   .game-top .club.right { text-align: left; align-items: flex-start; }
 }
 @media (max-width: 640px) {
-  .entrance, .hero, .paths, .team-grid, .news-grid, .award-grid, .stat-grid, .groups, .atlas-grid, .rival-grid { grid-template-columns: 1fr; }
+  .entrance, .hero, .paths, .team-grid, .news-grid, .award-grid, .stat-grid, .groups, .atlas-grid, .rival-grid, .steps { grid-template-columns: 1fr; }
   .brand h1 { font-size: 36px; }
   .nav { justify-content: flex-start; }
   .folio h2 { font-size: 58px; }

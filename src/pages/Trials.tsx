@@ -1,5 +1,5 @@
 import { useMemo, useState } from "react";
-import { playerById, TEAM_BY_ID, TEAMS } from "../data";
+import { CONSTRUCT_ID, playerById, TEAM_BY_ID } from "../data";
 import { formatSeed, parseSeed } from "../engine/rng";
 import type { TrialSummary } from "../engine/tournament";
 import { finishName, one } from "../lib/format";
@@ -21,7 +21,7 @@ export function Trials() {
       <p className="kicker">{trials.length} finished championships</p>
       <h2 className="display" style={{ fontSize: 68 }}>Run the field again</h2>
       <p className="lede">
-        Every trial is a full championship: same primes, same NBA rules, a new draw. Play-by-play is skipped so a hundred of them stay in the browser. Open any seed to watch that exact tournament with the box scores and the log.
+        Every trial is a full championship: the country draw, then the siege. Same human primes, the same built side, the same NBA rules, a new draw. Play-by-play is skipped so a hundred of them stay in the browser. Open any seed to watch that exact tournament. Title bars are the country championship. The floor is whether the Concord ended the threat.
       </p>
       <div className="filters">
         {[10, 25, 50, 100].map((count) => (
@@ -40,6 +40,14 @@ export function Trials() {
           <div className="panel"><span className="tag">Final margin</span><h3>{one(trials.reduce((sum, trial) => sum + trial.margin, 0), trials.length)}</h3><p>Average points between champion and runner-up.</p></div>
           <div className="panel"><span className="tag">Close games</span><h3>{one(trials.reduce((sum, trial) => sum + trial.closeGames, 0), trials.length)}</h3><p>Official games decided by five or fewer, per draw.</p></div>
           <div className="panel"><span className="tag">Comebacks</span><h3>{one(trials.reduce((sum, trial) => sum + trial.comebacks, 0), trials.length)}</h3><p>Wins after trailing by 12 or more, per draw. Upsets by eight seeds: {one(trials.reduce((sum, trial) => sum + trial.upsets, 0), trials.length)}.</p></div>
+        </div>
+      ) : null}
+      {trials.length > 0 ? (
+        <div className="stat-grid" style={{ marginTop: 12 }}>
+          <div className="panel"><span className="tag">Arrival</span><h3>{share(trials.filter((trial) => trial.arrivalWinnerId === CONSTRUCT_ID).length, trials.length)}</h3><p>Draws where the Construct beat the best group winner.</p></div>
+          <div className="panel"><span className="tag">The gate</span><h3>{share(trials.filter((trial) => trial.gateWinnerId === CONSTRUCT_ID).length, trials.length)}</h3><p>Draws where one country champion fell. The rest held.</p></div>
+          <div className="panel"><span className="tag">Restored</span><h3>{share(trials.filter((trial) => trial.threatEnded).length, trials.length)}</h3><p>Draws where the Concord beat the Construct and the country champion kept the floor.</p></div>
+          <div className="panel"><span className="tag">Construct holds</span><h3>{share(trials.filter((trial) => !trial.threatEnded).length, trials.length)}</h3><p>Draws where the built side still has the floor after the restoration.</p></div>
         </div>
       ) : null}
 
@@ -127,7 +135,7 @@ export function Trials() {
             <table>
               <thead>
                 <tr>
-                  <th>Seed</th><th>Champion</th><th>Final</th><th className="num">Margin</th><th>MVP</th><th>Third</th><th>Finish of focus</th>
+                  <th>Seed</th><th>Champion</th><th>Final</th><th className="num">Margin</th><th>MVP</th><th>Floor</th><th>Finish of focus</th>
                 </tr>
               </thead>
               <tbody>
@@ -140,7 +148,7 @@ export function Trials() {
                       <td>{trial.finals}{trial.ot ? " OT" : ""} vs {TEAM_BY_ID[trial.runnerUpId]?.code}</td>
                       <td className="num">{trial.margin}</td>
                       <td>{playerById(trial.mvpId)?.name}</td>
-                      <td>{TEAM_BY_ID[trial.thirdId]?.code}</td>
+                      <td>{trial.threatEnded ? "Restored" : "Construct"}</td>
                       <td>{place ? finishName(place) : "—"}</td>
                     </tr>
                   );
@@ -150,7 +158,7 @@ export function Trials() {
           </div>
         </section>
       ) : null}
-      <p className="note">The book keeps the latest 400 championships in this browser. Power seeds do not change between draws. The results do. {TEAMS.length} sides are in every one of them.</p>
+      <p className="note">The book keeps the latest 400 championships in this browser. Power seeds do not change between draws. The results do. Thirty-two human sides play the country tournament in every one of them. The Construct is outside that draw, and the Concord is named fresh each time.</p>
     </main>
   );
 }

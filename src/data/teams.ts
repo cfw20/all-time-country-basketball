@@ -1,3 +1,4 @@
+import { CONCORD_ID, CONCORD_TEAM } from "./concord";
 import type { Team } from "./types";
 
 export const TEAMS: Team[] = [
@@ -484,6 +485,21 @@ export const TEAMS: Team[] = [
       "Sergei Belov and Andrei Kirilenko, then the EuroBasket generation. Lithuanians, Latvians, Georgians, and Ukrainians are not folded back into a Soviet side. They play for the modern country they belong to.",
     pace: 0.97,
   },
+  {
+    id: "cstr",
+    kind: "construct",
+    country: "No nation",
+    name: "The Construct",
+    nickname: "Construct",
+    code: "CST",
+    region: "Built",
+    colors: { primary: "#c5d7ff", secondary: "#7d8cff" },
+    mark: "lattice",
+    motto: "Built to take the floor.",
+    blurb:
+      "The one invented side. Twenty-two chassis, strong enough that a single all-time country is in real trouble. They stay out of the groups and take no human seat. They arrive at the knockout, play the best group winner, then the country champion, then the Concord: twelve real primes borrowed from the sides already in the field. A Concord win ends the threat and leaves the country champion in place. A Construct win means they hold the floor.",
+    pace: 1.01,
+  },
 ];
 
 export const TEAM_BY_ID: Record<string, Team> = Object.fromEntries(TEAMS.map((t) => [t.id, t]));
@@ -492,4 +508,9 @@ export function teamById(id: string): Team {
   const team = TEAM_BY_ID[id];
   if (!team) throw new Error(`Unknown side ${id}`);
   return team;
+}
+
+/** Country sides, the Construct, or the Concord portrait. */
+export function sideById(id: string): Team | undefined {
+  return TEAM_BY_ID[id] ?? (id === CONCORD_ID ? CONCORD_TEAM : undefined);
 }

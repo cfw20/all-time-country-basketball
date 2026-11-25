@@ -7,6 +7,7 @@ const LINKS = [
   ["/", "Floor"],
   ["/standings", "Groups"],
   ["/bracket", "Bracket"],
+  ["/siege", "Siege"],
   ["/schedule", "Games"],
   ["/teams", "Sides"],
   ["/players", "Players"],
@@ -22,7 +23,7 @@ const LINKS = [
 
 export function Shell() {
   const { tournament, busy, progress, newDraw, replay, simNext, simRest } = usePantheon();
-  const done = tournament.through >= 8;
+  const done = tournament.through >= 9;
   return (
     <div className="shell">
       <div className="sky" aria-hidden="true">

@@ -22,10 +22,10 @@ export interface Tot {
   gs: number;
 }
 
-export function tally(games: GameResult[]): Map<string, Tot> {
+export function tally(games: GameResult[], includeExhibition = false): Map<string, Tot> {
   const map = new Map<string, Tot>();
   for (const game of games) {
-    if (game.exhibition) continue;
+    if (game.exhibition && !includeExhibition) continue;
     const sides = [
       [game.homeId, game.box.home],
       [game.awayId, game.box.away],
@@ -62,10 +62,10 @@ export function tally(games: GameResult[]): Map<string, Tot> {
   return map;
 }
 
-export function teamLine(games: GameResult[], teamId: string): { w: number; l: number; pf: number; pa: number } {
+export function teamLine(games: GameResult[], teamId: string, includeExhibition = false): { w: number; l: number; pf: number; pa: number } {
   const row = { w: 0, l: 0, pf: 0, pa: 0 };
   for (const game of games) {
-    if (game.exhibition) continue;
+    if (game.exhibition && !includeExhibition) continue;
     if (game.homeId !== teamId && game.awayId !== teamId) continue;
     const home = game.homeId === teamId;
     row.pf += home ? game.homeScore : game.awayScore;

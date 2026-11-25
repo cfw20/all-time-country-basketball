@@ -26,7 +26,7 @@ export function Bracket() {
       <p className="kicker">Knockout · neutral floor · NBA overtime</p>
       <h2 className="display" style={{ fontSize: 68 }}>The bracket</h2>
       <p className="lede">
-        A1–B2, C1–D2, E1–F2, G1–H2, then the matching pairs on the other side. No home court. The better power seed is listed second.
+        A1–B2, C1–D2, E1–F2, G1–H2, then the matching pairs on the other side. No home court. The better power seed is listed second. The country bracket ends at the final. <Link to="/siege">The siege</Link> holds the Construct and the Concord.
       </p>
       {tournament.through < 3 ? (
         <p className="empty">The bracket is named after group day 3. Sim the groups and the pairings appear, still unplayed until the round of 16.</p>

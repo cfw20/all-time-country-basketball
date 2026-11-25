@@ -3,7 +3,7 @@ import type { Tournament } from "../data/types";
 import { freshSeed } from "../engine/rng";
 import { simulateTournament, simulateTrial, summarizeTournament, type TrialSummary } from "../engine/tournament";
 
-const KEY = "pantheon-v3";
+const KEY = "pantheon-v4";
 
 interface Saved {
   seed: number;
@@ -14,15 +14,15 @@ interface Saved {
 function readSaved(): Saved {
   try {
     const raw = localStorage.getItem(KEY);
-    if (!raw) return { seed: 20261125, through: 8, trials: [] };
+    if (!raw) return { seed: 20261125, through: 9, trials: [] };
     const parsed = JSON.parse(raw) as Partial<Saved>;
     return {
       seed: typeof parsed.seed === "number" ? parsed.seed >>> 0 : 20261125,
-      through: typeof parsed.through === "number" ? Math.max(0, Math.min(8, parsed.through)) : 8,
+      through: typeof parsed.through === "number" ? Math.max(0, Math.min(9, parsed.through)) : 9,
       trials: Array.isArray(parsed.trials) ? parsed.trials.slice(0, 400) : [],
     };
   } catch {
-    return { seed: 20261125, through: 8, trials: [] };
+    return { seed: 20261125, through: 9, trials: [] };
   }
 }
 
@@ -66,7 +66,7 @@ export function PantheonProvider({ children }: { children: ReactNode }) {
   );
 
   useEffect(() => {
-    if (tournament.through < 8 || !tournament.awards) return;
+    if (tournament.through < 9 || !tournament.awards || !tournament.siege?.restoration) return;
     setTrials((prev) => {
       if (prev.some((trial) => trial.seed === tournament.seed)) return prev;
       return dedupe([summarizeTournament(tournament), ...prev]);
@@ -93,16 +93,16 @@ export function PantheonProvider({ children }: { children: ReactNode }) {
     },
     simNext: () => {
       if (busy) return;
-      setThrough((value) => Math.min(8, value + 1));
+      setThrough((value) => Math.min(9, value + 1));
     },
     simRest: () => {
       if (busy) return;
-      setThrough(8);
+      setThrough(9);
     },
     loadSeed: (next: number) => {
       if (busy) return;
       setSeed(next >>> 0);
-      setThrough(8);
+      setThrough(9);
     },
     runTrials: (count: number) => {
       if (busy || count <= 0) return;

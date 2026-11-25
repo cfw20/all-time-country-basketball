@@ -4,13 +4,15 @@ import { simulateTournament, simulateTrial, teamPower } from "../src/engine/tour
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
 
-if (TEAMS.length !== 32) fail(`expected 32 sides, got ${TEAMS.length}`);
+if (TEAMS.length !== 33) fail(`expected 33 sides, got ${TEAMS.length}`);
 const overflow = TEAMS.filter((t) => t.kind === "overflow");
 const homeland = TEAMS.filter((t) => t.kind === "homeland");
 const countries = TEAMS.filter((t) => t.kind === "country");
+const built = TEAMS.filter((t) => t.kind === "construct");
 if (overflow.length !== 3) fail(`expected 3 overflow houses, got ${overflow.length}`);
 if (homeland.length !== 1) fail(`expected 1 homeland house, got ${homeland.length}`);
 if (countries.length !== 28) fail(`expected 28 countries, got ${countries.length}`);
+if (built.length !== 1) fail(`expected 1 constructed side, got ${built.length}`);
 
 const seen = new Map<string, string>();
 for (const team of TEAMS) {
@@ -36,6 +38,12 @@ for (const team of TEAMS) {
     }
     if (team.kind === "homeland" && player.nationality === "United States") {
       fail(`${player.name} should not be American on the Lantern`);
+    }
+    if (team.kind === "construct" && player.nationality !== "Construct") {
+      fail(`${player.name} on the Construct is ${player.nationality}`);
+    }
+    if (team.kind !== "construct" && player.nationality === "Construct") {
+      fail(`${player.name} is marked constructed on a human side`);
     }
     const prior = seen.get(player.name);
     if (prior) fail(`duplicate name ${player.name} (${prior} and ${team.id})`);
@@ -146,6 +154,21 @@ if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star 
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
 if (official.length !== 48 + 8 + 4 + 2 + 2) fail(`unexpected game count ${official.length}`);
 if ((final?.plays.length ?? 0) < 40) fail("final play log too thin");
+const siege = tournament.siege;
+if (!siege?.arrival || !siege.gate || !siege.restoration) fail("siege is missing a night");
+if (tournament.groups.some((group) => group.teamIds.includes("cstr"))) fail("Construct was drawn into a group");
+if (tournament.ranking.some((row) => row.teamId === "cstr")) fail("Construct was given a country seed");
+if ((siege?.concordIds.length ?? 0) !== 12) fail(`Concord has ${siege?.concordIds.length} players`);
+const concordCountries = new Map<string, number>();
+for (const id of siege?.concordIds ?? []) {
+  const player = playerById(id);
+  if (!player || player.teamId === "cstr") fail(`Concord seat ${id} is not a human prime`);
+  else concordCountries.set(player.nationality, (concordCountries.get(player.nationality) ?? 0) + 1);
+}
+if ([...concordCountries.values()].some((count) => count > 5)) fail("Concord broke the five-player country cap");
+if (concordCountries.size < 6) fail(`Concord only spans ${concordCountries.size} sides`);
+console.log("SIEGE", siege?.arrival && `${siege.arrival.awayName} ${siege.arrival.awayScore} @ ${siege.arrival.homeName} ${siege.arrival.homeScore}`, "|", siege?.gate && `${siege.gate.awayName} ${siege.gate.awayScore} @ ${siege.gate.homeName} ${siege.gate.homeScore}`, "|", siege?.restoration && `${siege.restoration.awayName} ${siege.restoration.awayScore} @ ${siege.restoration.homeName} ${siege.restoration.homeScore}`, siege?.threatEnded ? "RESTORED" : "HELD");
+console.log("CONCORD", (siege?.concordIds ?? []).map((id, index) => `${index < 5 ? "*" : ""}${playerById(id)?.name}`).join(", "));
 if (mean < 102 || mean > 128) fail(`mean score ${mean.toFixed(1)} is outside 102-128`);
 const jordan = minutes("cont").find((row) => row.name === "Michael Jordan");
 const aminu = minutes("grns").find((row) => row.name === "Al-Farouq Aminu");
@@ -156,19 +179,30 @@ if (twMpg > 11) fail(`two-way minutes ${twMpg.toFixed(1)} are too high`);
 const trialStart = Date.now();
 const champs = new Map<string, number>();
 const TRIALS = 40;
+let arrivalConstruct = 0;
+let gateConstruct = 0;
+let restored = 0;
 for (let i = 0; i < TRIALS; i++) {
   const trial = simulateTrial(1100 + i * 97);
   champs.set(trial.championId, (champs.get(trial.championId) ?? 0) + 1);
-  if (!trial.mvpId || !trial.championId) fail(`bad trial ${trial.seed}`);
+  if (trial.arrivalWinnerId === "cstr") arrivalConstruct += 1;
+  if (trial.gateWinnerId === "cstr") gateConstruct += 1;
+  if (trial.threatEnded) restored += 1;
+  if (!trial.mvpId || !trial.championId || !trial.restorationWinnerId) fail(`bad trial ${trial.seed}`);
 }
 console.log(`\n${TRIALS} TRIALS ${Date.now() - trialStart}ms`);
 for (const [id, n] of [...champs.entries()].sort((a, b) => b[1] - a[1])) {
   console.log(String(n).padStart(3), TEAMS.find((t) => t.id === id)?.name);
 }
+console.log(`ARRIVAL construct ${arrivalConstruct}/${TRIALS}  GATE construct ${gateConstruct}/${TRIALS}  RESTORED ${restored}/${TRIALS}`);
 const contTitles = champs.get("cont") ?? 0;
 if (contTitles > 28) fail(`Continental won ${contTitles}/${TRIALS}, too locked`);
 if (contTitles < 6) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 3) fail(`only ${champs.size} champions in ${TRIALS} draws`);
+if (arrivalConstruct < 18) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, too mild a threat`);
+if (gateConstruct < 22) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
+if (gateConstruct > 38) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
+if (restored < 10 || restored > 30) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

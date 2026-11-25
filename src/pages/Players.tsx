@@ -1,6 +1,6 @@
 import { useMemo, useState } from "react";
 import { Link } from "react-router-dom";
-import { PLAYERS, TEAM_BY_ID } from "../data";
+import { isConstructed, PLAYERS, TEAM_BY_ID } from "../data";
 import { kindLabel } from "../lib/format";
 
 export function Players() {
@@ -18,12 +18,12 @@ export function Players() {
 
   return (
     <main className="page">
-      <p className="kicker">{PLAYERS.length} primes</p>
+      <p className="kicker">{PLAYERS.filter((player) => !isConstructed(player)).length} primes · 22 constructed units</p>
       <h2 className="display" style={{ fontSize: 68 }}>The book</h2>
-      <p className="lede">Every name is the prime on the card. Search a name, a side, or a nationality. Faded seasons and current age are not in the book.</p>
+      <p className="lede">Every human name is the prime on the card. The Construct is the one built side, and those units are marked Built. Search a name, a side, or a nationality.</p>
       <div className="filters">
         <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search the book" aria-label="Search players" />
-        {["All", "Country", "Overflow", "Homeland"].map((item) => (
+        {["All", "Country", "Overflow", "Homeland", "Construct"].map((item) => (
           <button key={item} type="button" className={item === kind ? "on" : ""} onClick={() => setKind(item)}>{item}</button>
         ))}
       </div>
@@ -42,8 +42,8 @@ export function Players() {
                   <td className="name-cell"><Link to={`/players/${player.id}`}>{player.name}</Link></td>
                   <td><Link to={`/teams/${team.id}`}>{team.name}</Link></td>
                   <td>{player.pos}</td>
-                  <td className="num">{player.primeYear}</td>
-                  <td>{team.kind === "country" ? "Country" : team.kind === "overflow" ? "Overflow" : "Homeland"}</td>
+                  <td className="num">{team.kind === "construct" ? "Built" : player.primeYear}</td>
+                  <td>{kindLabel(team.kind)}</td>
                   <td className="num">{player.ratings.ovr}</td>
                 </tr>
               );

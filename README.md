@@ -1,10 +1,10 @@
 # Pantheon
 
-Pantheon is a fictional all-time world basketball championship. Thirty-two sides, every prime at once, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
+Pantheon is a fictional all-time world basketball championship. Thirty-two human sides, every prime at once, plus one constructed villain side, played under NBA rules only. The site runs entirely in the browser. There is no paid API and no public deployment.
 
 This repository is private. It stays private until the owner decides to publish. Do not flip the repository to public, and do not deploy a public site from this project, unless the owner makes that decision.
 
-The players are real. The club names, the mixed houses, and the games are invented. Pantheon is not affiliated with the NBA or FIBA.
+The human players are real. The club names, the mixed houses, the Construct, and the games are invented. Pantheon is not affiliated with the NBA or FIBA.
 
 ## Run it
 
@@ -31,13 +31,15 @@ This is not a signing league and not a free-agent market. Countries and mixed si
 2. **Overflow path.** Americans who could not earn minutes on the national side. The houses, in order, are Vanguard, Afterlight, and Palladium. The national cut is positional: some all-time centers chose a house where the middle was actually open. There is no fourth American house.
 3. **Homeland path.** A great player whose country cannot fill a competitive all-time side. They choose the Lantern Company. It is the only house of that kind.
 
-Player pages state which path they took, and they state the prime. Every player is shown and simulated only in that prime. There is no faded version and no current-age card.
+Player pages state which path they took, and they state the prime. Every human player is shown and simulated only in that prime. There is no faded version and no current-age card.
+
+The Construct is the one invented side: twenty-two built units, outside the groups. They are a real threat under the same NBA engine. After the country final, the champion plays them at the gate. The Concord — twelve real primes already in the field, at most five from any one country — then plays them once. A Concord win ends the threat and leaves the country champion in place. A Construct win means they hold the floor.
 
 ## Rosters and status
 
 Each side carries a deep NBA-style book, twenty-two primes: a standard body, two two-way deals, and at least one 10-day, Exhibit 10, hardship, or other short stay. The extra seats are real players in a deep minute band. Those labels are minute bands, not contracts a team handed out.
 
-Stars play the heavy minutes. Rotation players live in the teens and low twenties. Two-ways, deep bench, and short deals stay sparse until fouls, a blowout, an injury scare, or a call-up. An injury scare lasts that game only. Ratings describe a prime already on record, including young players, and they do not project a career that has not happened. The atlas page groups the whole book by decade.
+Stars play the heavy minutes. Rotation players live in the teens and low twenties. Two-ways, deep bench, and short deals stay sparse until fouls, a blowout, an injury scare, or a call-up. An injury scare lasts that game only. Ratings describe a prime already on record, including young players, and they do not project a career that has not happened. The atlas page groups the human book by decade. The Construct is filed on its own side.
 
 ## Rules
 
@@ -54,7 +56,7 @@ No FIBA quarter length, foul limit, or roster cap is used anywhere in the event.
 
 ## The field
 
-Twenty-eight countries, three American overflow houses, and one homeland house.
+Twenty-eight countries, three American overflow houses, one homeland house, and the Construct. The Concord is assembled per draw and is not a thirty-fourth side.
 
 | Side | Kind | Country |
 | --- | --- | --- |
@@ -90,6 +92,7 @@ Twenty-eight countries, three American overflow houses, and one homeland house.
 | Fleuve | Country | DR Congo |
 | Olive Standard | Country | Israel |
 | Nevsky Court | Country | Russia |
+| The Construct | Constructed | No nation. Built units, outside the draw |
 
 ## The competition
 
@@ -97,13 +100,15 @@ Eight groups of four, drawn in pots from a fixed power ranking so each group get
 
 The bracket is fixed from group place: A1–B2, C1–D2, E1–F2, G1–H2, and the matching pairs on the other side. Neutral floors. A third-place game is played on final night.
 
-After the groups, an interval that does not count: an All-Star game (First Light against Second Light), a skills challenge, a three-point contest, and a dunk contest. Honors after the final include tournament MVP, Finals MVP, defense, sixth man, breakout, and two all-tournament teams. The wire is written from the box score of that draw: buzzers, upsets, blowouts, injury scares, short-deal nights, and the interval winners. Nights collects rematches, close games, and margins from the active draw.
+After the groups, an interval that does not count: an All-Star game (First Light against Second Light), a skills challenge, a three-point contest, and a dunk contest. The Construct does not enter those nights. Honors after the final include tournament MVP, Finals MVP, defense, sixth man, breakout, and two all-tournament teams, all from the country games.
+
+The siege is three NBA games off the standings. The arrival, at the start of the knockout, is the Construct against the best group winner. The gate is the country champion against the Construct. The restoration is the Concord against the Construct, and it decides whether the country champion keeps the floor. The wire includes those nights. Nights collects rematches, close games, and margins from the country draw.
 
 Every game has quarter scores, a full box (points, rebounds, assists, steals, blocks, turnovers, fouls, minutes, field goals, threes, free throws), and a possession log. Favorites win more often. They are not locks.
 
 ## Comparing draws
 
-Trials rerun the whole championship with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows title rate, finals, final four, average finish, win rate, honors, final margins, close games, comebacks, and upsets. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v3`.
+Trials rerun the whole championship, siege included, with play-by-play skipped, so a batch stays quick. The Trials page runs 10, 25, 50, or 100 championships and keeps up to 400 in this browser. It shows country title rate, finals, final four, average finish, win rate, honors, final margins, close games, comebacks, and upsets, plus how often the Construct wins the arrival and the gate and how often the Concord restores the floor. Click a side to inspect it, or open a seed to watch that exact tournament with the logs restored. Power seed does not change between draws. Finish does. The active draw and the trial list are stored locally under `pantheon-v4`.
 
 A game page has the line score, team shooting and true shooting, a short list of the plays that swung it, and the full possession log. Player pages carry a game log for the open draw. Team pages list every result. The painted floor is the look. The games are NBA basketball, played at the prime on each card.
 

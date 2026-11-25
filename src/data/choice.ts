@@ -1,4 +1,4 @@
-import { contractLabel, roleLabel } from "./ratings";
+import { dutyLabel, roleLabel, statusLabel } from "./ratings";
 import type { Player, Team } from "./types";
 
 export interface ChoiceStory {
@@ -8,7 +8,14 @@ export interface ChoiceStory {
 }
 
 export function choiceStory(player: Player, team: Team): ChoiceStory {
-  const seat = `${contractLabel(player.contract)} seat in the ${roleLabel(player.role).toLowerCase()} minute band`;
+  const seat = `${statusLabel(player.contract, false)} seat in the ${roleLabel(player.role).toLowerCase()} minute band`;
+  if (team.kind === "construct") {
+    return {
+      kicker: "Constructed",
+      title: "Built for the siege",
+      body: `${player.name} is a chassis on The Construct, the one invented side. There is no country and no prime. ${dutyLabel(player.role, true)} is the minute band, filed as a ${statusLabel(player.contract, true).toLowerCase()}: how often this unit is on the floor. ${player.note ?? ""} Every human name in the book is still a real prime.`.replace(/\s+/g, " ").trim(),
+    };
+  }
   if (team.kind === "country") {
     return {
       kicker: "Country path",

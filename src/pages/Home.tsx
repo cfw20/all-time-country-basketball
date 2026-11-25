@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { PLAYERS, playerById, TEAM_BY_ID, TEAMS } from "../data";
+import { CONSTRUCT_ID, isConstructed, PLAYERS, playerById, sideById, TEAM_BY_ID, TEAMS } from "../data";
 import { Mark } from "../components/Marks";
 import { formatSeed } from "../engine/rng";
 import { usePantheon } from "../state/store";
@@ -12,8 +12,11 @@ export function Home() {
   const mvp = tournament.awards ? playerById(tournament.awards.mvpId) : undefined;
   const latestLabel = tournament.games.at(-1)?.dayLabel;
   const latest = latestLabel ? tournament.games.filter((game) => game.dayLabel === latestLabel).slice(-4) : [];
-  const houses = TEAMS.filter((team) => team.kind !== "country");
+  const houses = TEAMS.filter((team) => team.kind === "overflow" || team.kind === "homeland");
   const nations = TEAMS.filter((team) => team.kind === "country");
+  const humans = PLAYERS.filter((player) => !isConstructed(player)).length;
+  const restoration = tournament.siege?.restoration;
+  const held = Boolean(restoration && !tournament.siege?.threatEnded);
 
   return (
     <main className="page">
@@ -23,12 +26,24 @@ export function Home() {
           <p className="kicker">A private all-time floor · NBA rules</p>
           <h2 className="display">Every prime<span>on one night.</span></h2>
           <p className="lede">
-            {PLAYERS.length} real primes. Thirty-two sides. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and nobody is simulated at a faded age.
+            {humans} real primes. Thirty-two human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
           </p>
         </div>
         <div className="panel">
           <span className="tag">{champ ? "This draw" : "The field is drawn"}</span>
-          {champ ? (
+          {champ && held && restoration ? (
+            <>
+              <div className="champion-mark" style={{ marginTop: 12 }}>
+                <Mark team={TEAM_BY_ID[CONSTRUCT_ID]} size={56} />
+                <h3 className="display" style={{ fontSize: 40 }}>The Construct</h3>
+              </div>
+              <p className="scoreline">
+                {Math.max(restoration.homeScore, restoration.awayScore)} · The Concord {Math.min(restoration.homeScore, restoration.awayScore)}
+                {restoration.ot ? " · OT" : ""}
+              </p>
+              <p>{champ.name} won the countries, over {runner?.name}. The Construct beat the Concord and holds the floor. {mvp ? `${mvp.name} is the country MVP.` : ""}</p>
+            </>
+          ) : champ ? (
             <>
               <div className="champion-mark" style={{ marginTop: 12 }}>
                 <Mark team={champ} size={56} />
@@ -38,7 +53,13 @@ export function Home() {
                 {Math.max(final!.homeScore, final!.awayScore)} · {runner?.name} {Math.min(final!.homeScore, final!.awayScore)}
                 {final!.ot ? " · OT" : ""}
               </p>
-              <p>{mvp ? `${mvp.name} is the tournament MVP. ` : ""}Favorites win more often. They do not own the night.</p>
+              <p>
+                {tournament.siege?.threatEnded
+                  ? `The Concord beat the Construct. ${champ.name} keeps the championship, and the floor is country against country again. `
+                  : "The country final is in. The siege still decides whether that title holds the floor. "}
+                {mvp ? `${mvp.name} is the tournament MVP. ` : ""}
+                Favorites win more often. They do not own the night.
+              </p>
             </>
           ) : (
             <>
@@ -63,6 +84,16 @@ export function Home() {
           <span>Great players whose country cannot fill a competitive all-time side. They choose the Lantern Company.</span>
         </article>
       </div>
+
+      <Link to="/siege" className="panel siege-banner">
+        <span className="tag">{tournament.siege?.threatEnded ? "Threat ended" : restoration ? "Construct holds" : "The Construct"}</span>
+        <h3>{tournament.siege?.threatEnded ? "The countries have the floor back." : "A built side is in the championship."}</h3>
+        <p>
+          {restoration
+            ? `${scoreName(restoration.winnerId, restoration)} ${Math.max(restoration.homeScore, restoration.awayScore)} · ${scoreName(restoration.loserId, restoration)} ${Math.min(restoration.homeScore, restoration.awayScore)}. Open the three nights.`
+            : "Arrival, the gate, then the Concord: twelve real primes, one night, against the Construct."}
+        </p>
+      </Link>
 
       <section className="section">
         <div className="section-head">
@@ -143,7 +174,7 @@ export function Home() {
 }
 
 function scoreName(id: string, game: { homeId: string; awayId: string; homeName?: string; awayName?: string }): string {
-  if (id === game.homeId) return game.homeName ?? TEAM_BY_ID[id]?.name ?? id;
-  if (id === game.awayId) return game.awayName ?? TEAM_BY_ID[id]?.name ?? id;
-  return TEAM_BY_ID[id]?.name ?? id;
+  if (id === game.homeId) return game.homeName ?? sideById(id)?.name ?? id;
+  if (id === game.awayId) return game.awayName ?? sideById(id)?.name ?? id;
+  return sideById(id)?.name ?? id;
 }

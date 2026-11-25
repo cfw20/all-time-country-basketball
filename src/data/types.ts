@@ -10,7 +10,7 @@ export type Contract =
   | "hardship"
   | "short";
 
-export type SideKind = "country" | "overflow" | "homeland";
+export type SideKind = "country" | "overflow" | "homeland" | "construct" | "concord";
 
 export type Arch =
   | "point"
@@ -65,7 +65,7 @@ export interface Team {
   code: string;
   region: string;
   colors: { primary: string; secondary: string };
-  mark: "ring" | "shield" | "diamond" | "arch" | "bars";
+  mark: "ring" | "shield" | "diamond" | "arch" | "bars" | "lattice";
   motto: string;
   blurb: string;
   pace: number;
@@ -189,6 +189,17 @@ export interface NewsItem {
   order: number;
 }
 
+/** The Construct's three nights, and the human roster borrowed to answer them. */
+export interface Siege {
+  arrival: GameResult | null;
+  gate: GameResult | null;
+  restoration: GameResult | null;
+  /** Real human player ids, opening five first. Empty until the Concord is named. */
+  concordIds: string[];
+  /** The Concord won the restoration, so the country champion keeps the floor. */
+  threatEnded: boolean;
+}
+
 export interface Tournament {
   seed: number;
   through: number;
@@ -203,4 +214,5 @@ export interface Tournament {
   awards: Awards | null;
   news: NewsItem[];
   finishes: Record<string, number>;
+  siege: Siege | null;
 }
