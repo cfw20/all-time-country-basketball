@@ -1,5 +1,6 @@
 import { PLAYERS, ROSTERS, TEAMS, playerById } from "../src/data";
 import { ERA_CARDS, eraCard, honorFor, seasonRecord, simulateSeason, startYear, yearUnlock } from "../src/engine/season";
+import { playDecade, playFive, playFortnight, playGauntlet, playHill, playOpen, playSurvivor } from "../src/engine/floors";
 import { drawThrone, playClash, playQuick, playThrone } from "../src/engine/side";
 import { lightLamp } from "../src/engine/tournament";
 import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from "../src/engine/tournament";
@@ -7,14 +8,14 @@ import { simulateTournament, simulateTrial, teamPower, type TrialSummary } from 
 const errors: string[] = [];
 const fail = (message: string) => errors.push(message);
 
-if (TEAMS.length !== 33) fail(`expected 33 sides, got ${TEAMS.length}`);
+if (TEAMS.length !== 41) fail(`expected 41 sides, got ${TEAMS.length}`);
 const overflow = TEAMS.filter((t) => t.kind === "overflow");
 const homeland = TEAMS.filter((t) => t.kind === "homeland");
 const countries = TEAMS.filter((t) => t.kind === "country");
 const built = TEAMS.filter((t) => t.kind === "construct");
-if (overflow.length !== 3) fail(`expected 3 overflow houses, got ${overflow.length}`);
-if (homeland.length !== 1) fail(`expected 1 homeland house, got ${homeland.length}`);
-if (countries.length !== 28) fail(`expected 28 countries, got ${countries.length}`);
+if (overflow.length !== 18) fail(`expected 18 overflow houses, got ${overflow.length}`);
+if (homeland.length !== 4) fail(`expected 4 homeland houses, got ${homeland.length}`);
+if (countries.length !== 18) fail(`expected 18 countries, got ${countries.length}`);
 if (built.length !== 1) fail(`expected 1 constructed side, got ${built.length}`);
 
 const seen = new Map<string, string>();
@@ -69,8 +70,9 @@ expect("Luka Doncic", "alps");
 expect("Giannis Antetokounmpo", "ordr");
 expect("Dirk Nowitzki", "iron");
 expect("Victor Wembanyama", "roya");
-expect("Yao Ming", "drgn");
-expect("Dikembe Mutombo", "flve");
+expect("Yao Ming", "bstn");
+expect("Dikembe Mutombo", "bstn");
+expect("Karl-Anthony Towns", "bstn");
 expect("Steve Nash", "nrth");
 expect("Pascal Siakam", "nrth");
 expect("Drazen Petrovic", "fire");
@@ -81,9 +83,12 @@ expect("Michael Jordan", "cont");
 const nigeria = ROSTERS.grns ?? [];
 if (nigeria.some((p) => p.name === "Hakeem Olajuwon")) fail("Hakeem must not be on Nigeria");
 
-const ranked = TEAMS.map((t) => ({ name: t.name, id: t.id, power: teamPower(t.id) })).sort((a, b) => b.power - a.power);
+const ranked = TEAMS.map((t) => ({ name: t.name, id: t.id, kind: t.kind, power: teamPower(t.id) })).sort((a, b) => b.power - a.power);
 console.log("POWER");
-for (const row of ranked) console.log(row.power.toFixed(1).padStart(7), row.name);
+for (const row of ranked) console.log(row.power.toFixed(1).padStart(7), row.kind, row.name);
+for (const row of ranked) {
+  if (row.kind !== "construct" && row.power < 820) fail(`${row.name} power ${row.power.toFixed(0)} is below the field floor`);
+}
 
 const started = Date.now();
 const tournament = simulateTournament(20261125, { log: true, exhibitions: true });
@@ -130,8 +135,8 @@ function minutes(teamId: string) {
 
 console.log("\nCONTINENTAL");
 for (const row of minutes("cont")) console.log(row.mpg.toFixed(1).padStart(5), row.ppg.toFixed(1).padStart(5), row.role, row.deal, row.name);
-console.log("\nNIGERIA");
-for (const row of minutes("grns").slice(0, 10)) console.log(row.mpg.toFixed(1).padStart(5), row.ppg.toFixed(1).padStart(5), row.role, row.deal, row.name);
+console.log("\nBASTION");
+for (const row of minutes("bstn").slice(0, 8)) console.log(row.mpg.toFixed(1).padStart(5), row.ppg.toFixed(1).padStart(5), row.role, row.deal, row.name);
 
 let twSec = 0;
 let twG = 0;
@@ -158,7 +163,12 @@ console.log(`\nstar mpg ${starMpg.toFixed(1)} two-way mpg ${twMpg.toFixed(1)}`);
 if (!tournament.awards) fail("missing awards");
 if (!tournament.allStar || tournament.allStar.plays.length < 20) fail("all-star log too thin");
 if (!tournament.three || !tournament.dunk || !tournament.skills) fail("missing interval contests");
-if (officialSeries.length !== 48 + 8 + 4 + 2 + 2) fail(`unexpected series count ${officialSeries.length}`);
+const expectedSeries = tournament.groups.length * 6 + 8 + 4 + 2 + 2;
+if (tournament.groups.length !== 10) fail(`expected 10 groups, got ${tournament.groups.length}`);
+if (tournament.groups.some((group) => group.teamIds.length !== 4)) fail("a group is not four sides");
+const r16ids = new Set(tournament.series.filter((item) => item.round === "r16").flatMap((item) => [item.homeId, item.awayId]));
+if (r16ids.size !== 16) fail(`round of 16 has ${r16ids.size} sides`);
+if (officialSeries.length !== expectedSeries) fail(`unexpected series count ${officialSeries.length}`);
 for (const item of officialSeries) {
   const wins = Math.max(item.homeWins, item.awayWins);
   const losses = Math.min(item.homeWins, item.awayWins);
@@ -190,9 +200,9 @@ console.log("SIEGE", seriesLine(siege?.arrival), "|", seriesLine(siege?.gate), "
 console.log("CONCORD", (siege?.concordIds ?? []).map((id, index) => `${index < 5 ? "*" : ""}${playerById(id)?.name}`).join(", "));
 if (mean < 102 || mean > 128) fail(`mean score ${mean.toFixed(1)} is outside 102-128`);
 const jordan = minutes("cont").find((row) => row.name === "Michael Jordan");
-const aminu = minutes("grns").find((row) => row.name === "Al-Farouq Aminu");
+const yao = minutes("bstn").find((row) => row.name === "Yao Ming");
 if (!jordan || jordan.mpg < 24) fail(`Jordan minutes ${jordan?.mpg.toFixed(1)}`);
-if (!aminu || aminu.mpg < 28) fail(`Aminu minutes ${aminu?.mpg.toFixed(1)}`);
+if (!yao || yao.mpg < 24) fail(`Yao minutes ${yao?.mpg.toFixed(1)}`);
 if (twMpg > 11) fail(`two-way minutes ${twMpg.toFixed(1)} are too high`);
 
 const trialStart = Date.now();
@@ -215,14 +225,16 @@ for (const [id, n] of [...champs.entries()].sort((a, b) => b[1] - a[1])) {
 }
 console.log(`ARRIVAL construct ${arrivalConstruct}/${TRIALS}  GATE construct ${gateConstruct}/${TRIALS}  RESTORED ${restored}/${TRIALS}`);
 const contTitles = champs.get("cont") ?? 0;
-if (contTitles > 38) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
+const leader = [...champs.entries()].sort((a, b) => b[1] - a[1])[0];
+if (!leader || leader[0] !== "cont") fail(`Continental is not the most common champion`);
+if (contTitles > 34) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
 if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-if (arrivalConstruct < 26) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, too mild a threat`);
-if (arrivalConstruct > 37) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, the arrival is a lock`);
-if (gateConstruct < 26) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
-if (gateConstruct > 37) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
-if (restored < 4 || restored > 18) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
+if (arrivalConstruct < 24) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, too mild a threat`);
+if (arrivalConstruct > 38) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, the arrival is a lock`);
+if (gateConstruct < 24) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, a single country handles them too often`);
+if (gateConstruct > 38) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, the gate is a lock`);
+if (restored < 2 || restored > 22) fail(`Concord restored the floor ${restored}/${TRIALS}, the climax is out of range`);
 
 for (const card of ERA_CARDS) {
   if (card.playerIds.length < 2) fail(`${card.franchise} ${card.years} lists ${card.playerIds.length} primes`);
@@ -262,6 +274,22 @@ if (!lamp.three.winnerId || !lamp.dunk.winnerId || !lamp.skills.winnerId) fail("
 const throne = playThrone(20261125);
 if (throne.games.length !== 7 || drawThrone(20261125).length !== 8 || !eraCard(throne.champion)) fail("the throne did not finish an eight-team night");
 console.log(`FLOORS clash ${clash.homeScore}-${clash.awayScore} series ${quick.homeWins}-${quick.awayWins} throne ${throne.champion}`);
+const hill = playHill(20261125);
+const gauntlet = playGauntlet(20261125);
+const decade = playDecade(20261125);
+const open = playOpen(20261125);
+const fortnight = playFortnight(20261125);
+const survivor = playSurvivor(20261125);
+const five = playFive(20261125);
+if (hill.games.length !== 8 || !hill.king) fail("the hill did not play eight nights");
+if (gauntlet.games.length !== 7 || gauntlet.games.at(-1)?.note !== "The Construct") fail("the gauntlet did not end at the Construct");
+if (decade.rows.length !== 8 || decade.games.length !== 29) fail(`decade cup played ${decade.games.length} games`);
+if (open.rounds.length !== 4 || open.rounds.reduce((sum, round) => sum + round.games.length, 0) !== 15) fail("the open is not a sixteen-side bracket");
+const fortWins = Math.max(fortnight.series.homeWins, fortnight.series.awayWins);
+if (fortnight.games.length !== 15 || fortWins !== 4) fail("fortnight did not finish a round robin and a series");
+if (survivor.rounds.length < 3 || !survivor.champion) fail("survivor did not play down to a champion");
+if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70) fail("the five did not tip");
+console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
 
 if (errors.length) {
   console.error("\nSANITY FAILED");

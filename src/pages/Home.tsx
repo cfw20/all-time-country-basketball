@@ -76,15 +76,15 @@ export function Home() {
       <div className="paths">
         <article className="path">
           <strong>Country</strong>
-          <span>Made the playable all-time roster of their own nation. Twenty-eight countries are in the field.</span>
+          <span>Made the playable all-time roster of their own nation. Countries that cannot fill a competitive book are not in the draw. Their best primes chose a homeland house.</span>
         </article>
         <article className="path">
           <strong>Overflow</strong>
-          <span>American primes the Continental could not minute. Vanguard, then Afterlight, then Palladium. No fourth house.</span>
+          <span>American primes the houses above them could not minute. Vanguard, Afterlight, Palladium, and a long run of houses after them. A player chooses the first house that still had a night.</span>
         </article>
         <article className="path">
           <strong>Homeland</strong>
-          <span>Great players whose country cannot fill a competitive all-time side. They choose the Lantern Company.</span>
+          <span>Great players whose country cannot fill a competitive all-time side. They choose the Lantern, the Bastion, the Harbor, or the Reed. The house is shared. Nobody signed them.</span>
         </article>
       </div>
 
@@ -108,6 +108,13 @@ export function Home() {
           <Link to="/play/series" className="panel door"><span className="tag">First to four</span><h3>A series tonight</h3><p>Any two sides, the Construct included. A best-of-seven on demand.</p></Link>
           <Link to="/play/lamp" className="panel door"><span className="tag">Contests</span><h3>The Lamp</h3><p>Threes, dunks, and skills, lit whenever you want.</p></Link>
           <Link to="/play/throne" className="panel door"><span className="tag">A bracket</span><h3>The Throne</h3><p>Eight era sides. Seven games. One year leaves with the floor.</p></Link>
+          <Link to="/play/hill" className="panel door"><span className="tag">Winner stays</span><h3>King of the Hill</h3><p>Defend the floor. The last challenger is the Construct.</p></Link>
+          <Link to="/play/gauntlet" className="panel door"><span className="tag">Seven rungs</span><h3>The Gauntlet</h3><p>One side climbs the field, one NBA game at a time.</p></Link>
+          <Link to="/play/decade" className="panel door"><span className="tag">By decade</span><h3>Decade Cup</h3><p>Every prime plays for the decade on the card.</p></Link>
+          <Link to="/play/open" className="panel door"><span className="tag">Sixteen sides</span><h3>The Open</h3><p>A one-game bracket. Loser out.</p></Link>
+          <Link to="/play/fortnight" className="panel door"><span className="tag">Then a series</span><h3>Fortnight</h3><p>Six sides, a round robin, a best-of-seven final.</p></Link>
+          <Link to="/play/survivor" className="panel door"><span className="tag">Worst loss out</span><h3>Survivor</h3><p>Eight sides. The heaviest defeat goes home.</p></Link>
+          <Link to="/play/five" className="panel door"><span className="tag">Two fives</span><h3>The Five</h3><p>Ten names from the whole book. One game.</p></Link>
         </div>
       </section>
 

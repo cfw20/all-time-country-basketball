@@ -229,7 +229,7 @@ Buddy Hield|SG|6-4|2018|Bahamas|starter|standard|shooter|80|20|52|1|-|three:88,s
 Tomas Satoransky|PG|6-7|2019|Czechia|starter|standard|point|80|16|34|1|-|play:84,def:76,three:76,reb:60|Czechia cannot fill a Pantheon roster.
 Steven Adams|C|6-11|2018|New Zealand|starter|standard|rim|82|12|0|0|-|reb:90,def:84,shot:68,play:62,ft:55|New Zealand cannot fill a Pantheon roster.
 Clint Capela|C|6-10|2019|Switzerland|rotation|standard|rim|81|12|0|0|-|reb:88,def:82,shot:70,ath:80|Switzerland cannot fill a Pantheon roster.
-Marcin Gortat|C|6-11|2014|Poland|rotation|standard|rim|80|14|0|0|-|reb:84,def:76,shot:72|Poland is outside the twenty-eight country sides.
+Marcin Gortat|C|6-11|2014|Poland|rotation|standard|rim|80|14|0|0|-|reb:84,def:76,shot:72|Poland cannot fill a competitive all-time roster.
 Rik Smits|C|7-4|1995|Netherlands|rotation|standard|post|79|18|0|0|-|shot:78,reb:72,def:70,ft:76|The Netherlands cannot fill a Pantheon roster.
 Thabo Sefolosha|SG|6-7|2015|Switzerland|rotation|standard|defender|78|12|36|0|SF|def:88,three:74,ath:80
 Jeremy Sochan|PF|6-9|2025|Poland|rotation|standard|defender|78|16|28|0|-|def:80,ath:82,reb:74,play:68|Born in the United Kingdom. Represents Poland. Rated on the prime already on record.

@@ -1,16 +1,19 @@
 import { Link } from "react-router-dom";
 import { TEAM_BY_ID } from "../data";
-import { standingsFor } from "../engine/tournament";
+import { advancingIds, standingsFor } from "../engine/tournament";
 import { usePantheon } from "../state/store";
 
 export function Standings() {
   const { tournament } = usePantheon();
+  const seedOf = new Map(tournament.ranking.map((row) => [row.teamId, row.seed]));
+  const played = tournament.series.some((item) => item.round.startsWith("group"));
+  const advancing = played ? advancingIds(tournament.groups, tournament.series, seedOf) : new Set<string>();
   return (
     <main className="page">
-      <p className="kicker">Group stage · eight groups of four</p>
+      <p className="kicker">Group stage · {tournament.groups.length} groups of four</p>
       <h2 className="display" style={{ fontSize: 68 }}>The tables</h2>
       <p className="lede">
-        Each cell is a best-of-seven. Tiebreakers, in order: series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. The top two advance.
+        Each cell is a best-of-seven. Tiebreakers, in order: series wins, head-to-head series when exactly two sides are tied, game differential, point differential, points scored, then pre-draw power. Every group winner advances. The best seconds fill the round of 16. A dot marks a side that is through.
       </p>
       <div className="groups" style={{ marginTop: 22 }}>
         {tournament.groups.map((group) => {
@@ -29,13 +32,13 @@ export function Standings() {
                   </tr>
                 </thead>
                 <tbody>
-                  {rows.map((row, index) => {
+                  {rows.map((row) => {
                     const team = TEAM_BY_ID[row.teamId];
                     return (
                       <tr key={row.teamId}>
                         <td>
                           <Link to={`/teams/${row.teamId}`}>
-                            {index < 2 && row.w + row.l > 0 ? "● " : ""}
+                            {advancing.has(row.teamId) ? "● " : ""}
                             {team?.code} {team?.name}
                           </Link>
                         </td>

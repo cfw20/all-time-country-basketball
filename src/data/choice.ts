@@ -32,7 +32,9 @@ export function choiceStory(player: Player, team: Team): ChoiceStory {
         ? "The Continental, the national all-time side, closed without a minutes-earning seat."
         : team.overflowRank === 2
           ? "The Continental and Vanguard had no seat left."
-          : "The national roster, Vanguard, and Afterlight had no seat left.";
+          : team.overflowRank === 3
+            ? "The national roster, Vanguard, and Afterlight had no seat left."
+            : "The American houses above this one had no minutes left.";
     return {
       kicker: "Overflow path",
       title: "Could not make the United States roster",
@@ -46,7 +48,7 @@ export function choiceStory(player: Player, team: Team): ChoiceStory {
     kicker: "Homeland path",
     title: `${player.nationality} could not field a side`,
     body: join(
-      `${player.name} is from ${player.nationality}. That country is outside the twenty-eight nation field because it cannot fill a competitive all-time roster. They chose the Lantern Company, the only house for that path. Nobody recruited them.`,
+      `${player.name} is from ${player.nationality}. That country cannot fill a competitive all-time roster, so they chose ${team.name}. Nobody recruited them.`,
       player.note,
     ),
   };

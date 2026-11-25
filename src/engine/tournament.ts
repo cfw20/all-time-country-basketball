@@ -1,4 +1,4 @@
-import { CONSTRUCT_ID, PLAYERS, rosterOf, teamById } from "../data";
+import { CONSTRUCT_ID, PLAYERS, TEAMS, rosterOf, teamById } from "../data";
 import { minuteTarget } from "../data/ratings";
 import type {
   Awards,
@@ -121,18 +121,7 @@ export function simulateTournament(seed: number, options: SimOptions = {}): Tour
   }
 
   if (through >= 5 && days === 3) {
-    const tables = new Map(groups.map((g) => [g.id, standingsFor(g.teamIds, series)]));
-    const top = (letter: string, place: number) => tables.get(letter)![place].teamId;
-    const r16pairs: [string, string][] = [
-      [top("A", 0), top("B", 1)],
-      [top("C", 0), top("D", 1)],
-      [top("E", 0), top("F", 1)],
-      [top("G", 0), top("H", 1)],
-      [top("B", 0), top("A", 1)],
-      [top("D", 0), top("C", 1)],
-      [top("F", 0), top("E", 1)],
-      [top("H", 0), top("G", 1)],
-    ];
+    const r16pairs = roundOfSixteen(groups, series, seedOf);
     r16pairs.forEach((pair, index) => {
       const [awayId, homeId] = betterHome(pair[0], pair[1], seedOf);
       const id = `r16-${index}`;
@@ -287,17 +276,68 @@ function rankTeams(): Tournament["ranking"] {
 }
 
 function teamIds(): string[] {
-  return ["cont","vngd","aftr","pall","lant","nrth","oro","roya","eagl","fire","alps","ambr","ordr","plat","auri","sun","iron","atlr","grns","crsc","fueg","quis","tera","gate","peak","cauc","brdg","drgn","arch","flve","oliv","nvsk"];
+  return TEAMS.filter((team) => team.kind !== "construct").map((team) => team.id);
 }
 
 function drawGroups(seed: number, ranked: string[]): Tournament["groups"] {
   const rng = mulberry32(seed);
-  const groups = "ABCDEFGH".split("").map((id) => ({ id, teamIds: [] as string[] }));
+  const count = ranked.length / 4;
+  const groups = Array.from({ length: count }, (_, index) => ({
+    id: String.fromCharCode(65 + index),
+    teamIds: [] as string[],
+  }));
   for (let pot = 0; pot < 4; pot++) {
-    const slice = shuffle(ranked.slice(pot * 8, pot * 8 + 8), rng);
+    const slice = shuffle(ranked.slice(pot * count, pot * count + count), rng);
     slice.forEach((teamId, index) => groups[index].teamIds.push(teamId));
   }
   return groups;
+}
+
+/** Group winners, then the best seconds until sixteen sides remain. Seeded 1–16 by pre-draw power. */
+export function roundOfSixteen(
+  groups: Tournament["groups"],
+  series: SeriesResult[],
+  seedOf: Map<string, number>,
+): [string, string][] {
+  const winners: string[] = [];
+  const seconds: GroupStanding[] = [];
+  for (const group of groups) {
+    const table = standingsFor(group.teamIds, series);
+    if (table[0]) winners.push(table[0].teamId);
+    if (table[1]) seconds.push(table[1]);
+  }
+  const need = Math.max(0, 16 - winners.length);
+  seconds.sort((a, b) => {
+    if (b.w !== a.w) return b.w - a.w;
+    const games = (b.gw - b.gl) - (a.gw - a.gl);
+    if (games !== 0) return games;
+    const diff = (b.pf - b.pa) - (a.pf - a.pa);
+    if (diff !== 0) return diff;
+    return (seedOf.get(a.teamId) ?? 99) - (seedOf.get(b.teamId) ?? 99);
+  });
+  const field = [...winners, ...seconds.slice(0, need).map((row) => row.teamId)];
+  field.sort((a, b) => (seedOf.get(a) ?? 99) - (seedOf.get(b) ?? 99));
+  const order = [0, 15, 7, 8, 4, 11, 3, 12, 5, 10, 2, 13, 6, 9, 1, 14];
+  const pairs: [string, string][] = [];
+  for (let i = 0; i < order.length; i += 2) {
+    const left = field[order[i]];
+    const right = field[order[i + 1]];
+    if (left && right) pairs.push([left, right]);
+  }
+  return pairs;
+}
+
+export function advancingIds(
+  groups: Tournament["groups"],
+  series: SeriesResult[],
+  seedOf: Map<string, number>,
+): Set<string> {
+  const ids = new Set<string>();
+  for (const [left, right] of roundOfSixteen(groups, series, seedOf)) {
+    ids.add(left);
+    ids.add(right);
+  }
+  return ids;
 }
 
 function betterHome(a: string, b: string, seedOf: Map<string, number>): [string, string] {
@@ -775,7 +815,7 @@ export function summarizeTournament(tournament: Tournament): TrialSummary {
     breakoutId: awards.breakoutId,
     teams: tournament.ranking.map((row) => ({
       id: row.teamId,
-      finish: tournament.finishes[row.teamId] ?? 32,
+      finish: tournament.finishes[row.teamId] ?? 40,
       seed: row.seed,
       wins: record.get(row.teamId)?.w ?? 0,
       losses: record.get(row.teamId)?.l ?? 0,

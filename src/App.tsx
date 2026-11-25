@@ -8,6 +8,7 @@ import { GamePage } from "./pages/Game";
 import { Home } from "./pages/Home";
 import { Leaders } from "./pages/Leaders";
 import { Clash } from "./pages/Clash";
+import { Decade, Five, Fortnight, Gauntlet, Hill, OpenFloor, Survivor } from "./pages/Floors";
 import { Lamp } from "./pages/Lamp";
 import { Play } from "./pages/Play";
 import { PlayerPage } from "./pages/Player";
@@ -54,6 +55,13 @@ export function App() {
         <Route path="play/series" element={<QuickSeries />} />
         <Route path="play/lamp" element={<Lamp />} />
         <Route path="play/throne" element={<Throne />} />
+        <Route path="play/hill" element={<Hill />} />
+        <Route path="play/gauntlet" element={<Gauntlet />} />
+        <Route path="play/decade" element={<Decade />} />
+        <Route path="play/open" element={<OpenFloor />} />
+        <Route path="play/fortnight" element={<Fortnight />} />
+        <Route path="play/survivor" element={<Survivor />} />
+        <Route path="play/five" element={<Five />} />
         <Route path="rules" element={<Rules />} />
         <Route path="*" element={<Missing />} />
       </Route>

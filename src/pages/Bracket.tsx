@@ -1,7 +1,7 @@
 import { Link } from "react-router-dom";
 import { TEAM_BY_ID } from "../data";
 import type { SeriesResult, Tournament } from "../data/types";
-import { standingsFor } from "../engine/tournament";
+import { roundOfSixteen } from "../engine/tournament";
 import { usePantheon } from "../state/store";
 
 interface Slot {
@@ -26,7 +26,7 @@ export function Bracket() {
       <p className="kicker">Knockout · first to four · neutral floor</p>
       <h2 className="display" style={{ fontSize: 68 }}>The bracket</h2>
       <p className="lede">
-        Every round is a best-of-seven. A side advances by winning four games. A1–B2, C1–D2, E1–F2, G1–H2, then the matching pairs on the other side. No home court. The better power seed is listed second. <Link to="/siege">The siege</Link> is its own set of series.
+        Every round is a best-of-seven. Group winners advance, and the best seconds fill sixteen. Those sixteen are seeded by pre-draw power: 1 against 16, and on through the bracket. No home court. The better power seed is listed second. <Link to="/siege">The siege</Link> is its own set of series.
       </p>
       {tournament.through < 3 ? (
         <p className="empty">The bracket is named after the third group series. Sim the groups and the pairings appear, still unplayed until the round of 16.</p>
@@ -98,17 +98,8 @@ function r16Slots(tournament: Tournament): Slot[] {
     return { id: `r16-${index}`, series, awayId: series?.awayId, homeId: series?.homeId };
   });
   if (slots[0].series || tournament.through < 3) return slots;
-  const table = (letter: string) => standingsFor(tournament.groups.find((group) => group.id === letter)!.teamIds, tournament.series);
-  const pairs: [string, string][] = [
-    [table("A")[0].teamId, table("B")[1].teamId],
-    [table("C")[0].teamId, table("D")[1].teamId],
-    [table("E")[0].teamId, table("F")[1].teamId],
-    [table("G")[0].teamId, table("H")[1].teamId],
-    [table("B")[0].teamId, table("A")[1].teamId],
-    [table("D")[0].teamId, table("C")[1].teamId],
-    [table("F")[0].teamId, table("E")[1].teamId],
-    [table("H")[0].teamId, table("G")[1].teamId],
-  ];
+  const seedOf = new Map(tournament.ranking.map((row) => [row.teamId, row.seed]));
+  const pairs = roundOfSixteen(tournament.groups, tournament.series, seedOf);
   pairs.forEach((pair, index) => {
     const [a, b] = pair;
     const sa = tournament.ranking.find((row) => row.teamId === a)?.seed ?? 99;

@@ -27,6 +27,48 @@ const DOORS = [
     body: "A bracket of era teams. Seven games. One year leaves holding the floor.",
   },
   {
+    to: "/play/hill",
+    kicker: "Winner stays",
+    title: "King of the Hill",
+    body: "A side defends the floor. Win and the next challenger walks on. The last one is the Construct.",
+  },
+  {
+    to: "/play/gauntlet",
+    kicker: "Seven rungs",
+    title: "The Gauntlet",
+    body: "One side, seven games, each opponent a step up the field. The last rung is the Construct.",
+  },
+  {
+    to: "/play/decade",
+    kicker: "Every prime's decade",
+    title: "Decade Cup",
+    body: "The 1950s through the 2020s, each as a side. A round robin, then a final.",
+  },
+  {
+    to: "/play/open",
+    kicker: "Sixteen sides",
+    title: "The Open",
+    body: "A one-game bracket drawn from the field. Loser out. Humans only.",
+  },
+  {
+    to: "/play/fortnight",
+    kicker: "A week, then a series",
+    title: "Fortnight",
+    body: "Six sides play a round robin. The top two settle it in a best-of-seven.",
+  },
+  {
+    to: "/play/survivor",
+    kicker: "The heaviest loss goes",
+    title: "Survivor",
+    body: "Eight sides. Each night the worst defeat is eliminated, until two remain.",
+  },
+  {
+    to: "/play/five",
+    kicker: "Ten names, one game",
+    title: "The Five",
+    body: "Two position-balanced fives, drawn from the whole human book. They play once.",
+  },
+  {
     to: "/season",
     kicker: "The long chase",
     title: "The Unbroken Year",

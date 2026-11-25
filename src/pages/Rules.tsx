@@ -28,11 +28,11 @@ export function Rules() {
           </article>
           <article className="path">
             <strong>Overflow path</strong>
-            <span>Americans who could not earn minutes on the Continental. The houses, in order, are Vanguard, Afterlight, and Palladium. The cut is positional: centers who would have had no night behind the national middle chose a house where they could play. There is no fourth American house.</span>
+            <span>Americans who could not earn minutes on the Continental, then on the houses above them. Vanguard, Afterlight, and Palladium are the first three. More houses follow, each a full prime-era roster, for players the book still had and the minutes did not. A player chooses the first house that can actually play them.</span>
           </article>
           <article className="path">
             <strong>Homeland path</strong>
-            <span>A great player whose country cannot fill a competitive all-time side. They choose the Lantern Company. The Lantern is the only mixed side of that kind.</span>
+            <span>A great player whose country cannot fill a competitive all-time side. Those countries are not in the draw. The primes choose a homeland house: the Lantern, the Bastion, the Harbor, or the Reed. The house is a roster that can play, not a pile of the players a weak national side could not support.</span>
           </article>
         </div>
       </section>
@@ -68,7 +68,7 @@ export function Rules() {
 
       <section className="section">
         <h3 className="display" style={{ fontSize: 36 }}>The competition</h3>
-        <p className="lede">Eight groups of four human sides, drawn in pots from pre-tournament power so each group gets one side from each band. Every group matchup is a best-of-seven, three series per side. Then an interval that does not count: All-Star, a skills challenge, a three-point contest, and a dunk contest. The Construct stays out of those nights. Sixteen advance. The bracket is fixed from group place, and every knockout round is first to four, including the final and the third-place series. The siege follows: arrival is already in from the round of 16, then the gate, then the Concord, each a best-of-seven. Same seed, same series. A new draw is a new seed. Trials compare country titles and whether the floor was restored. The atlas sorts every human prime by decade. Nights collects the seven-game series, the 4–3s, the sweeps, and the tight games of the country draw.</p>
+        <p className="lede">Ten groups of four human sides, drawn in pots from pre-tournament power so each group gets one side from each band. Every group matchup is a best-of-seven, three series per side. Then an interval that does not count: All-Star, a skills challenge, a three-point contest, and a dunk contest. The Construct stays out of those nights. Every group winner advances. The best second-place sides fill the field to sixteen. Those sixteen are seeded by pre-draw power, 1 against 16, and every knockout round is first to four, including the final and the third-place series. The siege follows: arrival is already in from the round of 16, then the gate, then the Concord, each a best-of-seven. Same seed, same series. A new draw is a new seed. Trials compare country titles and whether the floor was restored. The atlas sorts every human prime by decade. Nights collects the seven-game series, the 4–3s, the sweeps, and the tight games of the country draw.</p>
       </section>
 
       <section className="section">
@@ -80,7 +80,7 @@ export function Rules() {
 
       <section className="section">
         <h3 className="display" style={{ fontSize: 36 }}>Side floors</h3>
-        <p className="lede">The championship stays the book. Around it are nights you can start immediately. Era Clash is one NBA game between two rolled years. A series tonight is a best-of-seven between any two sides, and the Construct can be called. The Lamp is a three-point contest, a dunk contest, and a skills challenge, lit whenever you want. The Throne is eight era sides in a one-night bracket. None of them touch the standings.</p>
+        <p className="lede">The championship stays the book. Around it are nights you can start immediately. Era Clash is one NBA game between two rolled years. A series tonight is a best-of-seven between any two sides, and the Construct can be called. The Lamp is a three-point contest, a dunk contest, and a skills challenge, lit whenever you want. The Throne is eight era sides in a one-night bracket. King of the Hill keeps the winner on the floor. The Gauntlet is seven games up the field, ending at the Construct. The Decade Cup puts every prime on the decade of the card. The Open is a sixteen-side one-game bracket. Fortnight is a six-side round robin and a best-of-seven final. Survivor drops the heaviest loss each night. The Five is two drawn lineups and one game. None of them touch the standings.</p>
       </section>
 
       <section className="section">

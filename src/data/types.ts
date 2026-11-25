@@ -69,8 +69,8 @@ export interface Team {
   motto: string;
   blurb: string;
   pace: number;
-  /** 1 = first overflow house, 2 = second, 3 = last. */
-  overflowRank?: 1 | 2 | 3;
+  /** 1 is the first house after the national cut. Later numbers are further down the American mountain. */
+  overflowRank?: number;
 }
 
 export interface BoxLine {

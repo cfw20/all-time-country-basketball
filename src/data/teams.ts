@@ -1,7 +1,10 @@
 import { CONCORD_ID, CONCORD_TEAM } from "./concord";
+import { HOUSE_TEAMS } from "./houses";
 import type { Team } from "./types";
 
-export const TEAMS: Team[] = [
+const RETIRED = new Set(["grns", "fueg", "quis", "tera", "peak", "cauc", "brdg", "drgn", "arch", "flve"]);
+
+const RAW: Team[] = [
   {
     id: "cont",
     kind: "country",
@@ -59,9 +62,9 @@ export const TEAMS: Team[] = [
     region: "Overflow",
     colors: { primary: "#9fd0c8", secondary: "#1f6f73" },
     mark: "bars",
-    motto: "The last American house.",
+    motto: "Third house. The mountain continues.",
     blurb:
-      "The third and last overflow house. Still a prime-era roster, a step down the American mountain. There is no fourth house and no free-agent draft. Players outside these eighty-eight American seats are not in the field.",
+      "The third overflow house. Still a prime-era roster, a step down the American mountain. More houses follow, for Americans who still had a prime and still had no minutes here.",
     pace: 1.03,
     overflowRank: 3,
   },
@@ -75,9 +78,9 @@ export const TEAMS: Team[] = [
     region: "Homeland",
     colors: { primary: "#e7a15a", secondary: "#6a3418" },
     mark: "arch",
-    motto: "No homeland could carry them.",
+    motto: "No homeland could carry them alone.",
     blurb:
-      "The only mixed side for players whose own country cannot fill a competitive all-time roster. Finland, Austria, the Bahamas, Venezuela, Romania, New Zealand, Switzerland, Poland, Czechia, the Netherlands, Great Britain, South Sudan, Angola, and the rest of this roster did not enter a signing market. Each player chose the lantern, and each is shown in a prime.",
+      "A homeland house for players whose own country cannot fill a competitive all-time roster. Finland, Austria, the Bahamas, Venezuela, Romania, New Zealand, Switzerland, Poland, Czechia, the Netherlands, Great Britain, South Sudan, Angola, and the rest of this roster did not enter a signing market. Each player chose the lantern. The Bastion, the Harbor, and the Reed are the other houses on this path.",
     pace: 1.02,
   },
   {
@@ -501,6 +504,10 @@ export const TEAMS: Team[] = [
     pace: 1.01,
   },
 ];
+
+const human = RAW.filter((team) => !RETIRED.has(team.id) && team.kind !== "construct");
+const construct = RAW.filter((team) => team.kind === "construct");
+export const TEAMS: Team[] = [...human, ...HOUSE_TEAMS, ...construct];
 
 export const TEAM_BY_ID: Record<string, Team> = Object.fromEntries(TEAMS.map((t) => [t.id, t]));
 
