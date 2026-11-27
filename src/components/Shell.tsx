@@ -3,6 +3,7 @@ import { formatSeed } from "../engine/rng";
 import { STAGE_LABELS } from "../engine/tournament";
 import { usePantheon } from "../state/store";
 import { useVisit } from "../state/visit";
+import { FollowBar } from "./StakeDesk";
 import { Guide } from "./Guide";
 import { Tour } from "./Tour";
 
@@ -119,6 +120,7 @@ export function Shell() {
           </Link>
           <div className="mast-actions">
             <Link to="/play/call" className="arrival-go">Play a game</Link>
+            <Link to={{ pathname: "/", hash: "back-a-side" }} className="arrival-next">Back a side</Link>
             <button type="button" className="how-to" onClick={openTour}>How to play</button>
           </div>
         </div>
@@ -138,6 +140,7 @@ export function Shell() {
             ))}
           </div>
         </nav>
+        <FollowBar />
       </header>
       <Guide />
       <Outlet />

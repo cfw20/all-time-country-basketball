@@ -6,7 +6,7 @@ const STEPS: { title: string; body: string[] }[] = [
     title: "Where everything is",
     body: [
       "This is a basketball floor under NBA rules. The primes are real people. The purse you meet at the end is made up, and it is not money.",
-      "Home is this page. Play a game and Back a side are the first actions.",
+      "Home is this page. Play a game, Back a side, and How to play sit in the mast, in that order.",
       "Rankings is who is best. Teams holds every 22-man roster: five starters, two-ways, and a short deal.",
       "Games opens a series. A series is first to four.",
       "Play holds The Call, plus Horse, the Rack, the Stripe, the Poster, the Circuit, and Buzzer.",
@@ -51,7 +51,7 @@ const STEPS: { title: string; body: string[] }[] = [
     title: "This week",
     body: [
       "A short guide stays on the page until you have seen the board, a roster, and a night.",
-      "Then you back a side. The purse is made-up marks that live in this browser. They are not money. The stake does not change the games or the standings.",
+      "Then you back a side. Following stays in the mast: the side, their series, and the latest game. The purse is made-up marks that live in this browser. They are not money. The stake does not change the games or the standings.",
       "How to play, in the mast, opens this tour again.",
     ],
   },

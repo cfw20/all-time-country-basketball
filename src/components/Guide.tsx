@@ -18,7 +18,7 @@ const COPY = {
     label: "Open Play",
   },
   stake: {
-    text: "This week: back a side. The purse is made-up marks in this browser. They are not money.",
+    text: "This week: back a side. Following stays in the mast. The purse is made-up marks in this browser. They are not money.",
     to: { pathname: "/", hash: "back-a-side" },
     label: "Back a side",
   },

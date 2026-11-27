@@ -10,7 +10,7 @@ RJ Barrett|SF|6-6|2023|Canada|starter|standard|slasher|82|22|28|0|PF|shot:80,ath
 Dillon Brooks|SF|6-7|2022|Canada|rotation|standard|defender|80|16|34|0|-|def:84,three:70,ath:78
 Luguentz Dort|SG|6-4|2022|Canada|rotation|standard|defender|79|14|36|0|-|def:88,ath:84,three:72
 Kelly Olynyk|PF|6-11|2017|Canada|rotation|standard|stretch|77|14|36|0|-|play:74,three:76
-Chris Boucher|PF|6-9|2021|Canada|rotation|standard|rim|76|14|28|0|C|ath:84,def:76|Born in Saint Lucia. Represents Canada.
+Cory Joseph|PG|6-3|2016|Canada|rotation|standard|point|81|16|32|0|-|play:82,def:78,three:72,shot:78|NBA champion. Canadian national-team guard.
 Brandon Clarke|PF|6-8|2020|Canada|deep|standard|rim|77|14|12|0|-|ath:86,def:78,reb:74
 Fred VanVleet|PG|6-0|2022|Canada|rotation|standard|point|86|22|40|0|-|play:84,shot:84
 Scottie Barnes|SF|6-7|2024|Canada|rotation|standard|wing|84|20|30|0|PF|ath:86,def:84
@@ -238,6 +238,6 @@ Manute Bol|C|7-7|1989|South Sudan|deep|standard|rim|76|8|0|0|-|def:90,reb:70,sho
 Toumani Camara|SF|6-8|2025|Belgium|deep|standard|defender|81|14|34|0|PF|def:84,ath:82,reb:70,three:74|Belgium cannot fill a competitive side. Rated on the prime already on record.
 Bruno Fernando|C|6-10|2021|Angola|two-way|two-way|rim|74|12|8|0|-|ath:80,reb:72|Angola cannot fill a Pantheon roster.
 Carlik Jones|PG|6-0|2023|South Sudan|two-way|two-way|point|75|18|30|0|-|play:78,ath:84|American-born. Represents South Sudan.
-Wenyen Gabriel|PF|6-9|2022|South Sudan|deep|ten-day|glue|73|12|30|0|-|ath:82,def:74
+Jonas Jerebko|SF|6-10|2015|Sweden|deep|standard|stretch|79|14|36|0|PF|three:74,def:74,reb:70,shot:74|Sweden cannot fill a side. NBA forward for a decade.
 `,
 };

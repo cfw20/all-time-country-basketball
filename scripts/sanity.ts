@@ -365,9 +365,9 @@ if (!leader || leader[0] !== "cont") fail(`Continental is not the most common ch
 if (contTitles > 34) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
 if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-// Seeds 1100 + i*97 after the famous-card corrections: arrival 29, gate 35, restored 5.
+// Seeds 1100 + i*97 after the missing-prime seats: arrival 29, gate 36, restored 5.
 if (arrivalConstruct !== 29) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 29`);
-if (gateConstruct !== 35) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 35`);
+if (gateConstruct !== 36) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 36`);
 if (restored !== 5) fail(`Concord restored the floor ${restored}/${TRIALS}, expected 5`);
 
 for (const card of ERA_CARDS) {
@@ -423,10 +423,10 @@ if (survivor.rounds.length < 3 || !survivor.champion) fail("survivor did not pla
 if (five.home.length !== 5 || five.away.length !== 5 || five.game.homeScore < 70) fail("the five did not tip");
 console.log(`MORE hill ${hill.king} gauntlet ${gauntlet.cleared}/7 decade ${decade.champion} open ${open.champion} fortnight ${fortnight.champion} survivor ${survivor.champion}`);
 
-if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-v9" || OLYMPICS_KEY === "pantheon-v10" || OLYMPICS_KEY === "pantheon-v11" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
-const saveKeys = ["pantheon-v11", "pantheon-olympics-v2", "pantheon-year-v1", TOUR_KEY, GUIDE_KEY, STAKE_KEY];
+if (OLYMPICS_KEY === "pantheon-v7" || OLYMPICS_KEY === "pantheon-v8" || OLYMPICS_KEY === "pantheon-v9" || OLYMPICS_KEY === "pantheon-v10" || OLYMPICS_KEY === "pantheon-v11" || OLYMPICS_KEY === "pantheon-v12" || OLYMPICS_KEY === "pantheon-year-v1") fail("olympics save collided with the championship or the year");
+const saveKeys = ["pantheon-v12", "pantheon-olympics-v3", "pantheon-year-v1", TOUR_KEY, GUIDE_KEY, STAKE_KEY];
 if (new Set(saveKeys).size !== saveKeys.length) fail("tour or stake key collided with a save");
-if (TOUR_KEY === "pantheon-v11" || GUIDE_KEY === "pantheon-v11" || STAKE_KEY === "pantheon-v11") fail("tour or stake rewrote the championship key");
+if (TOUR_KEY === "pantheon-v12" || GUIDE_KEY === "pantheon-v12" || STAKE_KEY === "pantheon-v12") fail("tour or stake rewrote the championship key");
 if (olympicsUnlock([]).open) fail("olympics opened with no trials");
 const lockedLine = olympicsLockLine(olympicsUnlock([]));
 const lockedSentences = lockedLine.split(/[.!?]/).map((part) => part.trim()).filter(Boolean);

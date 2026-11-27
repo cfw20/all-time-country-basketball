@@ -15,8 +15,7 @@ import { useVisit } from "../state/visit";
 
 export function Home() {
   const { tournament, trials } = usePantheon();
-  const { stake } = useVisit();
-  const backed = stake.ticket ? TEAM_BY_ID[stake.ticket.teamId] : undefined;
+  const { openTour } = useVisit();
   const year = yearUnlock(trials);
   const olympics = olympicsUnlock(trials);
   const olympicSave = loadOlympics();
@@ -44,16 +43,9 @@ export function Home() {
           <div className="arrival">
             <Link to="/play/call" className="arrival-go">Play a game</Link>
             <a href="#back-a-side" className="arrival-next">Back a side</a>
+            <button type="button" className="how-to" onClick={openTour}>How to play</button>
           </div>
-          {backed ? (
-            <p className="backed-line">
-              Backing {backed.name}.
-              {stake.ticket?.settled
-                ? ` ${stake.ticket.sentence}`
-                : " Their series has not started."}
-              {stake.ticket?.seriesId ? <> <Link to={`/series/${stake.ticket.seriesId}`}>Open that series</Link></> : null}
-            </p>
-          ) : null}
+          <StakeDesk />
           <p className="lede">
             {humans} real primes. {humanSides} human sides. One built threat. Draw {formatSeed(tournament.seed)}. Countries do not sign. Players choose, and every human is simulated in a prime.
           </p>
@@ -97,8 +89,6 @@ export function Home() {
           )}
         </div>
       </section>
-
-      <StakeDesk />
 
       <div className="paths">
         <article className="path">

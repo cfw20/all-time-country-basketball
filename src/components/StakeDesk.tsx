@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { TEAM_BY_ID, TEAMS } from "../data";
 import type { SeriesResult } from "../data/types";
 import { STAKE_AMOUNTS, openingSeries, useVisit } from "../state/visit";
@@ -7,9 +7,35 @@ import { usePantheon } from "../state/store";
 
 const HUMANS = TEAMS.filter((team) => team.kind !== "construct").slice().sort((a, b) => a.name.localeCompare(b.name));
 
+export function FollowBar() {
+  const { tournament } = usePantheon();
+  const { stake } = useVisit();
+  const ticket = stake.ticket;
+  if (!ticket) return null;
+  const team = TEAM_BY_ID[ticket.teamId];
+  if (!team) return null;
+  const played = tournament.series.filter(
+    (series) => !series.exhibition && (series.homeId === team.id || series.awayId === team.id),
+  );
+  const current = played.at(-1);
+  const game = current?.games.at(-1);
+  const sentence = ticket.settled
+    ? ticket.sentence
+    : `Backing ${team.name} for ${ticket.amount.toLocaleString("en-US")} marks. Their series has not tipped, so you can still change the side.`;
+  return (
+    <div className="follow-bar">
+      <p><strong>Following {team.name}.</strong> {sentence}</p>
+      <Link to={`/teams/${team.id}`}>The side</Link>
+      {current ? <Link to={`/series/${current.id}`}>Their series</Link> : <span className="follow-wait">Series has not tipped</span>}
+      {game ? <Link to={`/games/${game.id}`}>Latest game</Link> : null}
+    </div>
+  );
+}
+
 export function StakeDesk() {
   const { tournament } = usePantheon();
   const { stake, place } = useVisit();
+  const location = useLocation();
   const ticket = stake.ticket;
   const [teamId, setTeamId] = useState(ticket?.teamId && !ticket.settled ? ticket.teamId : HUMANS[0].id);
   const [amount, setAmount] = useState<number>(ticket && !ticket.settled ? ticket.amount : 100);
@@ -26,6 +52,11 @@ export function StakeDesk() {
     setTeamId(ticket.teamId);
     setAmount(ticket.amount);
   }, [ticket]);
+
+  useEffect(() => {
+    if (location.hash !== "#back-a-side") return;
+    document.getElementById("back-a-side")?.scrollIntoView({ block: "start" });
+  }, [location.hash, location.pathname]);
 
   return (
     <section className="section stake-desk" id="back-a-side">

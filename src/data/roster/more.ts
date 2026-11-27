@@ -95,7 +95,7 @@ Marcel de Souza|PF|6-7|1982|Brazil|deep|standard|post|77|14|8|0|SF|shot:76,reb:7
 Helio Rubens|PG|6-1|1978|Brazil|two-way|two-way|point|78|14|12|0|-|play:80,shot:74|Helio Rubens Garcia. Long national-team point guard.
 `,
   sun: `
-Josh Green|SG|6-5|2024|Australia|deep|standard|wing|76|14|36|0|-|ath:86,def:80,three:74
+Mark Bradtke|C|6-10|1996|Australia|deep|standard|post|80|16|2|0|-|shot:74,reb:84,def:78,ft:70|Boomers center. A short NBA stay with Philadelphia.
 Chris Anstey|C|7-0|1999|Australia|deep|standard|post|79|16|6|0|-|shot:74,reb:76|Dallas and the Australian national team.
 Matthew Nielsen|PF|6-10|2004|Australia|deep|standard|stretch|78|14|28|0|C|shot:74,reb:76|Olympic frontcourt piece. The Australian bench, in a real prime.
 Jack White|SF|6-7|2023|Australia|deep|short|defender|73|10|34|0|-|def:80,ath:82

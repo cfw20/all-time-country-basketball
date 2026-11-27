@@ -3,7 +3,8 @@ import type { Tournament } from "../data/types";
 import { freshSeed } from "../engine/rng";
 import { simulateTournament, simulateTrial, summarizeTournament, type TrialSummary } from "../engine/tournament";
 
-const KEY = "pantheon-v11";
+/** Bumped from pantheon-v11 because roster seats changed. An old championship save cannot reopen against a different book. */
+const KEY = "pantheon-v12";
 
 interface Saved {
   seed: number;

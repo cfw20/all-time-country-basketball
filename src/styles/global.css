@@ -319,7 +319,7 @@ h2.display, .display {
   display: grid;
   grid-template-columns: 1.35fr 0.85fr;
   gap: 16px;
-  align-items: end;
+  align-items: start;
   padding: 4px 0 12px;
   position: relative;
 }
@@ -1332,6 +1332,39 @@ button.pool-row.cap { opacity: 0.55; }
 }
 
 .arrival { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.folio .stake-desk { margin-top: 14px; padding-top: 10px; border-top: 1px solid rgba(231, 194, 122, 0.28); }
+.folio .stake-desk .section-head h3 { font-size: 24px; }
+.folio .stake-desk .lede { font-size: 15px; line-height: 1.4; }
+.follow-bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  padding-top: 8px;
+  border-top: 1px solid rgba(201, 182, 255, 0.28);
+}
+.follow-bar p {
+  margin: 0;
+  flex: 1 1 240px;
+  min-width: 0;
+  font-size: 15px;
+  line-height: 1.35;
+  color: var(--ink);
+}
+.follow-bar a, .follow-bar .follow-wait {
+  display: inline-flex;
+  align-items: center;
+  min-height: 36px;
+  padding: 6px 12px;
+  border-radius: 999px;
+  border: 1px solid rgba(231, 194, 122, 0.55);
+  color: var(--ink);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 700;
+  background: rgba(12, 8, 18, 0.82);
+}
 .arrival-go, .arrival-next, .how-to, .stake-go, .tour-skip, .tour-actions button, .guide-card a, .stake-amounts button {
   display: inline-flex;
   align-items: center;

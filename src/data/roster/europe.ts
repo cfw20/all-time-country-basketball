@@ -16,7 +16,7 @@ Willy Hernangomez|C|6-11|2017|Spain|deep|standard|post|76|16|4|0|-|reb:84,shot:7
 Andres Jimenez|PF|6-9|1988|Spain|deep|standard|post|80|18|8|0|-|shot:80,reb:74|Barcelona and the Spanish teams of the 1980s.
 Raul Lopez|PG|6-0|2004|Spain|deep|standard|point|74|16|22|0|-|play:80
 Fernando Martin|PF|6-9|1986|Spain|deep|standard|post|77|18|2|0|-|shot:78,ath:80|Prime of the 1980s. Included at that peak.
-Victor Claver|SF|6-10|2012|Spain|two-way|two-way|glue|73|12|30|0|-|def:76
+Juancho Hernangomez|SF|6-9|2018|Spain|two-way|two-way|stretch|78|16|36|0|PF|three:76,reb:74,def:72|NBA forward. The minutes sit behind the Spanish medal core.
 Alberto Herreros|SG|6-6|1998|Spain|two-way|two-way|shooter|74|14|40|0|-|three:78
 Juan Antonio San Epifanio|SF|6-6|1984|Spain|deep|short|wing|76|16|20|0|-|shot:78
 `,
@@ -30,7 +30,7 @@ Rudy Gobert|C|7-1|2019|France|starter|standard|rim|86|16|0|0|-|reb:92,def:98,sho
 Evan Fournier|SG|6-7|2021|France|rotation|standard|shooter|79|20|40|0|-|three:80
 Boris Diaw|PF|6-8|2006|France|rotation|standard|glue|80|16|24|0|-|play:84,reb:70,def:76
 Mickael Pietrus|SG|6-6|2008|France|rotation|standard|defender|76|14|36|0|SF|def:82,ath:86
-Ronny Turiaf|C|6-10|2008|France|deep|standard|rim|74|12|0|0|-|def:80,reb:74
+Guerschon Yabusele|PF|6-8|2024|France|deep|standard|stretch|81|16|38|0|SF|three:78,shot:78,def:76,reb:74,ath:82|French Olympic forward. The minutes sit behind the French bigs.
 Rodrigue Beaubois|PG|6-2|2011|France|deep|standard|slasher|78|18|34|0|-|ath:88,shot:76
 Antoine Rigaudeau|SG|6-6|1998|France|deep|standard|shooter|82|22|30|0|-|three:78,play:80,shot:80|EuroLeague peak. He did not have an NBA star season.
 Bilal Coulibaly|SF|6-7|2026|France|deep|standard|defender|76|14|30|0|-|def:80,ath:86|Rated on the prime already on record.

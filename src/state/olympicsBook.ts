@@ -13,8 +13,8 @@ import {
   type OlympicSide,
 } from "../engine/olympics";
 
-/** Separate from pantheon-v11 and pantheon-year-v1. Bumped because a few thin-seat primes left the book. */
-export const OLYMPICS_KEY = "pantheon-olympics-v2";
+/** Separate from pantheon-v12 and pantheon-year-v1. Bumped because replaced primes left the draft pool. */
+export const OLYMPICS_KEY = "pantheon-olympics-v3";
 
 export interface OlympicSave {
   build: OlympicBuild | null;
