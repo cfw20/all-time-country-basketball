@@ -75,7 +75,7 @@ Jimmy Butler|SF|6-7|2020|United States|rotation|standard|wing|87|26|20|0|-|shot:
 Kyrie Irving|PG|6-2|2021|United States|rotation|standard|slasher|88|30|40|0|-|shot:90,three:88,play:86,reb:40,def:64,ath:90,ft:90,clutch:92|Born in Melbourne, Australia. Represented the United States.
 Anthony Edwards|SG|6-4|2025|United States|rotation|standard|slasher|89|30|36|0|-|shot:88,three:78,play:70,reb:55,def:72,ath:96,ft:82|Rated on the All-NBA prime already on record.
 Alonzo Mourning|C|6-10|2000|United States|two-way|two-way|rim|85|20|0|0|-|shot:78,reb:84,def:92,ath:82,ft:68
-Carmelo Anthony|SF|6-7|2013|United States|deep|standard|slasher|86|28|28|0|PF|shot:88,three:72,play:55,reb:64,def:58,ath:82,ft:84
+Carmelo Anthony|SF|6-7|2013|United States|deep|standard|wing|86|28|32|0|PF|shot:88,three:76,play:66,reb:64,def:58,ath:82,ft:84|Volume scorer and a midrange shooter. Not a rim runner, and not a stopper.
 Klay Thompson|SG|6-6|2016|United States|rotation|standard|shooter|87|18|52|0|-|shot:80,three:96,play:42,def:80,ath:80,ft:86
 Draymond Green|PF|6-6|2016|United States|rotation|standard|defender|86|12|28|0|-|shot:64,three:62,play:80,reb:84,def:97,ath:80,ft:70
 Kevin Love|PF|6-8|2014|United States|deep|exhibit-10|stretch|84|18|36|0|-|shot:78,three:80,reb:90,def:62,ft:82

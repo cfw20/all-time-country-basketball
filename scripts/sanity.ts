@@ -365,7 +365,7 @@ if (!leader || leader[0] !== "cont") fail(`Continental is not the most common ch
 if (contTitles > 34) fail(`Continental won ${contTitles}/${TRIALS}, the country title is a lock`);
 if (contTitles < 8) fail(`Continental won ${contTitles}/${TRIALS}, variance is too wild`);
 if (champs.size < 2) fail(`only ${champs.size} champions in ${TRIALS} draws`);
-// Seeds 1100 + i*97 after the missing-prime seats: arrival 29, gate 36, restored 5.
+// Seeds 1100 + i*97 after the ratings pass: arrival 29, gate 36, restored 5.
 if (arrivalConstruct !== 29) fail(`Construct won the arrival ${arrivalConstruct}/${TRIALS}, expected 29`);
 if (gateConstruct !== 36) fail(`Construct won the gate ${gateConstruct}/${TRIALS}, expected 36`);
 if (restored !== 5) fail(`Concord restored the floor ${restored}/${TRIALS}, expected 5`);

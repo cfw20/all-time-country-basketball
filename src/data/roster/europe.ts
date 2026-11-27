@@ -30,7 +30,7 @@ Rudy Gobert|C|7-1|2019|France|starter|standard|rim|86|16|0|0|-|reb:92,def:98,sho
 Evan Fournier|SG|6-7|2021|France|rotation|standard|shooter|79|20|40|0|-|three:80
 Boris Diaw|PF|6-8|2006|France|rotation|standard|glue|80|16|24|0|-|play:84,reb:70,def:76
 Mickael Pietrus|SG|6-6|2008|France|rotation|standard|defender|76|14|36|0|SF|def:82,ath:86
-Guerschon Yabusele|PF|6-8|2024|France|deep|standard|stretch|81|16|38|0|SF|three:78,shot:78,def:76,reb:74,ath:82|French Olympic forward. The minutes sit behind the French bigs.
+Guerschon Yabusele|PF|6-8|2024|France|deep|standard|stretch|79|16|38|0|SF|three:78,shot:76,def:74,reb:72,ath:74|French Olympic forward. A rotation stretch big, not a star. The minutes sit behind the French bigs.
 Rodrigue Beaubois|PG|6-2|2011|France|deep|standard|slasher|78|18|34|0|-|ath:88,shot:76
 Antoine Rigaudeau|SG|6-6|1998|France|deep|standard|shooter|82|22|30|0|-|three:78,play:80,shot:80|EuroLeague peak. He did not have an NBA star season.
 Bilal Coulibaly|SF|6-7|2026|France|deep|standard|defender|76|14|30|0|-|def:80,ath:86|Rated on the prime already on record.
@@ -148,7 +148,7 @@ Franz Wagner|SF|6-10|2025|Germany|starter|standard|wing|85|20|34|1|-|play:76,def
 Chris Kaman|C|7-0|2010|Germany|starter|standard|post|82|18|0|1|-|shot:78,reb:80,def:72|Born in the United States. Represented Germany.
 Isaiah Hartenstein|C|7-0|2024|Germany|starter|standard|rim|83|14|8|0|-|def:84,reb:86,play:70|Born in the United States. Represented Germany. The 2024 starting-center prime.
 Maxi Kleber|PF|6-10|2020|Germany|rotation|standard|stretch|79|12|40|0|-|def:80,three:78
-Daniel Theis|C|6-8|2020|Germany|rotation|standard|rim|78|12|20|0|PF|def:78
+Daniel Theis|C|6-8|2020|Germany|rotation|standard|rim|78|12|8|0|PF|def:78,three:55|A rim big with a rare pop, not a stretch five.
 Moritz Wagner|PF|6-11|2021|Germany|rotation|standard|stretch|78|16|34|0|C|three:74
 Ademola Okulaja|PF|6-8|2002|Germany|rotation|standard|glue|77|12|20|0|-|def:76|Nigerian heritage. Represented Germany.
 Christian Welp|C|7-0|1988|Germany|rotation|standard|post|80|16|2|0|-|shot:76,reb:78|The 1988 national-team center. A real prime, not a 72-overall seat.

@@ -360,7 +360,7 @@ Albert King|SF|6-6|1984|United States|rotation|standard|wing|79|18|12|0|-|shot:7
 P.J. Tucker|SF|6-5|2021|United States|rotation|standard|defender|79|12|40|0|PF|def:82,three:78,reb:72|The 2021 corner-and-defense prime.
 Udonis Haslem|PF|6-8|2006|United States|rotation|standard|post|78|12|8|0|-|def:80,reb:78,shot:74|Heat forward. The 2006 prime.
 Chris Morris|SF|6-8|1992|United States|rotation|standard|slasher|78|16|16|0|-|ath:82,shot:76|Nets wing of the early 1990s.
-Dale Davis|PF|6-11|1999|United States|deep|standard|rim|83|14|0|0|-|shot:64,reb:90,def:82,ft:58,ath:74|Indiana All-Star forward. A rebounder, not a scorer. Not Antonio Davis.
+Dale Davis|PF|6-11|1999|United States|rotation|standard|rim|83|14|0|0|-|shot:70,reb:90,def:82,ft:58,ath:74|Indiana starter and the 2000 All-Star. A rebounder who finished inside, not a deep-bench scorer. Not Antonio Davis.
 Bryant Reeves|C|7-0|1998|United States|deep|standard|post|78|16|2|0|-|shot:76,reb:80|Big Country. The Grizzlies prime, not the years after the body gave out.
 Grant Long|PF|6-9|1992|United States|deep|standard|glue|78|14|12|0|-|reb:76,def:76|Heat and Bucks forward.
 Loy Vaught|PF|6-9|1995|United States|deep|standard|rim|78|14|4|0|-|reb:84,def:74|Clippers glass. The 1995 prime.
@@ -402,7 +402,7 @@ Seth Curry|SG|6-2|2021|United States|star|standard|shooter|82|20|48|1|-|three:90
 Dorian Finney-Smith|SF|6-7|2022|United States|star|standard|wing|82|16|40|1|PF|def:82,three:80,reb:72|The 2022 corner-and-defense prime.
 Markelle Fultz|PG|6-4|2024|United States|starter|standard|point|82|20|28|0|-|play:84,ath:82,def:76|The 2024 Magic prime already on record.
 Max Strus|SF|6-5|2023|United States|starter|standard|shooter|81|18|44|0|SG|three:86,shot:78|The 2023 shooting prime.
-Larry Nance Jr.|PF|6-8|2022|United States|starter|standard|post|81|16|28|0|C|def:80,reb:80,ath:82|The 2022 two-way forward prime.
+Larry Nance Jr.|PF|6-8|2022|United States|starter|standard|glue|81|16|12|0|C|def:80,reb:80,ath:82,shot:74,three:58|Athlete and connector. Some threes, not a stretch post.
 Malik Beasley|SG|6-4|2024|United States|starter|standard|shooter|81|22|44|0|-|three:86,shot:80|The 2024 scoring guard prime.
 De'Anthony Melton|SG|6-2|2023|United States|starter|standard|defender|81|16|38|0|PG|def:86,ath:82,three:78|The 2023 defensive guard prime.
 Caleb Martin|SF|6-5|2023|United States|rotation|standard|wing|81|18|36|0|SG|def:80,ath:84,three:76|The 2023 two-way wing prime.

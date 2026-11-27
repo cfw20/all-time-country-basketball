@@ -41,7 +41,7 @@ Jamaal Magloire|C|6-11|2004|Canada|deep|standard|rim|81|16|0|0|-|reb:82,def:76|A
 Rick Fox|SF|6-7|2001|Canada|deep|short|wing|80|16|30|0|-|shot:78,def:74|Born in Toronto. Represented Canada. The short deal stays a real prime.
 `,
   oro: `
-Serge Ibaka|PF|6-10|2016|Spain|deep|standard|rim|82|16|22|0|C|def:88,reb:80,ath:84|Born in Brazzaville. Represented Spain.
+Serge Ibaka|PF|6-10|2016|Spain|deep|standard|rim|82|16|18|0|C|def:88,reb:80,ath:84,three:70|Born in Brazzaville. Represented Spain. The corner three was real. The card had been a miss.
 Santi Aldama|PF|7-0|2024|Spain|deep|standard|stretch|76|14|36|0|-|three:78,reb:74,play:70
 Jordi Villacampa|SG|6-5|1990|Spain|deep|standard|shooter|80|20|28|0|-|shot:80,three:74|Joventut and the Spanish national team.
 Usman Garuba|PF|6-8|2023|Spain|deep|short|defender|73|10|16|0|-|def:82,reb:74

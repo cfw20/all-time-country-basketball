@@ -10,7 +10,7 @@ RJ Barrett|SF|6-6|2023|Canada|starter|standard|slasher|82|22|28|0|PF|shot:80,ath
 Dillon Brooks|SF|6-7|2022|Canada|rotation|standard|defender|80|16|34|0|-|def:84,three:70,ath:78
 Luguentz Dort|SG|6-4|2022|Canada|rotation|standard|defender|79|14|36|0|-|def:88,ath:84,three:72
 Kelly Olynyk|PF|6-11|2017|Canada|rotation|standard|stretch|77|14|36|0|-|play:74,three:76
-Cory Joseph|PG|6-3|2016|Canada|rotation|standard|point|81|16|32|0|-|play:82,def:78,three:72,shot:78|NBA champion. Canadian national-team guard.
+Cory Joseph|PG|6-3|2016|Canada|rotation|standard|point|79|16|32|0|-|play:76,def:78,three:70,shot:74|NBA champion backup. A game manager, not a creator.
 Brandon Clarke|PF|6-8|2020|Canada|deep|standard|rim|77|14|12|0|-|ath:86,def:78,reb:74
 Fred VanVleet|PG|6-0|2022|Canada|rotation|standard|point|86|22|40|0|-|play:84,shot:84
 Scottie Barnes|SF|6-7|2024|Canada|rotation|standard|wing|84|20|30|0|PF|ath:86,def:84
@@ -70,14 +70,14 @@ Josh Giddey|PG|6-8|2024|Australia|rotation|standard|point|80|18|30|0|-|play:84,r
 Matisse Thybulle|SF|6-5|2021|Australia|rotation|standard|defender|80|10|36|0|-|def:94,ath:86,shot:60|American-raised. Represented Australia.
 Dyson Daniels|SG|6-7|2025|Australia|rotation|standard|defender|83|12|30|0|-|def:88,play:74,ath:82|Rated on the 2025 All-Defense prime already on record.
 Matthew Dellavedova|PG|6-4|2016|Australia|rotation|standard|glue|78|12|36|0|-|def:78,three:76,clutch:84
-Aron Baynes|C|6-10|2018|Australia|rotation|standard|post|79|12|20|0|-|reb:76,def:76
+Aron Baynes|C|6-10|2018|Australia|rotation|standard|post|79|12|4|0|-|reb:76,def:76|The 2018 prime is a traditional big. The stretch year came later.
 Dante Exum|SG|6-5|2018|Australia|deep|standard|slasher|78|14|28|0|-|ath:86
 Jock Landale|C|6-11|2022|Australia|deep|standard|post|78|12|16|0|-|
 David Andersen|C|6-11|2009|Australia|deep|standard|stretch|78|12|30|0|-|
 Luc Longley|C|7-2|1996|Australia|deep|standard|post|78|12|0|0|-|reb:74,def:74
 Leroy Loggins|SF|6-5|1987|Australia|rotation|standard|slasher|83|22|12|0|-|shot:82,ath:84,def:76|American-born. Represented Australia. The NBL prime, not a later fade.
 Shane Heal|PG|6-0|1996|Australia|two-way|two-way|shooter|76|16|40|0|-|
-Duop Reath|C|6-10|2024|Australia|two-way|two-way|post|78|14|28|0|-|shot:76,reb:76|Born in South Sudan. Represented Australia. The 2024 prime already on record.
+Duop Reath|C|6-10|2024|Australia|two-way|two-way|stretch|78|14|32|0|-|shot:74,three:74,reb:74|Born in South Sudan. Represented Australia. A stretch big, not a post who misses the three.
 Phil Smyth|PG|6-0|1988|Australia|deep|short|point|79|14|16|0|-|play:82,def:78|Boomers captain. A short seat under Gaze.
 `,
   grns: `
@@ -238,6 +238,6 @@ Manute Bol|C|7-7|1989|South Sudan|deep|standard|rim|76|8|0|0|-|def:90,reb:70,sho
 Toumani Camara|SF|6-8|2025|Belgium|deep|standard|defender|81|14|34|0|PF|def:84,ath:82,reb:70,three:74|Belgium cannot fill a competitive side. Rated on the prime already on record.
 Bruno Fernando|C|6-10|2021|Angola|two-way|two-way|rim|74|12|8|0|-|ath:80,reb:72|Angola cannot fill a Pantheon roster.
 Carlik Jones|PG|6-0|2023|South Sudan|two-way|two-way|point|75|18|30|0|-|play:78,ath:84|American-born. Represents South Sudan.
-Jonas Jerebko|SF|6-10|2015|Sweden|deep|standard|stretch|79|14|36|0|PF|three:74,def:74,reb:70,shot:74|Sweden cannot fill a side. NBA forward for a decade.
+Jonas Jerebko|SF|6-10|2015|Sweden|deep|standard|stretch|77|14|36|0|PF|three:74,def:74,reb:70,shot:72|Sweden cannot fill a side. A role stretch forward, not a scorer.
 `,
 };
